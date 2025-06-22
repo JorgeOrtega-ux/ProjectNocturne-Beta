@@ -35,43 +35,80 @@ body {
     color: #000000;
 }
 
-/* GRADIENT TEXT STYLES */
-.tool-alarm span,
-.tool-timer span,
-.tool-stopwatch span,
-.tool-worldClock span {
-    color: unset;
-    background-image: none;
-    -webkit-background-clip: unset;
-    background-clip: unset;
-    -webkit-text-fill-color: unset;
-}
-
+/* MODIFIED: GRADIENT/COLOR TEXT STYLES using CSS Variables */
 :root {
     /* Variables globales para font-size de cada sección */
     --font-size-alarm: 100px;
     --font-size-timer: 100px;
     --font-size-stopwatch: 100px;
     --font-size-worldClock: 100px;
+
+    /* NEW: Variables globales para el color/degradado de cada sección */
+    --text-color-alarm: #000000;
+    --text-color-timer: #000000;
+    --text-color-stopwatch: #000000;
+    --text-color-worldClock: #000000;
 }
 
-/* Aplicar las variables CSS a cada sección específica */
+/* Base styles for tool text spans (handles SOLID colors) */
+.tool-alarm span,
+.tool-timer span,
+.tool-stopwatch span,
+.tool-worldClock span {
+    /* Reset styles */
+    background-image: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    -webkit-text-fill-color: unset; /* Allows the 'color' property to work */
+}
+
+/* Specific font-size and color application for each tool */
 .tool-alarm span {
-    font-size: var(--font-size-alarm) !important;
-    /* Remover cualquier font-size inline */
+    font-size: var(--font-size-alarm);
+    color: var(--text-color-alarm);
 }
 
 .tool-timer span {
-    font-size: var(--font-size-timer) !important;
+    font-size: var(--font-size-timer);
+    color: var(--text-color-timer);
 }
 
 .tool-stopwatch span {
-    font-size: var(--font-size-stopwatch) !important;
+    font-size: var(--font-size-stopwatch);
+    color: var(--text-color-stopwatch);
 }
 
 .tool-worldClock span {
-    font-size: var(--font-size-worldClock) !important;
+    font-size: var(--font-size-worldClock);
+    color: var(--text-color-worldClock);
 }
+
+/* NEW: Conditional styles for GRADIENTS */
+/* These rules only apply when the container has the 'is-gradient' class */
+.tool-alarm.is-gradient span,
+.tool-timer.is-gradient span,
+.tool-stopwatch.is-gradient span,
+.tool-worldClock.is-gradient span {
+    color: transparent; /* Fallback for older browsers */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Apply the correct gradient from the variable to each tool */
+.tool-alarm.is-gradient span {
+    background-image: var(--text-color-alarm);
+}
+.tool-timer.is-gradient span {
+    background-image: var(--text-color-timer);
+}
+.tool-stopwatch.is-gradient span {
+    background-image: var(--text-color-stopwatch);
+}
+.tool-worldClock.is-gradient span {
+    background-image: var(--text-color-worldClock);
+}
+
 
 /* ====================================== */
 /* ========== PAGE WRAPPER ============= */
