@@ -238,7 +238,7 @@ function showOtherColorSections() {
 
 // ========== SEARCH SYSTEM INITIALIZATION ==========
 
-function initColorSearch() {
+function initializeSearchInput() {
     if (searchState.isInitialized) return;
 
     if (typeof chroma === 'undefined') {
@@ -1043,7 +1043,7 @@ function integrateWithColorSystem() {
                     window.colorTextManager.initColorTextSystem();
                 }
                 if (!searchState.isInitialized) {
-                    initColorSearch();
+                    initializeSearchInput();
                 } else {
                     refreshSearchSystem();
                 }
@@ -1097,7 +1097,7 @@ function initColorSearchSystem() {
 }
 
 window.colorSearchManager = {
-    init: initColorSearch,
+    init: initializeSearchInput,
     refresh: refreshSearchSystem,
     clear: clearSearchColors,
     addColor: addCustomColor,
@@ -1119,7 +1119,7 @@ window.colorSearchManager = {
 
 export {
     initColorSearchSystem, // <--- CAMBIO: Se exporta la nueva función de inicialización
-    initColorSearch,
+    initializeSearchInput,
     refreshSearchSystem,
     clearSearchColors,
     addCustomColor,
