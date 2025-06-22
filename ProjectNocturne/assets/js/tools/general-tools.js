@@ -1,0 +1,945 @@
+// ========== SERVICE: CATEGORY SLIDER DRAG & SCROLL ==========
+
+function initializeCategorySliderService() {
+    // ========== CONFIGURATION ==========
+    const config = {
+        enableService: true,
+        enableButtons: true,
+        scrollStep: 200,
+        containerSelector: '.tool-options-wrapper',
+        wrapperSelector: '.section-top',
+        pointerOnly: true
+    };
+
+    if (!config.enableService) return;
+    if (config.pointerOnly && !window.matchMedia('(pointer: fine)').matches) return;
+
+    // ========== REFERENCES - USING QUERYSELECTORALL ==========
+    const wrappers = document.querySelectorAll(config.wrapperSelector);
+    if (!wrappers.length) return;
+
+    // ========== FUNCTION TO CREATE BUTTONS ==========
+    function createScrollButton(dir, container, wrapper) {
+        const btn = document.createElement('button');
+        btn.className = `scroll-btn scroll-btn-${dir}`;
+        btn.setAttribute('aria-label', `Scroll ${dir}`);
+        btn.innerHTML = dir === 'left'
+            ? '<span class="material-symbols-rounded">arrow_left</span>'
+            : '<span class="material-symbols-rounded">arrow_right</span>';
+
+        btn.addEventListener('click', function handleScrollButtonClick() {
+            container.scrollBy({
+                left: (dir === 'left' ? -1 : 1) * config.scrollStep,
+                behavior: 'smooth'
+            });
+        });
+
+        return btn;
+    }
+
+    // ========== FUNCTION TO UPDATE BUTTONS (CORRECTED) ==========
+    function updateScrollButtons(container, wrapper, buttons) {
+        if (!config.enableButtons) {
+            buttons.left?.remove();
+            buttons.right?.remove();
+            buttons.left = buttons.right = null;
+            return;
+        }
+
+        const canScroll = container.scrollWidth > container.clientWidth;
+        if (!canScroll) {
+            buttons.left?.remove();
+            buttons.right?.remove();
+            buttons.left = buttons.right = null;
+            return;
+        }
+
+        const scrollLeft = container.scrollLeft;
+        const scrollWidth = container.scrollWidth;
+        const clientWidth = container.clientWidth;
+
+        const roundedScrollLeft = Math.round(scrollLeft);
+
+        if (roundedScrollLeft > 0) {
+            if (!buttons.left) {
+                buttons.left = createScrollButton('left', container, wrapper);
+                wrapper.append(buttons.left);
+            }
+        } else {
+            buttons.left?.remove();
+            buttons.left = null;
+        }
+        
+        if (roundedScrollLeft + clientWidth < scrollWidth) {
+            if (!buttons.right) {
+                buttons.right = createScrollButton('right', container, wrapper);
+                wrapper.append(buttons.right);
+            }
+        } else {
+            buttons.right?.remove();
+            buttons.right = null;
+        }
+    }
+
+    // ========== FUNCTION TO SETUP DRAG-TO-SCROLL ==========
+    function setupDragScrollBehavior(container) {
+        let isDragging = false, startX = 0, scrollStart = 0;
+
+        function handleMouseDown(e) {
+            if (container.scrollWidth <= container.clientWidth) return;
+            isDragging = true;
+            startX = e.pageX - container.offsetLeft;
+            scrollStart = container.scrollLeft;
+            container.classList.add('dragging');
+        }
+
+        function handleMouseUpOrLeave() {
+            isDragging = false;
+            container.classList.remove('dragging');
+        }
+
+        function handleMouseMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            container.scrollLeft = scrollStart - (x - startX);
+        }
+
+        container.addEventListener('mousedown', handleMouseDown);
+        container.addEventListener('mouseup', handleMouseUpOrLeave);
+        container.addEventListener('mouseleave', handleMouseUpOrLeave);
+        container.addEventListener('mousemove', handleMouseMove);
+    }
+
+    // ========== INITIALIZATION FOR EACH WRAPPER ==========
+    function initializeWrappers() {
+        wrappers.forEach(function processWrapper(wrapper) {
+            const container = wrapper.querySelector(config.containerSelector);
+            if (!container) return;
+
+            const buttons = { left: null, right: null };
+
+            setupDragScrollBehavior(container);
+
+            function updateButtonsForThisWrapper() {
+                updateScrollButtons(container, wrapper, buttons);
+            }
+
+            container.addEventListener('scroll', updateButtonsForThisWrapper);
+
+            new ResizeObserver(function handleResize() {
+                updateButtonsForThisWrapper();
+            }).observe(container);
+
+            requestAnimationFrame(updateButtonsForThisWrapper);
+        });
+    }
+
+    // ========== GLOBAL EVENTS ==========
+    function handleWindowResize() {
+        wrappers.forEach(function processWrapperOnResize(wrapper) {
+            const container = wrapper.querySelector(config.containerSelector);
+            if (container) {
+                requestAnimationFrame(function updateButtonsOnResize() {
+                    const buttons = {
+                        left: wrapper.querySelector('.scroll-btn-left'),
+                        right: wrapper.querySelector('.scroll-btn-right')
+                    };
+                    updateScrollButtons(container, wrapper, buttons);
+                });
+            }
+        });
+    }
+
+    function handleWindowLoad() {
+        requestAnimationFrame(function updateButtonsOnLoad() {
+            wrappers.forEach(function processWrapperOnLoad(wrapper) {
+                const container = wrapper.querySelector(config.containerSelector);
+                if (container) {
+                    const buttons = {
+                        left: wrapper.querySelector('.scroll-btn-left'),
+                        right: wrapper.querySelector('.scroll-btn-right')
+                    };
+                    updateScrollButtons(container, wrapper, buttons);
+                }
+            });
+        });
+    }
+
+    // ========== INITIALIZATION ==========
+    initializeWrappers();
+    window.addEventListener('resize', handleWindowResize);
+    window.addEventListener('load', handleWindowLoad);
+}
+
+// ========== CENTRALIZED FONT MANAGER ==========
+function initializeCentralizedFontManager() {
+    // ========== GLOBAL VARIABLES ==========
+    const sections = ['alarm', 'timer', 'stopwatch', 'worldClock'];
+    const clockContainers = {};
+    const clockElements = {};
+    const decreaseButtons = {};
+    const increaseButtons = {};
+    const fontSizeDisplays = {};
+    let resizeObservers = [];
+
+    let globalScaleFactor = 1.0;
+    let isInitialized = false;
+
+    const STORAGE_KEY = 'clockFontScale_global';
+    const FONT_SIZE_RATIO = 8;
+    const PIXEL_INCREMENT = 2;
+
+    // ========== AUTO-INCREMENT VARIABLES ==========
+    const autoIncrementState = {
+        isActive: false,
+        intervalId: null,
+        direction: null,
+        initialDelay: 500,
+        repeatInterval: 150,
+        currentButton: null,
+        currentSection: null
+    };
+
+    // ========== NUEVA FUNCIÓN PARA ACTUALIZAR VARIABLES CSS ==========
+    function updateCSSVariable(sectionName, fontSize) {
+        const variableName = `--font-size-${sectionName}`;
+        document.documentElement.style.setProperty(variableName, `${fontSize}px`);
+    }
+
+    // ========== NUEVA FUNCIÓN PARA LIMPIAR ESTILOS EN LÍNEA ==========
+    function cleanInlineStyles() {
+        sections.forEach(function cleanSection(sectionName) {
+            const element = clockElements[sectionName];
+            if (element && element.style.fontSize) {
+                element.style.removeProperty('font-size');
+                if (element.style.length === 0) {
+                    element.removeAttribute('style');
+                }
+            }
+        });
+    }
+
+    // ========== MODIFIED INITIALIZATION ==========
+    function initializeFontManager() {
+        if (isInitialized) return;
+
+        findFontElements();
+
+        const hasElements = Object.keys(clockElements).length > 0;
+        if (!hasElements) {
+            setTimeout(initializeFontManager, 1000); // Reintentar si los elementos no están listos
+            return;
+        }
+
+        loadFontScalesFromStorage();
+        cleanInlineStyles(); // Limpiar estilos antiguos
+        setupFontEventListeners();
+        setupFontResizeObservers();
+        adjustAndApplyFontSizeToAllSections();
+
+        isInitialized = true;
+    }
+
+    function setupFontManager() {
+        initializeFontManager();
+    }
+    
+    function findFontElements() {
+        sections.forEach(function processSectionElements(sectionName) {
+            const section = document.querySelector(`.section-${sectionName}`);
+            if (!section) return;
+
+            const clockContainer = section.querySelector('.tool-content');
+            const clockElement = section.querySelector(`.tool-${sectionName} span`);
+            const decreaseBtn = section.querySelector('.increse-font-zise-left');
+            const increaseBtn = section.querySelector('.increse-font-zise-right');
+            const fontSizeDisplay = section.querySelector('.increse-font-zise-center');
+
+            if (clockContainer && clockElement && decreaseBtn && increaseBtn && fontSizeDisplay) {
+                clockContainers[sectionName] = clockContainer;
+                clockElements[sectionName] = clockElement;
+                decreaseButtons[sectionName] = decreaseBtn;
+                increaseButtons[sectionName] = increaseBtn;
+                fontSizeDisplays[sectionName] = fontSizeDisplay;
+            }
+        });
+    }
+
+    function loadFontScalesFromStorage() {
+        const savedScale = localStorage.getItem(STORAGE_KEY);
+        if (savedScale && !isNaN(parseFloat(savedScale))) {
+            globalScaleFactor = Math.max(0.2, Math.min(3.0, parseFloat(savedScale)));
+        } else {
+            globalScaleFactor = 1.0;
+        }
+    }
+
+    function saveFontScaleToStorage() {
+        localStorage.setItem(STORAGE_KEY, globalScaleFactor.toString());
+    }
+
+    // ========== AUTO-INCREMENT MANAGEMENT ==========
+    function startAutoIncrement(direction, button, sectionName) {
+        stopAutoIncrement();
+
+        autoIncrementState.isActive = true;
+        autoIncrementState.direction = direction;
+        autoIncrementState.currentButton = button;
+        autoIncrementState.currentSection = sectionName;
+
+        button.classList.add('auto-incrementing');
+
+        autoIncrementState.intervalId = setTimeout(function startRepeating() {
+            autoIncrementState.intervalId = setInterval(function performAutoIncrement() {
+                let success = false;
+
+                if (autoIncrementState.direction === 'increase') {
+                    success = increaseFontSizeForSection(autoIncrementState.currentSection);
+                } else if (autoIncrementState.direction === 'decrease') {
+                    success = decreaseFontSizeForSection(autoIncrementState.currentSection);
+                }
+
+                if (!success) {
+                    stopAutoIncrement();
+                }
+            }, autoIncrementState.repeatInterval);
+        }, autoIncrementState.initialDelay);
+    }
+
+    function stopAutoIncrement() {
+        if (autoIncrementState.intervalId) {
+            clearTimeout(autoIncrementState.intervalId);
+            clearInterval(autoIncrementState.intervalId);
+            autoIncrementState.intervalId = null;
+        }
+
+        if (autoIncrementState.currentButton) {
+            autoIncrementState.currentButton.classList.remove('auto-incrementing');
+        }
+
+        autoIncrementState.isActive = false;
+        autoIncrementState.direction = null;
+        autoIncrementState.currentButton = null;
+        autoIncrementState.currentSection = null;
+    }
+
+    // ========== EVENT MANAGEMENT ==========
+    function setupFontEventListeners() {
+        sections.forEach(function setupSectionListeners(sectionName) {
+            if (increaseButtons[sectionName]) {
+                const increaseBtn = increaseButtons[sectionName];
+
+                increaseBtn.addEventListener('click', function handleIncreaseFontSize(e) {
+                    if (!autoIncrementState.isActive) {
+                        increaseFontSizeForSection(sectionName);
+                    }
+                });
+
+                increaseBtn.addEventListener('mousedown', function handleIncreaseMouseDown(e) {
+                    e.preventDefault();
+                    startAutoIncrement('increase', increaseBtn, sectionName);
+                });
+
+                increaseBtn.addEventListener('mouseup', stopAutoIncrement);
+                increaseBtn.addEventListener('mouseleave', stopAutoIncrement);
+                increaseBtn.addEventListener('touchstart', function handleIncreaseTouchStart(e) {
+                    e.preventDefault();
+                    startAutoIncrement('increase', increaseBtn, sectionName);
+                });
+                increaseBtn.addEventListener('touchend', stopAutoIncrement);
+                increaseBtn.addEventListener('touchcancel', stopAutoIncrement);
+            }
+
+            if (decreaseButtons[sectionName]) {
+                const decreaseBtn = decreaseButtons[sectionName];
+
+                decreaseBtn.addEventListener('click', function handleDecreaseFontSize(e) {
+                    if (!autoIncrementState.isActive) {
+                        decreaseFontSizeForSection(sectionName);
+                    }
+
+                });
+
+                decreaseBtn.addEventListener('mousedown', function handleDecreaseMouseDown(e) {
+                    e.preventDefault();
+                    startAutoIncrement('decrease', decreaseBtn, sectionName);
+                });
+
+                decreaseBtn.addEventListener('mouseup', stopAutoIncrement);
+                decreaseBtn.addEventListener('mouseleave', stopAutoIncrement);
+                decreaseBtn.addEventListener('touchstart', function handleDecreaseTouchStart(e) {
+                    e.preventDefault();
+                    startAutoIncrement('decrease', decreaseBtn, sectionName);
+                });
+                decreaseBtn.addEventListener('touchend', stopAutoIncrement);
+                decreaseBtn.addEventListener('touchcancel', stopAutoIncrement);
+            }
+        });
+
+        document.addEventListener('mouseup', function handleGlobalMouseUp() {
+            if (autoIncrementState.isActive) {
+                stopAutoIncrement();
+            }
+        });
+
+        window.addEventListener('blur', function handleWindowBlur() {
+            if (autoIncrementState.isActive) {
+                stopAutoIncrement();
+            }
+        });
+    }
+
+    function setupFontResizeObservers() {
+        sections.forEach(function setupSectionObserver(sectionName) {
+            if (clockContainers[sectionName]) {
+                const observer = new ResizeObserver(function handleContainerResize() {
+                    adjustAndApplyFontSizeToSection(sectionName);
+                });
+                observer.observe(clockContainers[sectionName]);
+                resizeObservers.push(observer);
+            }
+        });
+    }
+
+    // ========== HELPER FUNCTIONS FOR EVEN NUMBERS ==========
+    function roundToEvenNumber(number) {
+        const rounded = Math.round(number);
+        return rounded % 2 === 0 ? rounded : rounded + 1;
+    }
+    
+    function calculateBaseFontSize(containerWidth) {
+        const baseSize = containerWidth / FONT_SIZE_RATIO;
+        return roundToEvenNumber(baseSize);
+    }
+
+    function getCurrentActualFontSize(sectionName) {
+        if (!sectionName || !clockContainers[sectionName]) {
+            return 0;
+        }
+
+        const baseSize = calculateBaseFontSize(clockContainers[sectionName].offsetWidth);
+        const calculatedSize = baseSize * globalScaleFactor;
+        return roundToEvenNumber(calculatedSize);
+    }
+    
+    // ========== MODIFICADO: FONT SIZE LOGIC ==========
+    function checkIfWouldOverflowWithPixelSize(sectionName, targetPixelSize) {
+        const container = clockContainers[sectionName];
+        const element = clockElements[sectionName];
+
+        if (!container || !element) return true;
+        
+        const variableName = `--font-size-${sectionName}`;
+        const originalValue = getComputedStyle(document.documentElement).getPropertyValue(variableName);
+
+        // Actualiza temporalmente la variable CSS
+        document.documentElement.style.setProperty(variableName, `${targetPixelSize}px`);
+        
+        // Forza un reflow para obtener el nuevo tamaño
+        element.offsetHeight; 
+        
+        const overflows = element.scrollWidth > container.offsetWidth;
+        
+        // Restaura el valor original
+        document.documentElement.style.setProperty(variableName, originalValue);
+        
+        return overflows;
+    }
+    
+    function adjustAndApplyFontSizeToSection(sectionName) {
+        const container = clockContainers[sectionName];
+        const display = fontSizeDisplays[sectionName];
+
+        if (!container || !display) return;
+
+        const baseSize = calculateBaseFontSize(container.offsetWidth);
+        const calculatedSize = baseSize * globalScaleFactor;
+        const finalSize = roundToEvenNumber(calculatedSize);
+
+        // En lugar de style.fontSize, actualiza la variable CSS
+        updateCSSVariable(sectionName, finalSize);
+        
+        display.textContent = finalSize + ' px';
+
+        updateFontButtonStatesForSection(sectionName);
+    }
+
+    function adjustAndApplyFontSizeToAllSections() {
+        sections.forEach(function adjustEachSection(sectionName) {
+            if (clockContainers[sectionName]) {
+                adjustAndApplyFontSizeToSection(sectionName);
+            }
+        });
+    }
+
+    function updateFontButtonStatesForSection(sectionName) {
+        const currentSize = getCurrentActualFontSize(sectionName);
+        const canDecrease = currentSize > 8;
+        const canIncrease = !checkIfWouldOverflowWithPixelSize(sectionName, currentSize + PIXEL_INCREMENT);
+
+        const decreaseBtn = decreaseButtons[sectionName];
+        const increaseBtn = increaseButtons[sectionName];
+
+        if (decreaseBtn) {
+            if (canDecrease) {
+                decreaseBtn.classList.remove('disabled-interactive');
+            } else {
+                decreaseBtn.classList.add('disabled-interactive');
+            }
+        }
+
+        if (increaseBtn) {
+            if (canIncrease) {
+                increaseBtn.classList.remove('disabled-interactive');
+            } else {
+                increaseBtn.classList.add('disabled-interactive');
+            }
+        }
+    }
+
+    // ========== PUBLIC FUNCTIONS ==========
+    function increaseFontSizeForSection(sectionName) {
+        const currentSize = getCurrentActualFontSize(sectionName);
+        const targetSize = currentSize + PIXEL_INCREMENT;
+
+        const wouldOverflow = sections.some(function (section) {
+            return clockContainers[section] &&
+                checkIfWouldOverflowWithPixelSize(section, targetSize);
+        });
+
+        if (!wouldOverflow) {
+            const container = clockContainers[sectionName];
+            if (container) {
+                const baseSize = calculateBaseFontSize(container.offsetWidth);
+                globalScaleFactor = targetSize / baseSize;
+                adjustAndApplyFontSizeToAllSections();
+                saveFontScaleToStorage();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function decreaseFontSizeForSection(sectionName) {
+        const currentSize = getCurrentActualFontSize(sectionName);
+        const targetSize = Math.max(8, currentSize - PIXEL_INCREMENT);
+
+        if (targetSize >= 8) {
+            const container = clockContainers[sectionName];
+            if (container) {
+                const baseSize = calculateBaseFontSize(container.offsetWidth);
+                globalScaleFactor = targetSize / baseSize;
+                adjustAndApplyFontSizeToAllSections();
+                saveFontScaleToStorage();
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    function increaseFontSize() {
+        const firstSection = Object.keys(clockElements)[0];
+        if (firstSection) {
+            return increaseFontSizeForSection(firstSection);
+        }
+        return false;
+    }
+
+    function decreaseFontSize() {
+        const firstSection = Object.keys(clockElements)[0];
+        if (firstSection) {
+            return decreaseFontSizeForSection(firstSection);
+        }
+        return false;
+    }
+
+    function setFontScaleForSection(sectionName, scale) {
+        if (typeof scale !== 'number' || scale < 0.2) return false;
+
+        const wouldOverflow = sections.some(function (section) {
+            const container = clockContainers[section];
+            if (!container) return false;
+
+            const baseSize = calculateBaseFontSize(container.offsetWidth);
+            const testSize = roundToEvenNumber(baseSize * scale);
+            return checkIfWouldOverflowWithPixelSize(section, testSize);
+        });
+
+        if (!wouldOverflow) {
+            globalScaleFactor = scale;
+            adjustAndApplyFontSizeToAllSections();
+            saveFontScaleToStorage();
+            return true;
+        }
+        return false;
+    }
+    
+    function resetFontSizeForAllSections() {
+        globalScaleFactor = 1.0;
+        adjustAndApplyFontSizeToAllSections();
+        saveFontScaleToStorage();
+    }
+
+    function getCurrentFontScale() {
+        return globalScaleFactor;
+    }
+
+    function getCurrentActualFontSizePublic(sectionName) {
+        if (!sectionName) {
+            const firstSection = Object.keys(clockElements)[0];
+            if (firstSection) {
+                return getCurrentActualFontSize(firstSection);
+            }
+            return 0;
+        }
+        return getCurrentActualFontSize(sectionName);
+    }
+
+    function getFontManagerStatus() {
+        return {
+            initialized: isInitialized,
+            globalScaleFactor: globalScaleFactor,
+            pixelIncrement: PIXEL_INCREMENT,
+            autoIncrement: {
+                isActive: autoIncrementState.isActive,
+                direction: autoIncrementState.direction,
+                currentSection: autoIncrementState.currentSection,
+                initialDelay: autoIncrementState.initialDelay,
+                repeatInterval: autoIncrementState.repeatInterval
+            },
+            elements: {
+                containers: Object.keys(clockContainers),
+                elements: Object.keys(clockElements),
+                decreaseButtons: Object.keys(decreaseButtons),
+                increaseButtons: Object.keys(increaseButtons),
+                displays: Object.keys(fontSizeDisplays)
+            },
+            observers: resizeObservers.length
+        };
+    }
+
+    // ========== CLEANUP ==========
+    function destroyFontManager() {
+        stopAutoIncrement();
+        resizeObservers.forEach(function disconnectObserver(observer) {
+            observer.disconnect();
+        });
+        resizeObservers = [];
+        isInitialized = false;
+    }
+
+    // ========== PUBLIC API ==========
+    const publicFontAPI = {
+        increaseFontSizeForSection: increaseFontSizeForSection,
+        decreaseFontSizeForSection: decreaseFontSizeForSection,
+        setFontScaleForSection: setFontScaleForSection,
+        resetFontSizeForAllSections: resetFontSizeForAllSections,
+        getCurrentFontScaleForSection: getCurrentFontScale,
+        getCurrentActualSizeForSection: getCurrentActualFontSizePublic,
+
+        increaseFontSize: increaseFontSize,
+        decreaseFontSize: decreaseFontSize,
+        resetFontSize: resetFontSizeForAllSections,
+        getCurrentScale: getCurrentFontScale,
+        getCurrentActualSize: getCurrentActualFontSizePublic,
+
+        adjustAndApplyFontSizeToAll: adjustAndApplyFontSizeToAllSections,
+        adjustAndApplyFontSizeToSection: adjustAndApplyFontSizeToSection,
+        updateAllButtonStates: function () {
+            sections.forEach(function updateSection(sectionName) {
+                if (clockContainers[sectionName]) {
+                    updateFontButtonStatesForSection(sectionName);
+                }
+            });
+        },
+
+        startAutoIncrement: startAutoIncrement,
+        stopAutoIncrement: stopAutoIncrement,
+        setAutoIncrementSettings: function (initialDelay, repeatInterval) {
+            if (typeof initialDelay === 'number' && initialDelay > 0) {
+                autoIncrementState.initialDelay = initialDelay;
+            }
+            if (typeof repeatInterval === 'number' && repeatInterval > 0) {
+                autoIncrementState.repeatInterval = repeatInterval;
+            }
+        },
+
+        getStatus: getFontManagerStatus,
+        destroy: destroyFontManager,
+
+        debugInfo: function () {
+            console.group('🔤 Font Manager Debug');
+            console.log('Status:', getFontManagerStatus());
+            console.log('Available sections:', sections);
+            console.log('Found containers:', Object.keys(clockContainers));
+            console.log('Found elements:', Object.keys(clockElements));
+            console.groupEnd();
+        }
+    };
+
+    // ========== GLOBAL EXPOSURE ==========
+    window.centralizedFontManager = publicFontAPI;
+
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = publicFontAPI;
+    }
+
+    // ========== INITIALIZATION ==========
+    initializeFontManager();
+}
+
+
+// ========== TEXT STYLE MANAGER (BOLD & ITALIC) ==========
+
+const textStyleState = {
+    isBold: false,
+    isItalic: false,
+    sections: ['alarm', 'timer', 'stopwatch', 'worldClock'],
+    boldButtonSelector: '[data-action="toggleBoldMode"]',
+    italicButtonSelector: '[data-action="toggleItalicMode"]',
+    toolDivSelectors: {
+        'alarm': '.tool-alarm',
+        'timer': '.tool-timer',
+        'stopwatch': '.tool-stopwatch',
+        'worldClock': '.tool-worldClock'
+    },
+    localStorageKeys: {
+        bold: 'textStyle_isBold',
+        italic: 'textStyle_isItalic'
+    },
+    isInitialized: false,
+    _attachedListeners: new WeakSet()
+};
+
+function initializeTextStyleManager() {
+    if (textStyleState.isInitialized) return;
+
+    loadTextStylesFromStorage();
+    attachTextStyleEventListeners();
+    applyTextStylesToAllSections();
+    updateTextButtonStates();
+
+    document.addEventListener('sectionChanged', handleSectionChangeForTextStyles);
+
+    const observer = new MutationObserver((mutationsList) => {
+        let relevantChange = false;
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList' && (
+                mutation.addedNodes.length > 0 &&
+                Array.from(mutation.addedNodes).some(node => node.nodeType === Node.ELEMENT_NODE && (
+                    node.matches(textStyleState.boldButtonSelector) ||
+                    node.matches(textStyleState.italicButtonSelector) ||
+                    node.matches('.section-alarm') || node.matches('.section-timer') ||
+                    node.matches('.section-stopwatch') || node.matches('.section-worldClock') ||
+                    node.querySelector(textStyleState.boldButtonSelector) ||
+                    node.querySelector(textStyleState.italicButtonSelector) ||
+                    node.querySelector('.section-alarm') || node.querySelector('.section-timer') ||
+                    node.querySelector('.section-stopwatch') || node.querySelector('.section-worldClock')
+                ))
+            )) {
+                relevantChange = true;
+                break;
+            }
+        }
+        if (relevantChange) {
+            clearTimeout(textStyleState._refreshTimeout);
+            textStyleState._refreshTimeout = setTimeout(() => {
+                attachTextStyleEventListeners();
+                applyTextStylesToAllSections();
+                updateTextButtonStates();
+            }, 50);
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+
+    textStyleState.isInitialized = true;
+
+}
+
+function loadTextStylesFromStorage() {
+    textStyleState.isBold = localStorage.getItem(textStyleState.localStorageKeys.bold) === 'true';
+    textStyleState.isItalic = localStorage.getItem(textStyleState.localStorageKeys.italic) === 'true';
+}
+
+function saveTextStylesToStorage() {
+    localStorage.setItem(textStyleState.localStorageKeys.bold, textStyleState.isBold);
+    localStorage.setItem(textStyleState.localStorageKeys.italic, textStyleState.isItalic);
+}
+
+function attachTextStyleEventListeners() {
+    const boldButtons = document.querySelectorAll(textStyleState.boldButtonSelector);
+    const italicButtons = document.querySelectorAll(textStyleState.italicButtonSelector);
+
+    boldButtons.forEach(button => {
+        if (!textStyleState._attachedListeners.has(button)) {
+            button.addEventListener('click', toggleBoldMode);
+            textStyleState._attachedListeners.add(button);
+        }
+    });
+
+    italicButtons.forEach(button => {
+        if (!textStyleState._attachedListeners.has(button)) {
+            button.addEventListener('click', toggleItalicMode);
+            textStyleState._attachedListeners.add(button);
+        }
+    });
+}
+
+function handleSectionChangeForTextStyles() {
+    applyTextStylesToAllSections();
+    updateTextButtonStates();
+}
+
+function toggleBoldMode(event) {
+    event.preventDefault();
+    textStyleState.isBold = !textStyleState.isBold;
+    applyTextStylesToAllSections();
+    updateTextButtonStates();
+    saveTextStylesToStorage();
+    dispatchTextStyleChangeEvent();
+    console.log('Bold mode toggled:', textStyleState.isBold);
+}
+
+function toggleItalicMode(event) {
+    event.preventDefault();
+    textStyleState.isItalic = !textStyleState.isItalic;
+    applyTextStylesToAllSections();
+    updateTextButtonStates();
+    saveTextStylesToStorage();
+    dispatchTextStyleChangeEvent();
+    console.log('Italic mode toggled:', textStyleState.isItalic);
+}
+
+function applyTextStylesToAllSections() {
+    textStyleState.sections.forEach(sectionName => {
+        const toolDiv = document.querySelector(textStyleState.toolDivSelectors[sectionName]);
+        if (toolDiv) {
+            if (textStyleState.isBold) {
+                toolDiv.classList.add('bold-mode');
+            } else {
+                toolDiv.classList.remove('bold-mode');
+            }
+
+            if (textStyleState.isItalic) {
+                toolDiv.classList.add('italic-mode');
+            } else {
+                toolDiv.classList.remove('italic-mode');
+            }
+        }
+    });
+}
+
+function updateTextButtonStates() {
+    const boldButtons = document.querySelectorAll(textStyleState.boldButtonSelector);
+    const italicButtons = document.querySelectorAll(textStyleState.italicButtonSelector);
+
+    boldButtons.forEach(button => {
+        if (textStyleState.isBold) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    });
+
+    italicButtons.forEach(button => {
+        if (textStyleState.isItalic) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    });
+}
+
+function dispatchTextStyleChangeEvent() {
+    const event = new CustomEvent('textStyleChanged', {
+        detail: {
+            isBold: textStyleState.isBold,
+            isItalic: textStyleState.isItalic
+        }
+    });
+    document.dispatchEvent(event);
+}
+
+// ========== FULLSCREEN MANAGER ==========
+
+function initializeFullScreenManager() {
+    // Check for Fullscreen API support
+    if (!document.documentElement.requestFullscreen) {
+        console.warn('Fullscreen API is not supported in this browser.');
+        // Hide all fullscreen buttons if the API is not supported
+        document.querySelectorAll('[data-action="toggleFullScreen"]').forEach(button => {
+            button.style.display = 'none';
+        });
+        return;
+    }
+
+    // Main event listener for clicks
+    document.addEventListener('click', function(event) {
+        const fullScreenButton = event.target.closest('[data-action="toggleFullScreen"]');
+        if (!fullScreenButton) return;
+
+        event.preventDefault();
+
+        const section = fullScreenButton.closest('.section-alarm, .section-timer, .section-stopwatch, .section-worldClock');
+        if (!section) {
+            console.error('Fullscreen button is not inside a recognized section.');
+            return;
+        }
+
+        const sectionCenter = section.querySelector('.section-center');
+        if (!sectionCenter) {
+            console.error('.section-center not found within the section.');
+            return;
+        }
+
+        toggleFullScreen(sectionCenter);
+    });
+
+    // Function to toggle fullscreen state
+    function toggleFullScreen(element) {
+        if (!document.fullscreenElement) {
+            element.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+
+    // Listen for changes in fullscreen state to update icons and log status
+    document.addEventListener('fullscreenchange', () => {
+        const fullscreenElement = document.fullscreenElement;
+        const isInFullScreen = !!fullscreenElement;
+        console.log('Fullscreen mode toggled:', isInFullScreen);
+
+        const allButtons = document.querySelectorAll('[data-action="toggleFullScreen"]');
+
+        allButtons.forEach(button => {
+            const icon = button.querySelector('.material-symbols-rounded');
+            if (!icon) return;
+
+            // Check if the button's own section is the one in fullscreen
+            const section = button.closest('.section-alarm, .section-timer, .section-stopwatch, .section-worldClock');
+            const sectionCenter = section ? section.querySelector('.section-center') : null;
+
+            if (fullscreenElement && sectionCenter === fullscreenElement) {
+                icon.textContent = 'fullscreen_exit';
+            } else {
+                icon.textContent = 'fullscreen';
+            }
+        });
+    });
+}
+
+
+// ========== EXPORTS ==========
+export {
+    initializeCategorySliderService,
+    initializeCentralizedFontManager,
+    initializeTextStyleManager,
+    initializeFullScreenManager
+};

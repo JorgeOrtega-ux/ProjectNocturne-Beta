@@ -1,0 +1,1155 @@
+/* ====================================== */
+/* ============= IMPORTS ================ */
+/* ====================================== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* ====================================== */
+/* ===== GLOBAL RESET & BASE STYLES ===== */
+/* ====================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: #f5f5fa;
+}
+
+/* ====================================== */
+/* ============ TYPOGRAPHY ============== */
+/* ====================================== */
+.body-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    letter-spacing: 0.0178571429em;
+    color: #000000;
+}
+
+/* GRADIENT TEXT STYLES */
+.tool-alarm span,
+.tool-timer span,
+.tool-stopwatch span,
+.tool-worldClock span {
+    color: unset;
+    background-image: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    -webkit-text-fill-color: unset;
+}
+
+:root {
+    /* Variables globales para font-size de cada sección */
+    --font-size-alarm: 100px;
+    --font-size-timer: 100px;
+    --font-size-stopwatch: 100px;
+    --font-size-worldClock: 100px;
+}
+
+/* Aplicar las variables CSS a cada sección específica */
+.tool-alarm span {
+    font-size: var(--font-size-alarm) !important;
+    /* Remover cualquier font-size inline */
+}
+
+.tool-timer span {
+    font-size: var(--font-size-timer) !important;
+}
+
+.tool-stopwatch span {
+    font-size: var(--font-size-stopwatch) !important;
+}
+
+.tool-worldClock span {
+    font-size: var(--font-size-worldClock) !important;
+}
+
+/* ====================================== */
+/* ========== PAGE WRAPPER ============= */
+/* ====================================== */
+.page-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+/* ====================================== */
+/* ========== MAIN CONTENT ============== */
+/* ====================================== */
+.main-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    gap: 8px;
+    background-color: #f5f5fa;
+}
+
+/* ====================================== */
+/* ============= SIDEBAR ================ */
+/* ====================================== */
+.sidebar-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: 100%;
+}
+
+/* Desktop Sidebar */
+.sidebar-wrapper.desktop-sidebar .sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+    height: 100%;
+    padding: 8px;
+    gap: 8px;
+    background-color: #ffffff;
+    border: 1px solid #00000020;
+    border-radius: 12px;
+}
+
+/* Mobile Sidebar */
+.sidebar-wrapper.mobile-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.sidebar-wrapper.mobile-sidebar .sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+    height: 100%;
+    padding: 8px;
+    gap: 8px;
+    background-color: #ffffff;
+    border-right: 1px solid #00000020;
+    border-bottom-left-radius: 12px;
+}
+
+/* Sidebar Components */
+.sidebar-top,
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+}
+
+.sidebar-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Sidebar Buttons */
+.sidebar-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: 1px solid #00000020;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sidebar-button:hover {
+    background-color: #f5f5fa;
+}
+
+.sidebar-button.active {
+    color: #ffffff;
+    background-color: #000000;
+    border-color: #000000;
+}
+
+/* Sidebar Separator */
+.sidebar .separator {
+    width: 35px;
+    height: 1px;
+    background-color: #00000020;
+    border-radius: 50px;
+}
+
+/* ====================================== */
+/* ========== GENERAL CONTENT =========== */
+/* ====================================== */
+.general-content {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    background-color: #ffffff;
+    border: 1px solid #00000020;
+    border-radius: 12px;
+}
+
+/* ====================================== */
+/* ========== CONTENT TOP =============== */
+/* ====================================== */
+.general-content-top {
+    z-index: 999;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #00000020;
+}
+
+/* ====================================== */
+/* =============== HEADER =============== */
+/* ====================================== */
+.header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 8px;
+    gap: 8px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+/* Header Sections */
+.header-left {
+    display: flex;
+    flex: 0 0 auto;
+}
+
+.header-right {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 0 0 auto;
+}
+
+/* Header Items */
+.header-item {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: 100%;
+    gap: 8px;
+}
+
+/* Header Buttons */
+.header-button {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: 1px solid #00000020;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+.header-button:hover {
+    background-color: #f5f5fa;
+}
+
+.header-button.active {
+    background-color: #f5f5fa;
+}
+
+.header-button[data-module="toggleSidebarMovile"] {
+    display: none;
+}
+
+/* ====================================== */
+/* ======== CONTENT SCROLLEABLE ======== */
+/* ====================================== */
+.general-content-scrolleable {
+    position: relative;
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.general-content-bottom {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    height: 100%;
+}
+
+.scrollable-content {
+    width: 100%;
+    height: 100%;
+}
+
+/* ====================================== */
+/* =========== SECTIONS ================= */
+/* ====================================== */
+.section-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.section-everything,
+.section-alarm,
+.section-timer,
+.section-stopwatch,
+.section-worldClock {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.section-top {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 8px;
+    gap: 8px;
+    border-bottom: 1px solid #00000020;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.section-top .separator {
+    flex: 0 0 auto;
+    width: 1px;
+    height: 35px;
+    background-color: #00000020;
+    border-radius: 50px;
+}
+
+.section-center {
+    width: 100%;
+    height: auto;
+    padding: 82px 26px;
+    border-bottom: 1px solid #00000020;
+}
+
+.section-bottom {
+    flex: 1;
+    padding: 8px;
+}
+
+/* ====================================== */
+/* ========= MODULES & OVERLAYS ========= */
+/* ====================================== */
+.module-control-center {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 5px;
+    z-index: 999;
+    width: 320px;
+    height: auto;
+}
+
+.menu-control-center {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 8px;
+    color: #000000;
+    background-color: #ffffff;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    filter: drop-shadow(0 4px 12px #00000020);
+}
+
+/* Module Overlays (Palette, Alarm, Timer, World Clock) */
+.module-overlay {
+    position: absolute;
+    z-index: 999;
+    width: 360px;
+    height: 100%;
+    padding: 8px;
+}
+
+.menu-alarm,
+.menu-timer,
+.menu-worldClock,
+.menu-paletteColors {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    filter: drop-shadow(0 4px 12px #00000020);
+}
+
+/* Menu section specific styles (applies to control center & overlays) */
+.menu-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.menu-section-top {
+    padding: 8px;
+    border-bottom: 1px solid #00000020;
+}
+
+.shadow {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.menu-section-center {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding: 8px;
+    gap: 8px;
+    overflow: hidden;
+}
+
+.menu-section-bottom {
+    width: 100%;
+    height: auto;
+    padding: 8px;
+    border-top: 1px solid #00000020;
+}
+
+/* ====================================== */
+/* =========== MENU LISTS (GENERAL) ===== */
+/* ====================================== */
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    gap: 4px;
+    overflow: auto;
+    user-select: none;
+}
+
+.menu-link {
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 40px;
+    color: #000000;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.menu-link:hover {
+    background-color: #f5f5fa;
+}
+
+.menu-link.active {
+    background-color: #f5f5fa;
+}
+
+.menu-link-icon {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 100%;
+}
+
+.menu-link-text {
+    display: block;
+    flex: 1 1 auto;
+    align-self: center;
+    text-align: start;
+    overflow: hidden;
+}
+
+.menu-link-text span {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ====================================== */
+/* =========== MENU CONTENT (PALETTE) === */
+/* ====================================== */
+.menu-content-wrapper.active {
+    display: flex;
+}
+
+.menu-content-wrapper.disabled {
+    display: none;
+}
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+}
+
+.menu-content-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 45px;
+    padding: 12px;
+    gap: 8px;
+    font-weight: 500;
+    background-color: #ffffff;
+    border: 1px solid #00000020;
+    border-radius: 8px;
+}
+
+.menu-content-general {
+    width: auto;
+    height: auto;
+}
+
+.color-wrapper {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    width: 100%;
+}
+
+.color-content {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid #00000020;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.color {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.color::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+/* Interactive Color States */
+.color-content:hover .color {
+    transform: scale(0.9);
+}
+
+.color-content:not(.active):hover .color::before {
+    border-color: #00000020;
+    opacity: 0.5;
+    transform: scale(1);
+}
+
+.color-content.active .color {
+    transform: scale(0.9);
+}
+
+.color-content.active .color::before {
+    border-color: #000000;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Color Definitions */
+.black-color { background: #000000; }
+.darkgray-color { background: #525252; }
+.mediumgray-color { background: #757575; }
+.lightgray-color { background: #a8a8a8; }
+.verylightgray-color { background: #dbdbdb; }
+.white-color { background: #ffffff; border: 1px solid #00000020; }
+.brightred-color { background: #ff2f2f; }
+.coralred-color { background: #ff5555; }
+.pink-color { background: #ff64c2; }
+.lavenderpink-color { background: #ca6ae4; }
+.purple-color { background: #8a50ff; }
+.violet-color { background: #5c15e9; }
+.darkturquoise-color { background: #0095b0; }
+.aquablue-color { background: #0abedd; }
+.turquoiseblue-color { background: #5adfe4; }
+.skyblue-color { background: #36b4ff; }
+.royalblue-color { background: #506fff; }
+.cobaltblue-color { background: #0048ab; }
+.green-color { background: #00bd61; }
+.grassgreen-color { background: #7cd755; }
+.limegreen-color { background: #bfff70; }
+.yellow-color { background: #ffdc57; }
+.peach-color { background: #ffb366; }
+.orange-color { background: #ff8f4b; }
+
+/* ====================================== */
+/* ========= AUTO COLOR STYLES ========== */
+/* ====================================== */
+.auto-color {
+    position: relative;
+    background-color: #000000;
+}
+
+.auto-color span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Color validation warning styles */
+.color-content.invalid-for-theme {
+    position: relative;
+    opacity: 0.5;
+}
+
+.color-content.invalid-for-theme .auto-color {
+    opacity: 1;
+}
+
+.color-content.invalid-for-theme .auto-color::before {
+    display: none;
+}
+
+/* Gradient color previews */
+.color.gradient-preview {
+    background-color: transparent;
+    background-size: 150% 100%;
+    background-position: center;
+    border: 1px solid #00000020;
+}
+
+.menu-content-scrolleable {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+/* ====================================== */
+/* ============== SEARCH ================ */
+/* ====================================== */
+.search-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 40px;
+    border: 1px solid #00000020;
+    border-radius: 8px;
+}
+
+.search-content-icon {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 100%;
+}
+
+.search-content-text {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.search-content-text > input {
+    width: 100%;
+    height: 90%;
+    color: #000000;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ====================================== */
+/* ========== TOOL OPTIONS ============== */
+/* ====================================== */
+.tool-options-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.tool-options-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.tool-options-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: max-content;
+    min-width: auto;
+    height: auto;
+    gap: 8px;
+    user-select: none;
+}
+
+.tool-options-content::-webkit-scrollbar {
+    height: 8px;
+}
+
+.tool-options-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tool-options-content::-webkit-scrollbar-thumb {
+    background: #00000080;
+    border-radius: 4px;
+}
+
+.tool-options-content::-webkit-scrollbar-thumb:hover {
+    background: #000000;
+}
+
+.tool-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.increse-font-zise {
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: max-content;
+    height: 40px;
+    border: 1px solid #00000020;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.increse-font-zise-left,
+.increse-font-zise-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: 100%;
+    padding: 0 4px;
+    color: #000000;
+    cursor: pointer;
+}
+
+.increse-font-zise-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 8px;
+    color: #000000;
+    white-space: nowrap;
+}
+
+.increse-font-zise-left:hover,
+.increse-font-zise-right:hover {
+    background-color: #f5f5fa;
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    transform: translateY(-50%);
+    background: #ffffff;
+    border: 1px solid #00000020;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.scroll-btn:hover {
+    background-color: #f5f5fa;
+}
+
+.scroll-btn-left {
+    left: 3px;
+}
+
+.scroll-btn-right {
+    right: 3px;
+}
+
+.tool-alarm,
+.tool-timer,
+.tool-stopwatch,
+.tool-worldClock {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ====================================== */
+/* ============ DRAG HANDLE ============= */
+/* ====================================== */
+.pill-container {
+    display: none;
+    justify-content: center;
+    width: 100%;
+    padding: 8px 0;
+}
+
+.drag-handle {
+    position: relative;
+    display: flex;
+    width: 52px;
+    height: 4px;
+    background-color: #f5f5fa;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+/* ====================================== */
+/* ============== TOOLTIP =============== */
+/* ====================================== */
+.tooltip {
+    position: relative;
+    z-index: 999;
+    display: none;
+    box-sizing: border-box;
+    width: auto;
+    min-width: 100px;
+    max-width: 300px;
+    padding: 4px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.0178571429em;
+    text-align: center;
+    color: #ffffff;
+    background-color: #252627;
+    border: 1px solid #252627;
+    border-radius: 8px;
+}
+
+/* Tooltip Arrows */
+.tooltip::before {
+    content: "";
+    position: absolute;
+    background-color: #252627;
+    border: 1px solid #252627;
+}
+
+.tooltip[data-popper-placement^="bottom"]::before {
+    top: -6px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translateX(-50%) rotate(45deg);
+    border-bottom: none;
+    border-right: none;
+    border-radius: 2px 0 0 0;
+}
+
+.tooltip[data-popper-placement^="top"]::before {
+    bottom: -6px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translateX(-50%) rotate(45deg);
+    border-top: none;
+    border-left: none;
+    border-radius: 0 0 2px 0;
+}
+
+.tooltip[data-popper-placement^="right"]::before {
+    top: 50%;
+    left: -6px;
+    width: 10px;
+    height: 10px;
+    transform: translateY(-50%) rotate(45deg);
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 2px;
+}
+
+.tooltip[data-popper-placement^="left"]::before {
+    top: 50%;
+    right: -6px;
+    width: 10px;
+    height: 10px;
+    transform: translateY(-50%) rotate(45deg);
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 2px 0 0;
+}
+
+/* ====================================== */
+/* ============ ANIMATIONS ============== */
+/* ====================================== */
+.menu-link-icon .material-symbols-rounded.spinning {
+    color: #000000;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.slide-out-mobile {
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+}
+
+/* ====================================== */
+/* ============== STATES ================ */
+/* ====================================== */
+.active {
+    display: flex;
+}
+
+.disabled {
+    display: none;
+}
+
+.preview-active {
+    background-color: #f5f5fa;
+    opacity: 0.5;
+}
+
+.disabled-interactive {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ====================================== */
+/* ============= UTILITIES ============== */
+/* ====================================== */
+.overflow-y {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: none;
+    scrollbar-width: thin;
+    scrollbar-color: #00000080 transparent;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+.overflow-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior: none;
+    scrollbar-width: thin;
+    scrollbar-color: #00000080 transparent;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* ====================================== */
+/* ========== MEDIA QUERIES ============ */
+/* ====================================== */
+@media (min-width: 768px) {
+    .sidebar-wrapper.mobile-sidebar .sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar-wrapper.desktop-sidebar {
+        display: none;
+    }
+    .header-button[data-module="toggleSidebarMovile"] {
+        display: flex;
+    }
+}
+
+@media (max-width: 468px) {
+    .module-control-center {
+        position: fixed;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        align-items: flex-end;
+        width: 100%;
+        height: 100%;
+        background-color: #00000080;
+    }
+    .menu-control-center {
+        padding-top: 0;
+        border-bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .pill-container {
+        display: flex;
+    }
+    .module-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        align-items: flex-end;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        background-color: #00000080;
+    }
+    .menu-paletteColors,
+    .menu-alarm,
+    .menu-timer,
+    .menu-worldClock {
+        height: auto;
+        max-height: 85%;
+        padding-top: 0;
+        border-bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+/* ====================================== */
+/* ========= COLLAPSIBLE SECTIONS ======= */
+/* ====================================== */
+.menu-content-header-primary {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+}
+
+.menu-content-header-secondary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: 100%;
+}
+
+.collapse-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: #000000;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.collapse-btn:hover {
+    background-color: #f5f5fa;
+}
+
+.collapse-btn .expand-icon {
+    transition: transform 0.3s ease;
+}
+
+.menu-content-general.collapsed {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.menu-content-general.expanded {
+    max-height: none;
+    opacity: 1;
+}
+
+.menu-content-general {
+    width: auto;
+    height: auto;
+    padding-top: 8px;
+    padding-bottom: 0;
+}
+
+.menu-content-wrapper {
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ====================================== */
+/* ========= TEXT STYLES ================ */
+/* ====================================== */
+.bold-mode {
+    font-weight: bold;
+}
+
+.italic-mode {
+    font-style: italic;
+}
