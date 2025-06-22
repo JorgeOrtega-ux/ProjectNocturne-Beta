@@ -22,7 +22,6 @@
         }
         updateLocalTime();
         clockInterval = setInterval(updateLocalTime, 1000);
-        console.log('⏰ Alarm Clock Initialized Instantly.');
     }
     
     if (document.readyState === 'loading') {

@@ -12,6 +12,12 @@ const COLOR_SYSTEM_CONFIG = {
     activeColorSectionKey: 'active-color-last-section',
     recentColorsKey: 'recent-text-colors',
     maxRecentColors: 12,
+    textSelectors: [
+        '.tool-alarm span',
+        '.tool-timer span',
+        '.tool-stopwatch span',
+        '.tool-worldClock span',
+    ],
     gradientColors: [
         { name: 'midnight_express', hex: 'linear-gradient(90deg, #182848 0%, #4b6cb7 100%)' },
         { name: 'deep_amethyst', hex: 'linear-gradient(90deg, #3F2B96 0%, #A8C0FF 100%)' },
@@ -31,30 +37,6 @@ const COLOR_SYSTEM_CONFIG = {
 };
 
 const PALETTE_PREMIUM_FEATURES = true;
-
-// MODIFIED: Configuration now includes the container selector for applying state classes.
-const TEXT_ELEMENT_CONFIG = {
-    alarm: {
-        containerSelector: '.tool-alarm',
-        selector: '.tool-alarm span',
-        variable: '--text-color-alarm'
-    },
-    timer: {
-        containerSelector: '.tool-timer',
-        selector: '.tool-timer span',
-        variable: '--text-color-timer'
-    },
-    stopwatch: {
-        containerSelector: '.tool-stopwatch',
-        selector: '.tool-stopwatch span',
-        variable: '--text-color-stopwatch'
-    },
-    worldClock: {
-        containerSelector: '.tool-worldClock',
-        selector: '.tool-worldClock span',
-        variable: '--text-color-worldClock'
-    }
-};
 
 
 // ========== CENTRALIZED STATE ==========
@@ -351,6 +333,9 @@ function updateSingleColorTooltip(element) {
     const colorName = element.getAttribute('data-color');
     const colorSection = element.getAttribute('data-section');
     const baseTooltipKey = element.getAttribute('data-translate');
+    
+    // Determine the correct category. 'auto' is a UI concept, not just a color.
+    const tooltipCategory = (baseTooltipKey === 'auto') ? 'tooltips' : 'colors';
 
     let tooltipText = '';
 
@@ -362,7 +347,7 @@ function updateSingleColorTooltip(element) {
             const hex2 = matches[1];
             tooltipText = `${getTranslation('linear_gradient_90deg', 'tooltips') || 'Linear Gradient 90°'}${getTranslation('color_separator', 'tooltips') || ': '}${hex1}, ${hex2}`;
         } else {
-            tooltipText = getTranslation(baseTooltipKey, 'tooltips');
+            tooltipText = getTranslation(baseTooltipKey, tooltipCategory);
         }
     } else if (colorHex === 'auto') {
         tooltipText = getTranslation('auto', 'tooltips');
@@ -370,7 +355,7 @@ function updateSingleColorTooltip(element) {
         const knownColorKey = getTranslatedColorNameFromHex(colorHex);
         
         if (knownColorKey) {
-            tooltipText = getTranslation(knownColorKey, 'tooltips');
+            tooltipText = getTranslation(knownColorKey, 'colors');
         } else {
             const isSearchGeneratedName = (colorName && (
                 colorName.includes('Lighter') ||
@@ -387,7 +372,7 @@ function updateSingleColorTooltip(element) {
             if (colorSection === 'search' || (colorSection === 'recent' && isSearchGeneratedName)) {
                 tooltipText = colorHex;
             } else {
-                const translatedName = getTranslation(baseTooltipKey, 'tooltips');
+                const translatedName = getTranslation(baseTooltipKey, 'colors');
                 const isPredefinedColorName = (translatedName !== baseTooltipKey);
 
                 if (isPredefinedColorName) {
@@ -650,7 +635,7 @@ function createRecentColorElement(recentColor) {
         colorContent.setAttribute('data-translate', recentColor.hex);
     }
     
-    colorContent.setAttribute('data-translate-category', 'tooltips');
+    colorContent.setAttribute('data-translate-category', 'colors');
     colorContent.setAttribute('data-translate-target', 'tooltip');
 
     updateSingleColorTooltip(colorContent);
@@ -693,18 +678,10 @@ function setupRecentColorEvents() {
             e.stopPropagation();
             handleColorClick(element, { hex: colorHex, name: colorName, section: colorSection });
         };
-
-        const mouseEnterHandler = () => {
-            if (!element.classList.contains('active')) {
-                element.style.transform = 'scale(1.05)';
-            }
-        };
-
-        const mouseLeaveHandler = () => {
-            if (!element.classList.contains('active')) {
-                element.style.transform = 'scale(1)';
-            }
-        };
+        
+        // Let CSS handle hover effects
+        const mouseEnterHandler = () => {};
+        const mouseLeaveHandler = () => {};
 
         element.addEventListener('click', clickHandler);
         element.addEventListener('mouseenter', mouseEnterHandler);
@@ -737,8 +714,10 @@ function setupColorElements() {
                 element: element
             });
 
+            const tooltipCategory = (colorName === 'auto') ? 'tooltips' : 'colors';
+
             element.setAttribute('data-translate', colorName);
-            element.setAttribute('data-translate-category', 'tooltips');
+            element.setAttribute('data-translate-category', tooltipCategory);
             element.setAttribute('data-translate-target', 'tooltip');
 
             updateSingleColorTooltip(element);
@@ -831,7 +810,7 @@ function createGradientColorElement(gradient) {
     colorContent.setAttribute('data-section', 'gradient');
 
     colorContent.setAttribute('data-translate', gradient.name);
-    colorContent.setAttribute('data-translate-category', 'tooltips');
+    colorContent.setAttribute('data-translate-category', 'colors');
     colorContent.setAttribute('data-translate-target', 'tooltip');
 
     updateSingleColorTooltip(colorContent);
@@ -870,18 +849,10 @@ function attachEventListeners() {
             e.stopPropagation();
             handleColorClick(element, { hex: colorHex, name: colorName, section: colorSection });
         };
-
-        const mouseEnterHandler = () => {
-            if (!element.classList.contains('active')) {
-                element.style.transform = 'scale(1.05)';
-            }
-        };
-
-        const mouseLeaveHandler = () => {
-            if (!element.classList.contains('active')) {
-                element.style.transform = 'scale(1)';
-            }
-        };
+        
+        // Let CSS handle hover effects
+        const mouseEnterHandler = () => {};
+        const mouseLeaveHandler = () => {};
 
         element.addEventListener('click', clickHandler);
         element.addEventListener('mouseenter', mouseEnterHandler);
@@ -910,9 +881,9 @@ function setupMutationObserver() {
                 mutation.addedNodes.forEach(node => {
                     if (node.nodeType !== Node.ELEMENT_NODE) return false;
 
-                    const hasTextElements = Object.values(TEXT_ELEMENT_CONFIG).some(config => {
-                        return node.matches && node.matches(config.selector) ||
-                            node.querySelector && node.querySelector(config.selector);
+                    const hasTextElements = COLOR_SYSTEM_CONFIG.textSelectors.some(selector => {
+                        return node.matches && node.matches(selector) ||
+                            node.querySelector && node.querySelector(selector);
                     });
 
                     const hasColorElements = node.matches && node.matches('.color-content') ||
@@ -995,14 +966,16 @@ function handleColorClick(element, colorData) {
 function setActiveColorInAllSections(clickedElement) {
     document.querySelectorAll('.color-content').forEach(el => {
         el.classList.remove('active');
-        el.style.transform = 'scale(1)';
+        // Remove the inline transform style to let CSS classes handle it
+        el.style.transform = '';
     });
 
     if (clickedElement) {
         clickedElement.classList.add('active');
-        clickedElement.style.transform = 'scale(1.1)';
+        // Let the .active class in the CSS file apply the transform
     }
 }
+
 
 // ========== COLLAPSIBLE SECTIONS FUNCTIONALITY ==========
 
@@ -1040,6 +1013,25 @@ function setupCollapsibleSectionEvents() {
             collapseButton.setAttribute('data-collapsible', 'true');
             collapseButton.innerHTML = '<span class="material-symbols-rounded expand-icon">expand_more</span>';
             secondaryHeader.appendChild(collapseButton);
+            
+            // MEJORA: Aplicar estado inicial inmediatamente al crear el botón
+            const sectionId = sectionContainer.getAttribute('data-section');
+            const expandIcon = collapseButton.querySelector('.expand-icon');
+            
+            if (expandIcon) {
+                expandIcon.style.transition = 'none';
+                if (colorSystemState.collapsedSections.has(sectionId)) {
+                    expandIcon.style.transform = 'rotate(-90deg)';
+                    collapseButton.setAttribute('aria-expanded', 'false');
+                } else {
+                    expandIcon.style.transform = 'rotate(0deg)';
+                    collapseButton.setAttribute('aria-expanded', 'true');
+                }
+                
+                requestAnimationFrame(() => {
+                    expandIcon.style.transition = '';
+                });
+            }
         }
 
         if (collapseButton._collapseHandler) {
@@ -1057,12 +1049,10 @@ function setupCollapsibleSectionEvents() {
     });
 }
 
-
 function setupCollapsibleSections() {
     setupCollapsibleSectionEvents();
-    applyCollapsedSectionsState();
+    applyCollapsedSectionsState(); // CAMBIO: Ya no usa setTimeout internamente
 }
-
 function toggleSectionCollapse(sectionId) {
     if (!PALETTE_PREMIUM_FEATURES) return;
 
@@ -1124,30 +1114,37 @@ function saveCollapsedSectionsState() {
 function applyCollapsedSectionsState() {
     if (!PALETTE_PREMIUM_FEATURES) return;
 
-    setTimeout(() => {
-        document.querySelectorAll('.menu-content[data-collapsible-section="true"]').forEach(sectionContainer => {
-            const sectionId = sectionContainer.getAttribute('data-section');
-            const contentElement = sectionContainer.querySelector('.menu-content-general');
-            const collapseButton = sectionContainer.querySelector('.collapse-btn');
-            const expandIcon = collapseButton ? collapseButton.querySelector('.expand-icon') : null;
+    // CAMBIO: Remover setTimeout y aplicar inmediatamente
+    document.querySelectorAll('.menu-content[data-collapsible-section="true"]').forEach(sectionContainer => {
+        const sectionId = sectionContainer.getAttribute('data-section');
+        const contentElement = sectionContainer.querySelector('.menu-content-general');
+        const collapseButton = sectionContainer.querySelector('.collapse-btn');
+        const expandIcon = collapseButton ? collapseButton.querySelector('.expand-icon') : null;
 
-            if (contentElement && collapseButton && expandIcon) {
-                if (colorSystemState.collapsedSections.has(sectionId)) {
-                    contentElement.classList.add('collapsed');
-                    contentElement.classList.remove('expanded');
-                    contentElement.setAttribute('data-section-collapsed', 'true');
-                    collapseButton.setAttribute('aria-expanded', 'false');
-                    expandIcon.style.transform = 'rotate(-90deg)';
-                } else {
-                    contentElement.classList.remove('collapsed');
-                    contentElement.classList.add('expanded');
-                    contentElement.setAttribute('data-section-collapsed', 'false');
-                    collapseButton.setAttribute('aria-expanded', 'true');
-                    expandIcon.style.transform = 'rotate(0deg)';
-                }
+        if (contentElement && collapseButton && expandIcon) {
+            // MEJORA: Desactivar temporalmente las transiciones CSS
+            expandIcon.style.transition = 'none';
+            
+            if (colorSystemState.collapsedSections.has(sectionId)) {
+                contentElement.classList.add('collapsed');
+                contentElement.classList.remove('expanded');
+                contentElement.setAttribute('data-section-collapsed', 'true');
+                collapseButton.setAttribute('aria-expanded', 'false');
+                expandIcon.style.transform = 'rotate(-90deg)';
+            } else {
+                contentElement.classList.remove('collapsed');
+                contentElement.classList.add('expanded');
+                contentElement.setAttribute('data-section-collapsed', 'false');
+                collapseButton.setAttribute('aria-expanded', 'true');
+                expandIcon.style.transform = 'rotate(0deg)';
             }
-        });
-    }, 100);
+            
+            // MEJORA: Reactivar las transiciones después de un frame
+            requestAnimationFrame(() => {
+                expandIcon.style.transition = '';
+            });
+        }
+    });
 }
 
 // ========== COLOR APPLICATION ==========
@@ -1160,48 +1157,35 @@ function applyStoredColor() {
     }
 }
 
-/**
- * REWRITTEN FUNCTION
- * Applies colors by setting CSS variables and managing a state class ('is-gradient').
- * This is more robust and separates concerns between JS and CSS.
- * @param {string|null} colorValue - The color hex/gradient to apply.
- */
 function applyColorToElements(colorValue = null) {
     const finalColorValue = colorValue || (colorSystemState.currentColor === 'auto' ? getAutoColor() : colorSystemState.currentColor);
-    const isGradient = isGradientColor(finalColorValue);
 
-    for (const key in TEXT_ELEMENT_CONFIG) {
-        const config = TEXT_ELEMENT_CONFIG[key];
-        const container = document.querySelector(config.containerSelector);
-
-        // 1. Set the CSS variable with the color or gradient value.
-        document.documentElement.style.setProperty(config.variable, finalColorValue);
-
-        // 2. Add or remove the 'is-gradient' class on the container based on the color type.
-        if (container) {
-            if (isGradient) {
-                container.classList.add('is-gradient');
-            } else {
-                container.classList.remove('is-gradient');
-            }
-        }
-
-        // 3. (Good Practice) Clean up any old inline styles to prevent conflicts.
-        const elements = document.querySelectorAll(config.selector);
+    COLOR_SYSTEM_CONFIG.textSelectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
         elements.forEach(element => {
-            if (element.hasAttribute('style')) {
-                element.removeAttribute('style');
+            if (isGradientColor(finalColorValue)) {
+                element.style.color = '';
+                element.style.backgroundImage = finalColorValue;
+                element.style.webkitBackgroundClip = 'text';
+                element.style.backgroundClip = 'text';
+                element.style.webkitTextFillColor = 'transparent';
+                element.style.color = 'transparent';
+            } else {
+                element.style.backgroundImage = '';
+                element.style.webkitBackgroundClip = '';
+                element.style.backgroundClip = '';
+                element.style.webkitTextFillColor = '';
+                element.style.color = finalColorValue;
             }
         });
-    }
+    });
 }
-
 
 function getElementCount() {
     let count = 0;
-    for (const key in TEXT_ELEMENT_CONFIG) {
-        count += document.querySelectorAll(TEXT_ELEMENT_CONFIG[key].selector).length;
-    }
+    COLOR_SYSTEM_CONFIG.textSelectors.forEach(selector => {
+        count += document.querySelectorAll(selector).length;
+    });
     return count;
 }
 
@@ -1288,9 +1272,9 @@ function resetToDefault() {
     setColor('auto', 'auto');
 }
 
-function addTextSelector(key, selector, containerSelector, variable) {
-    if (!TEXT_ELEMENT_CONFIG[key]) {
-        TEXT_ELEMENT_CONFIG[key] = { selector, containerSelector, variable };
+function addTextSelector(selector) {
+    if (!COLOR_SYSTEM_CONFIG.textSelectors.includes(selector)) {
+        COLOR_SYSTEM_CONFIG.textSelectors.push(selector);
         if (colorSystemState.currentColor === 'auto') {
             applyAutoColor();
         } else {
@@ -1299,14 +1283,12 @@ function addTextSelector(key, selector, containerSelector, variable) {
     }
 }
 
-function removeTextSelector(key) {
-    if (TEXT_ELEMENT_CONFIG[key]) {
-        // Optionally reset the CSS variable to default
-        document.documentElement.style.removeProperty(TEXT_ELEMENT_CONFIG[key].variable);
-        delete TEXT_ELEMENT_CONFIG[key];
+function removeTextSelector(selector) {
+    const index = COLOR_SYSTEM_CONFIG.textSelectors.indexOf(selector);
+    if (index > -1) {
+        COLOR_SYSTEM_CONFIG.textSelectors.splice(index, 1);
     }
 }
-
 
 function isValidHexColor(hex) {
     return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hex);
@@ -1373,7 +1355,7 @@ function createSearchColorElement(colorData) {
         }
     }
 
-    colorContent.setAttribute('data-translate-category', 'tooltips');
+    colorContent.setAttribute('data-translate-category', 'colors');
     colorContent.setAttribute('data-translate-target', 'tooltip');
 
     updateSingleColorTooltip(colorContent);
@@ -1408,7 +1390,7 @@ function debugColorSystem() {
     console.log('Is theme changing:', colorSystemState.isThemeChanging);
     console.log('Total solid color elements (main/default):', colorSystemState.colorElements.size);
     console.log('Total gradient colors (config):', COLOR_SYSTEM_CONFIG.gradientColors.length);
-    console.log('Text element configuration:', TEXT_ELEMENT_CONFIG);
+    console.log('Text selectors:', COLOR_SYSTEM_CONFIG.textSelectors);
     console.log('Elements affected:', getElementCount());
     console.log('Recent colors:', colorSystemState.recentColors);
     console.log('Move Recent to Front enabled:', COLOR_SYSTEM_CONFIG.moveRecentToFront);
@@ -1629,3 +1611,6 @@ export {
     isGradientColor,
     toggleSectionCollapse
 };
+
+applyCollapsedSectionsState
+setupCollapsibleSectionEvents

@@ -201,39 +201,23 @@ function initializeCentralizedFontManager() {
         currentSection: null
     };
 
-    // ========== NUEVA FUNCIÓN PARA ACTUALIZAR VARIABLES CSS ==========
-    function updateCSSVariable(sectionName, fontSize) {
-        const variableName = `--font-size-${sectionName}`;
-        document.documentElement.style.setProperty(variableName, `${fontSize}px`);
-    }
-
-    // ========== NUEVA FUNCIÓN PARA LIMPIAR ESTILOS EN LÍNEA ==========
-    function cleanInlineStyles() {
-        sections.forEach(function cleanSection(sectionName) {
-            const element = clockElements[sectionName];
-            if (element && element.style.fontSize) {
-                element.style.removeProperty('font-size');
-                if (element.style.length === 0) {
-                    element.removeAttribute('style');
-                }
-            }
-        });
-    }
-
-    // ========== MODIFIED INITIALIZATION ==========
+    // ========== INITIALIZATION ==========
     function initializeFontManager() {
+        setupFontManager();
+    }
+
+    function setupFontManager() {
         if (isInitialized) return;
 
         findFontElements();
 
         const hasElements = Object.keys(clockElements).length > 0;
         if (!hasElements) {
-            setTimeout(initializeFontManager, 1000); // Reintentar si los elementos no están listos
+            setTimeout(setupFontManager, 1000);
             return;
         }
 
         loadFontScalesFromStorage();
-        cleanInlineStyles(); // Limpiar estilos antiguos
         setupFontEventListeners();
         setupFontResizeObservers();
         adjustAndApplyFontSizeToAllSections();
@@ -241,10 +225,6 @@ function initializeCentralizedFontManager() {
         isInitialized = true;
     }
 
-    function setupFontManager() {
-        initializeFontManager();
-    }
-    
     function findFontElements() {
         sections.forEach(function processSectionElements(sectionName) {
             const section = document.querySelector(`.section-${sectionName}`);
@@ -358,7 +338,6 @@ function initializeCentralizedFontManager() {
                     if (!autoIncrementState.isActive) {
                         decreaseFontSizeForSection(sectionName);
                     }
-
                 });
 
                 decreaseBtn.addEventListener('mousedown', function handleDecreaseMouseDown(e) {
@@ -407,7 +386,7 @@ function initializeCentralizedFontManager() {
         const rounded = Math.round(number);
         return rounded % 2 === 0 ? rounded : rounded + 1;
     }
-    
+
     function calculateBaseFontSize(containerWidth) {
         const baseSize = containerWidth / FONT_SIZE_RATIO;
         return roundToEvenNumber(baseSize);
@@ -422,44 +401,34 @@ function initializeCentralizedFontManager() {
         const calculatedSize = baseSize * globalScaleFactor;
         return roundToEvenNumber(calculatedSize);
     }
-    
-    // ========== MODIFICADO: FONT SIZE LOGIC ==========
+
+    // ========== FONT SIZE LOGIC ==========
     function checkIfWouldOverflowWithPixelSize(sectionName, targetPixelSize) {
         const container = clockContainers[sectionName];
         const element = clockElements[sectionName];
 
         if (!container || !element) return true;
-        
-        const variableName = `--font-size-${sectionName}`;
-        const originalValue = getComputedStyle(document.documentElement).getPropertyValue(variableName);
 
-        // Actualiza temporalmente la variable CSS
-        document.documentElement.style.setProperty(variableName, `${targetPixelSize}px`);
-        
-        // Forza un reflow para obtener el nuevo tamaño
-        element.offsetHeight; 
-        
+        const currentSize = element.style.fontSize;
+        element.style.fontSize = targetPixelSize + 'px';
         const overflows = element.scrollWidth > container.offsetWidth;
-        
-        // Restaura el valor original
-        document.documentElement.style.setProperty(variableName, originalValue);
-        
+        element.style.fontSize = currentSize;
+
         return overflows;
     }
-    
+
     function adjustAndApplyFontSizeToSection(sectionName) {
         const container = clockContainers[sectionName];
+        const element = clockElements[sectionName];
         const display = fontSizeDisplays[sectionName];
 
-        if (!container || !display) return;
+        if (!container || !element || !display) return;
 
         const baseSize = calculateBaseFontSize(container.offsetWidth);
         const calculatedSize = baseSize * globalScaleFactor;
         const finalSize = roundToEvenNumber(calculatedSize);
 
-        // En lugar de style.fontSize, actualiza la variable CSS
-        updateCSSVariable(sectionName, finalSize);
-        
+        element.style.fontSize = finalSize + 'px';
         display.textContent = finalSize + ' px';
 
         updateFontButtonStatesForSection(sectionName);
@@ -537,7 +506,7 @@ function initializeCentralizedFontManager() {
         }
         return false;
     }
-    
+
     function increaseFontSize() {
         const firstSection = Object.keys(clockElements)[0];
         if (firstSection) {
@@ -574,7 +543,7 @@ function initializeCentralizedFontManager() {
         }
         return false;
     }
-    
+
     function resetFontSizeForAllSections() {
         globalScaleFactor = 1.0;
         adjustAndApplyFontSizeToAllSections();
@@ -688,7 +657,6 @@ function initializeCentralizedFontManager() {
     // ========== INITIALIZATION ==========
     initializeFontManager();
 }
-
 
 // ========== TEXT STYLE MANAGER (BOLD & ITALIC) ==========
 

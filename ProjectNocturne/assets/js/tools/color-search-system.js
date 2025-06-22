@@ -862,28 +862,35 @@ function handleSearchColorClick(colorData) {
 
 // ========== ERROR AND STATE HANDLING ==========
 
+// ========== ERROR AND STATE HANDLING - UPDATED ==========
+
 function displaySearchError(message) {
     const searchResultsWrapper = document.querySelector(COLOR_SEARCH_CONFIG.searchColorsWrapper);
     if (!searchResultsWrapper) return;
 
     searchResultsWrapper.innerHTML = '';
 
-    const errorSection = document.createElement('div');
-    errorSection.className = 'menu-content';
-    errorSection.setAttribute('data-section', 'no-results');
+    // Crear solo el contenido general sin header
+    const errorContent = document.createElement('div');
+    errorContent.className = 'menu-content-general';
+    
+    const errorMessage = document.createElement('p');
+    errorMessage.textContent = message;
+    
+    errorContent.appendChild(errorMessage);
+    searchResultsWrapper.appendChild(errorContent);
+}
 
-    errorSection.innerHTML = `
-        <div class="menu-content-header">
-            <div class="menu-content-header-primary">
-                <span class="material-symbols-rounded">error</span>
-                <span>${getSearchSectionTranslation('no_results_title')}</span>
-            </div>
-        </div>
-        <div class="menu-content-general">
-            <p style="color: #888; text-align: center; padding: 20px;">${message}</p>
+// También puedes usar esta versión alternativa más minimalista:
+function displaySearchErrorMinimal(message) {
+    const searchResultsWrapper = document.querySelector(COLOR_SEARCH_CONFIG.searchColorsWrapper);
+    if (!searchResultsWrapper) return;
+
+    searchResultsWrapper.innerHTML = `
+        <div class="menu-content-general" style="padding: 20px;">
+            <p style="color: #888; text-align: center; margin: 0;">${message}</p>
         </div>
     `;
-    searchResultsWrapper.appendChild(errorSection);
 }
 
 function showSearchSectionWrapper() {

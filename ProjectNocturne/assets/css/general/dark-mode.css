@@ -277,7 +277,6 @@
 
 .dark-mode .color-content.active .auto-color {
     transform: scale(0.9);
-    border: 2px solid #ffffff;
 }
 
 .dark-mode .color-content.active .auto-color::before {
