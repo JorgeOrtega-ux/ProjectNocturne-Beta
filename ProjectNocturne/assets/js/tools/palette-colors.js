@@ -1590,8 +1590,6 @@ function getTranslatedColorNameFromHex(hex) {
     
     return null;
 }
-document.addEventListener('DOMContentLoaded', initColorTextSystem);
-
 // ========== EXPORTS ==========
 
 export {

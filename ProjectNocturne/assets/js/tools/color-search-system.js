@@ -1085,12 +1085,8 @@ function integrateWithColorSystem() {
 
 // ========== AUTO-INITIALIZATION AND INTEGRATION ==========
 
-function autoInit() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', integrateWithColorSystem);
-    } else {
-        integrateWithColorSystem();
-    }
+function initColorSearchSystem() {
+    integrateWithColorSystem();
 
     window.colorSearchDebug = debugSearchSystem;
     window.clearColorSearch = clearSearchColors;
@@ -1119,11 +1115,10 @@ window.colorSearchManager = {
     hideSearchSectionWrapper: hideSearchSectionWrapper
 };
 
-autoInit();
-
 // ========== EXPORTS ==========
 
 export {
+    initColorSearchSystem, // <--- CAMBIO: Se exporta la nueva función de inicialización
     initColorSearch,
     refreshSearchSystem,
     clearSearchColors,

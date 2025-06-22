@@ -44,7 +44,7 @@ import {
     getTranslation as getTranslationFunction,
     getCurrentLanguage as getTranslationCurrentLanguage
 } from './translations-controller.js';
-
+import { initColorSearchSystem } from '../tools/color-search-system.js';
 import {
     initializeCategorySliderService,
     initializeCentralizedFontManager,
@@ -385,7 +385,7 @@ function initializeMainComponents() {
     initializeCentralizedFontManager();
     initializeFullScreenManager();
     initColorTextSystem();
-
+  initColorSearchSystem(); 
     setupEventListeners();
     batchMigrateTooltips();
     initializeMobileSidebarTooltips();
