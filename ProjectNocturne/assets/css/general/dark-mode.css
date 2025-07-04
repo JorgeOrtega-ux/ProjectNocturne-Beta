@@ -488,6 +488,7 @@
 
 .dark-mode .expandable-card-header-icon {
     color: #ffffff;
+    border-color: #ffffff20;
 }
 
 .dark-mode .expandable-card-header h3 {
