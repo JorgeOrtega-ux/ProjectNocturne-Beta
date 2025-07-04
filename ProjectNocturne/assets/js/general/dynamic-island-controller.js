@@ -83,12 +83,11 @@ export function showDynamicIslandNotification(toolType, actionType, messageKey, 
     // CORRECCIÓN: Lógica para generar la clave del título correctamente.
     if (toolType === 'system') {
         // Para notificaciones del sistema, la clave se deriva directamente de la acción.
-        if (actionType === 'limit_reached_premium') {
-            titleKey = 'limit_reached_premium_title';
-        } else if (actionType === 'premium_required') {
-            titleKey = 'premium_required_title';
-        } else if (actionType === 'limit_reached') {
-            titleKey = 'limit_reached_title';
+     if (actionType === 'limit_reached_premium') {
+        titleKey = 'limit_reached_premium_title';
+    } else if (actionType === 'premium_required') {
+        titleKey = 'limit_reached_premium_title'; // Changed from 'premium_required_title'
+    } else if (actionType === 'limit_reached') {
         } else {
             // Para otras acciones del sistema como 'info', 'error', etc.
             titleKey = `${actionType}_title`;

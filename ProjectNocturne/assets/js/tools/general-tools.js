@@ -329,15 +329,14 @@ export async function handleAudioUpload(callback) {
     const maxSizeInMB = PREMIUM_FEATURES ? '1 GB' : '256 MB';
 
     if (userAudiosCache.length >= uploadLimit) {
-        if (PREMIUM_FEATURES) {
-            showDynamicIslandNotification('system', 'limit_reached_premium', 'premium_limit_reached_message', 'notifications', {
-                type: getTranslation('audio_singular', 'sounds')
-            });
-        } else {
-            showDynamicIslandNotification('system', 'premium_required', 'premium_limit_reached_message', 'notifications', {
-                type: getTranslation('audio_singular', 'sounds')
-            });
-        }
+        const messageKey = PREMIUM_FEATURES ? 'limit_reached_message_premium' : 'premium_limit_reached_message';
+        showDynamicIslandNotification(
+            'system',
+            PREMIUM_FEATURES ? 'limit_reached' : 'limit_reached_premium',
+            messageKey,
+            'notifications',
+            { type: getTranslation('audio_singular', 'sounds') }
+        );
         return;
     }
 

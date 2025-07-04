@@ -35,9 +35,11 @@
     "worldclock_updated": "Se ha actualizado el reloj '{title}' correctamente.",
     "worldclock_deleted": "Se ha eliminado el reloj '{title}'.",
     "limit_reached": "Se alcanzó el límite de {limit} {type}s.",
-    "premium_limit_reached_message": "Se ha alcanzado el límite máximo de {type} disponibles.",
+    "premium_limit_reached_message": "Conviértete en premium para aumentar el límite disponible",
+    "limit_reached_message_premium": "Se ha alcanzado el límite de {type} disponibles.",
     "loading_countries_error": "Error al cargar la lista de países.",
     "limit_reached_premium_title": "Se ha alcanzado el límite máximo",
+    
     "dismiss": "Descartar"
   },
   "color_system": {

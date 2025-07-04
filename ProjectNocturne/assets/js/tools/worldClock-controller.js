@@ -304,16 +304,14 @@ function createAndStartClockCard(title, country, timezone, existingId = null, sa
     const hasLocalClock = document.querySelector('.local-clock-card');
     const actualCurrentClocks = hasLocalClock && existingId !== 'local' ? totalCurrentClocks - 1 : totalCurrentClocks;
     if (save && actualCurrentClocks >= totalClockLimit) {
-        if (PREMIUM_FEATURES) {
-            showDynamicIslandNotification('system', 'limit_reached_premium', 'premium_limit_reached_message', 'notifications', {
-                type: getTranslation('world_clock', 'tooltips')
-            });
-        } else {
-            showDynamicIslandNotification('system', 'limit_reached', 'limit_reached_generic', 'notifications', {
-                type: getTranslation('world_clock', 'tooltips'),
-                limit: totalClockLimit
-            });
-        }
+        const messageKey = PREMIUM_FEATURES ? 'limit_reached_message_premium' : 'premium_limit_reached_message';
+        showDynamicIslandNotification(
+            'system',
+            PREMIUM_FEATURES ? 'limit_reached' : 'limit_reached_premium',
+            messageKey,
+            'notifications',
+            { type: getTranslation('world_clock', 'tooltips') }
+        );
         return;
     }
     const ct = window.ct;

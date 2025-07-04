@@ -120,16 +120,15 @@ function recordLap() {
     const lapLimit = PREMIUM_FEATURES ? 1000 : 100;
 
     if (stopwatchState.lapNumber >= lapLimit) {
-        if (PREMIUM_FEATURES) {
-            console.warn(`Premium lap limit (${lapLimit}) reached.`);
-            updateButtonStates();
-            return;
-        } else {
-            showDynamicIslandNotification('system', 'premium_required', 'premium_limit_reached_message', 'notifications', {
-                type: getTranslation('stopwatch', 'tooltips')
-            });
-            return;
-        }
+        const messageKey = PREMIUM_FEATURES ? 'limit_reached_message_premium' : 'premium_limit_reached_message';
+        showDynamicIslandNotification(
+            'system',
+            PREMIUM_FEATURES ? 'limit_reached' : 'limit_reached_premium',
+            messageKey,
+            'notifications',
+            { type: getTranslation('stopwatch', 'tooltips') }
+        );
+        return;
     }
 
     const lapTime = Date.now() - stopwatchState.startTime;
