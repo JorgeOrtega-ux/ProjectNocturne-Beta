@@ -487,7 +487,6 @@
     margin-bottom: 16px;
 }
 
-/* Apply reddish hover background to delete links within search result items (light mode) */
 .search-result-item .card-dropdown-menu .menu-link[data-action*="delete"]:hover {
     background-color: rgba(229, 57, 53, 0.08);
 }
@@ -964,7 +963,7 @@
     cursor: pointer;
 }
 
-#dynamic-island {
+.dynamic-island {
     position: fixed;
     top: 20px;
     left: 50%;
@@ -986,7 +985,7 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-#dynamic-island.expanded {
+.dynamic-island.active {
     opacity: 1;
     width: 300px;
     height: 54px;
@@ -996,11 +995,11 @@
     pointer-events: auto;
 }
 
-#dynamic-island.active-tool-ringing {
+.dynamic-island.active-tool-ringing {
     width: 340px;
 }
 
-#dynamic-island.active-tool-ringing.expanded {
+.dynamic-island.active.active-tool-ringing {
     width: 340px;
 }
 
@@ -1016,7 +1015,7 @@
     box-sizing: border-box;
 }
 
-#dynamic-island.expanded .island-notification-content {
+.dynamic-island.active .island-notification-content {
     opacity: 1;
     transition: opacity 0.4s ease-in 0.2s;
 }
@@ -1101,7 +1100,7 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-#dynamic-island.expanded.active-tool-ringing .island-dismiss-button {
+.dynamic-island.active.active-tool-ringing .island-dismiss-button {
     opacity: 1;
     pointer-events: auto;
 }
@@ -1129,29 +1128,29 @@
     }
 }
 
-#dynamic-island.active-tool-ringing {
+.dynamic-island.active-tool-ringing {
     animation: island-pulse 2s ease-in-out infinite;
 }
 
-html.light-mode #dynamic-island {
+html.light-mode .dynamic-island {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), 0 4px 16px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 @media (max-width: 768px) {
-    #dynamic-island {
+    .dynamic-island {
         top: 15px;
         width: 40px;
         height: 40px;
         border-radius: 20px;
     }
 
-    #dynamic-island.expanded {
+    .dynamic-island.active {
         width: 280px;
         height: 50px;
         border-radius: 25px;
     }
 
-    #dynamic-island.active-tool-ringing {
+    .dynamic-island.active-tool-ringing {
         width: 320px;
     }
 
