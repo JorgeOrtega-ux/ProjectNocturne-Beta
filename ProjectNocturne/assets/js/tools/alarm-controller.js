@@ -1,3 +1,4 @@
+// Ruta: /assets/js/tools/alarm-controller.js
 import { use24HourFormat, PREMIUM_FEATURES, activateModule, getCurrentActiveOverlay, allowCardMovement } from '../general/main.js';
 import { prepareAlarmForEdit } from './menu-interactions.js';
 import { playSound as playAlarmSound, stopSound as stopAlarmSound, initializeSortable, getAvailableSounds, handleAlarmCardAction, getSoundNameById } from './general-tools.js';
@@ -10,9 +11,9 @@ const ALARMS_STORAGE_KEY = 'user-alarms';
 const DEFAULT_ALARMS_STORAGE_KEY = 'default-alarms-order';
 
 const DEFAULT_ALARMS = [
-    { id: 'default-1', title: 'clean_room', hour: 10, minute: 0, sound: 'gentle_chime', enabled: false, type: 'default' },
-    { id: 'default-2', title: 'exercise', hour: 18, minute: 0, sound: 'digital_alarm', enabled: false, type: 'default' },
-    { id: 'default-3', title: 'read_book', hour: 21, minute: 0, sound: 'peaceful_tone', enabled: false, type: 'default' }
+    { id: 'default-2', title: 'lunch_time', hour: 13, minute: 0, sound: 'gentle_chime', enabled: false, type: 'default' },
+    { id: 'default-3', title: 'read_book', hour: 21, minute: 0, sound: 'peaceful_tone', enabled: false, type: 'default' },
+    { id: 'default-5', title: 'take_a_break', hour: 16, minute: 0, sound: 'gentle_chime', enabled: false, type: 'default' }
 ];
 
 let clockInterval = null;

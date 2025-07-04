@@ -1,3 +1,4 @@
+// Ruta: /assets/js/tools/timer-controller.js
 import { getTranslation } from '../general/translations-controller.js';
 import { PREMIUM_FEATURES, activateModule, getCurrentActiveOverlay, allowCardMovement } from '../general/main.js';
 import { prepareTimerForEdit, prepareCountToDateForEdit } from './menu-interactions.js';
@@ -14,12 +15,11 @@ let activeTimers = new Map();
 let pinnedTimerId = null;
 
 const DEFAULT_TIMERS = [
-    { id: 'default-timer-1', title: 'pomodoro_25', type: 'countdown', initialDuration: 1500000, remaining: 1500000, endAction: 'restart', sound: 'gentle_chime', isRunning: false, isPinned: false },
     { id: 'default-timer-2', title: 'short_break_5', type: 'countdown', initialDuration: 300000, remaining: 300000, endAction: 'stop', sound: 'peaceful_tone', isRunning: false, isPinned: false },
-    { id: 'default-timer-3', title: 'exercise_1', type: 'countdown', initialDuration: 60000, remaining: 60000, endAction: 'restart', sound: 'digital_alarm', isRunning: false, isPinned: false }
+    { id: 'default-timer-4', title: 'exercise_30', type: 'countdown', initialDuration: 1800000, remaining: 1800000, endAction: 'restart', sound: 'digital_alarm', isRunning: false, isPinned: false },
+    { id: 'default-timer-5', title: 'study_session_45', type: 'countdown', initialDuration: 2700000, remaining: 2700000, endAction: 'restart', sound: 'gentle_chime', isRunning: false, isPinned: false }
 ];
 
-// --- NUEVA FUNCIÓN PARA ACTUALIZAR EL NOMBRE DEL TEMPORIZADOR FIJADO ---
 function updatePinnedTimerNameDisplay() {
     const nameDisplayTool = document.querySelector('.info-tool[data-timer-name-display]');
     if (!nameDisplayTool) return;
@@ -37,11 +37,15 @@ function updatePinnedTimerNameDisplay() {
             ? getTranslation(pinnedTimer.title, 'timer')
             : pinnedTimer.title;
         span.textContent = title;
+        nameDisplayTool.setAttribute('data-translate', 'pinned_timer_tooltip');
+        nameDisplayTool.setAttribute('data-translate-category', 'timer');
         nameDisplayTool.setAttribute('data-translate-target', 'tooltip');
-        nameDisplayTool.setAttribute('data-tooltip', title);
     } else {
         span.textContent = '-';
         nameDisplayTool.removeAttribute('data-tooltip');
+        nameDisplayTool.removeAttribute('data-translate');
+        nameDisplayTool.removeAttribute('data-translate-category');
+        nameDisplayTool.removeAttribute('data-translate-target');
     }
     if (window.tooltipManager && typeof window.tooltipManager.attachTooltipsToNewElements === 'function') {
         window.tooltipManager.attachTooltipsToNewElements(nameDisplayTool.parentElement);
