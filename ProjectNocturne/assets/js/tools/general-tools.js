@@ -325,8 +325,8 @@ function createSoundMenuItem(sound, actionName, activeSoundId, isCustom) {
 export async function handleAudioUpload(callback) {
     await populateAudioCache();
     const uploadLimit = PREMIUM_FEATURES ? 10 : 1;
-    const totalSizeLimit = 5 * 1024 * 1024 * 1024;
-    const singleFileSizeLimit = 256 * 1024 * 1024;
+    const singleFileSizeLimit = PREMIUM_FEATURES ? 1024 * 1024 * 1024 : 256 * 1024 * 1024;
+    const maxSizeInMB = PREMIUM_FEATURES ? '1 GB' : '256 MB';
 
     if (userAudiosCache.length >= uploadLimit) {
         const messageKey = PREMIUM_FEATURES ? 'limit_reached_generic' : 'limit_reached_audio_free';
@@ -349,17 +349,9 @@ export async function handleAudioUpload(callback) {
             return;
         }
 
-        if (PREMIUM_FEATURES) {
-            const currentTotalSize = userAudiosCache.reduce((sum, audio) => sum + audio.file.size, 0);
-            if (currentTotalSize + file.size > totalSizeLimit) {
-                showDynamicIslandNotification('system', 'error', 'total_size_limit_reached', 'notifications', { maxSize: '5 GB' });
-                return;
-            }
-        } else {
-            if (file.size > singleFileSizeLimit) {
-                showDynamicIslandNotification('system', 'error', 'file_too_large', 'notifications', { maxSize: '256 MB' });
-                return;
-            }
+        if (file.size > singleFileSizeLimit) {
+            showDynamicIslandNotification('system', 'error', 'file_too_large', 'notifications', { maxSize: maxSizeInMB });
+            return;
         }
         
         try {

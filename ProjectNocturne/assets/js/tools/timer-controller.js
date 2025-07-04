@@ -576,7 +576,7 @@ export function addTimerAndRender(timerData) {
         isPinned: false,
     };
 
-    const timerLimit = PREMIUM_FEATURES ? 10 : 3;
+    const timerLimit = getTimerLimit();
     if (userTimers.length >= timerLimit) {
         showDynamicIslandNotification('system', 'limit_reached', 'limit_reached_generic', 'notifications', {
             type: getTranslation('timer', 'tooltips'),
