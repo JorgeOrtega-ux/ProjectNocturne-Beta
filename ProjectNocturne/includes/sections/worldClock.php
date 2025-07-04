@@ -9,6 +9,7 @@
                     data-translate-target="tooltip">
                     <span class="material-symbols-rounded">add</span>
                 </div>
+                 <div class="info-tool" data-timezone-worldclock></div>
             </div>
             <div class="tool-options-content body-title">
                 <div class="increse-font-zise">
@@ -65,5 +66,7 @@
             </div>
         </div>
     </div>
-    <div class="section-bottom"></div>
+    <div class="section-bottom">
+        <div class="tool-grid world-clocks-grid active"></div>
+    </div>
 </div>

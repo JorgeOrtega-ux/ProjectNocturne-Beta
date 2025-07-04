@@ -1,5 +1,4 @@
 <div class="module-control-center body-title disabled">
-    <!-- Main control center menu -->
     <div class="menu-control-center active" data-menu="control_center">
         <div class="pill-container">
             <div class="drag-handle"></div>
@@ -32,7 +31,6 @@
         </div>
     </div>
 
-    <!-- Settings menu -->
     <div class="menu-control-center disabled" data-menu="settings">
         <div class="pill-container">
             <div class="drag-handle"></div>
@@ -54,10 +52,17 @@
                     <span data-translate="language" data-translate-category="menu" data-translate-target="text"></span>
                 </div>
             </div>
+            <div class="menu-link" data-toggle="location">
+                <div class="menu-link-icon">
+                    <span class="material-symbols-rounded">location_on</span>
+                </div>
+                <div class="menu-link-text">
+                    <span data-translate="location" data-translate-category="menu" data-translate-target="text"></span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Appearance submenu -->
     <div class="menu-control-center disabled" data-menu="appearance">
         <div class="pill-container">
             <div class="drag-handle"></div>
@@ -90,7 +95,6 @@
         </div>
     </div>
 
-    <!-- Language submenu -->
     <div class="menu-control-center disabled" data-menu="language">
         <div class="pill-container">
             <div class="drag-handle"></div>
@@ -120,6 +124,29 @@
                     <span data-translate="french_fr" data-translate-category="menu" data-translate-target="text"></span>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="menu-control-center disabled" data-menu="location">
+        <div class="pill-container">
+            <div class="drag-handle"></div>
+        </div>
+        <div class="menu-control-center-top">
+            <div class="search-content">
+                <div class="search-content-icon">
+                    <span class="material-symbols-rounded">search</span>
+                </div>
+                <div class="search-content-text">
+                    <input type="text" id="location-search-input" class="body-title" autocomplete="off"
+                        data-translate="search_cities_placeholder"
+                        data-translate-category="search"
+                        data-translate-target="placeholder"
+                        placeholder="">
+                </div>
+            </div>
+        </div>
+        <div class="menu-control-center-bottom overflow-y">
+            <div class="menu-list"></div>
         </div>
     </div>
 </div>

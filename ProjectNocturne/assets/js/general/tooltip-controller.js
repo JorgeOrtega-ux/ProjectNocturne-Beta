@@ -11,7 +11,6 @@ let popperLoaded = false;
 let activeElement = null;
 const attachedElements = new WeakSet();
 let tooltipResizeHandler = null;
-let mobileSidebarInitialized = false;
 let isRefreshingTooltips = false;
 let isSystemInitialized = false;
 
@@ -201,16 +200,16 @@ function getTooltipText(element) {
         const tooltipKey = element.dataset.tooltip;
         let tooltipText;
         if (typeof window.getTranslation === 'function' && tooltipKey in (window.translations?.tooltips || {})) {
-             const translatedText = window.getTranslation(tooltipKey, 'tooltips');
-             if (translatedText && translatedText !== tooltipKey) {
-                 tooltipText = translatedText;
-             } else {
-                 tooltipText = tooltipTextMap[tooltipKey] || tooltipKey;
-             }
+            const translatedText = window.getTranslation(tooltipKey, 'tooltips');
+            if (translatedText && translatedText !== tooltipKey) {
+                tooltipText = translatedText;
+            } else {
+                tooltipText = tooltipTextMap[tooltipKey] || tooltipKey;
+            }
         } else {
             tooltipText = tooltipTextMap[tooltipKey] || tooltipKey;
         }
-        
+
         return tooltipText + unavailableText;
     }
 
@@ -231,30 +230,30 @@ function isColorBlockedForTheme(element) {
     if (!element.classList.contains('color-content')) {
         return false;
     }
-    
+
     const colorHex = element.getAttribute('data-hex');
     if (!colorHex || colorHex === 'auto') {
         return false;
     }
-    
-    if (typeof window.colorTextManager === 'object' && 
+
+    if (typeof window.colorTextManager === 'object' &&
         typeof window.colorTextManager.isValidForTheme === 'function') {
         return !window.colorTextManager.isValidForTheme(colorHex);
     }
-    
+
     try {
         if (typeof chroma !== 'undefined') {
             const color = chroma(colorHex);
             const luminance = color.luminance();
             const html = document.documentElement;
             const isDarkMode = html.classList.contains('dark-mode');
-            
+
             return isDarkMode ? luminance < 0.08 : luminance > 0.92;
         }
     } catch (e) {
         return false;
     }
-    
+
     return false;
 }
 
@@ -698,25 +697,12 @@ function getTooltipSystemStatus() {
 
 // ========== EXPORTS ==========
 export {
-    initializeTooltipSystem,
-    enableTooltips,
-    disableTooltips,
-    isTooltipSystemEnabled,
-    addTooltip,
-    updateTooltip,
-    refreshTooltips,
-    addTooltipText,
-    updateTooltipText,
-    removeTooltipText,
-    getTooltipTextMap,
-    setTooltipTextMap,
-    updateTooltipTextMapFromTranslations as updateTooltipTextMap,
-    migrateTooltipToNewSystem,
-    batchMigrateTooltips,
-    initializeMobileSidebarTooltips,
-    resetTooltipSystem,
-    debugTooltipSystem,
-    getTooltipSystemStatus,
-    setTranslationGetter,
-    attachTooltipsToNewElements
+    addTooltip, addTooltipText, attachTooltipsToNewElements, batchMigrateTooltips, debugTooltipSystem,
+    disableTooltips, enableTooltips, getTooltipSystemStatus, getTooltipTextMap, initializeMobileSidebarTooltips,
+    initializeTooltipSystem, isTooltipSystemEnabled, migrateTooltipToNewSystem, refreshTooltips,
+    removeTooltipText, resetTooltipSystem, setTooltipTextMap, setTranslationGetter
+};
+
+export {
+    updateTooltip, updateTooltipText, updateTooltipTextMapFromTranslations as updateTooltipTextMap
 };

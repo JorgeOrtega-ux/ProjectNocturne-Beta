@@ -1,24 +1,17 @@
 // ========== MAIN.JS - UPDATED FOR NEW MODULE MANAGER FUNCTIONS ==========
 
-import {
-    initModuleManager,
-    activateModule,
-    deactivateModule,
-    toggleModule,
-    deactivateAllModules,
-    isModuleCurrentlyChanging,
-    logModuleStates,
-    resetModuleChangeFlag,
-    showControlCenterMenu,
-    showSpecificOverlay,
-    getActiveModule,
-    isModuleActive,
-    isAnyModuleActive
-} from './module-manager.js';
-
+import { activateModule, deactivateAllModules, deactivateModule, getActiveModule, isAnyModuleActive, isModuleActive, isModuleCurrentlyChanging, logModuleStates, resetModuleChangeFlag, showControlCenterMenu, showSpecificOverlay, toggleModule } from './module-manager.js';
 import { initializeTextStyleManager } from '../tools/general-tools.js';
+import { isGradientColor } from '../tools/palette-colors.js';
 
-import { getCurrentColor, getColorInfo, isGradientColor } from '../tools/palette-colors.js';
+// ========== GLOBAL TIME FORMAT SETTING ==========
+export let use24HourFormat = true;
+
+// ========== PREMIUM FEATURES CONSTANT ==========
+export const PREMIUM_FEATURES = false;
+
+// ========== CARD MOVEMENT SETTING ==========
+export let allowCardMovement = true;
 
 
 // ========== MOBILE SIDEBAR MODULE ==========
@@ -98,13 +91,9 @@ function logSectionStates() {
 }
 
 function activateSection(sectionName, showLog) {
-    // =========> INICIO DE LA MODIFICACIÓN <=========
-    // Si la sección que se quiere activar ya es la activa, no hagas nada.
     if (activeSectionStates[sectionName] === true) {
-        return; 
+        return;
     }
-    // =========> FIN DE LA MODIFICACIÓN <=========
-
     if (showLog === undefined) showLog = true;
 
     const sections = Object.keys(activeSectionStates);
@@ -239,7 +228,7 @@ function closeActiveModule(options = {}) {
 
 function closeAllModules(options = {}) {
     const { source = 'closeAllModules' } = options;
-    
+
     if (isAnyModuleActive()) {
         deactivateAllModules();
         console.log('🔧 All modules closed from:', source);
@@ -268,11 +257,11 @@ function isControlCenterActive() {
 }
 
 function isAnyOverlayActive() {
-    return isModuleActive('menuAlarm') || 
-           isModuleActive('menuTimer') || 
-           isModuleActive('menuWorldClock') || 
-           isModuleActive('menuPaletteColors') ||
-           isModuleActive('overlayContainer');
+    return isModuleActive('menuAlarm') ||
+        isModuleActive('menuTimer') ||
+        isModuleActive('menuWorldClock') ||
+        isModuleActive('menuPaletteColors') ||
+        isModuleActive('overlayContainer');
 }
 
 // ========== OVERLAY SPECIFIC FUNCTIONS ==========
@@ -526,65 +515,17 @@ document.addEventListener('DOMContentLoaded', initializeTextStyleManager);
 // ========== EXPORTS - COMPLETE AND UNIFIED FUNCTIONS ==========
 
 export {
-    initSidebarMobile,
-    initSidebarSections,
-    initControlCenter,
-    initNewOverlayModules,
-    
-    logSectionStates,
-    getActiveSection,
-    getAllSectionStates,
-    switchToSection,
-    activateSection,
-    
-    activateModuleByName as activateModule,
-    deactivateModule,
-    toggleModuleByName as toggleModule,
-    closeActiveModule,
-    closeAllModules,
-    
-    activateControlCenterMenu,
-    switchControlCenterMenu,
-    showControlCenterMenu,
-    
-    activateSpecificOverlay,
-    closeSpecificOverlay,
-    switchOverlay,
-    getCurrentActiveOverlay,
-    showSpecificOverlay,
-    
-    isModuleCurrentlyChanging,
-    isModuleBusy,
-    resetModuleChangeFlag,
-    logModuleStates,
-    
-    isAnyModuleActive,
-    isControlCenterActive,
-    isAnyOverlayActive,
-    getModuleInfo,
-    getSystemStatus,
-    logAllStates,
-    
-    getActiveModule,
-    isModuleActive,
-    
-    closeControlCenter,
-    closeOverlays,
-    closeOverlayByName,
-    
+    activateControlCenterMenu, activateModuleByName as activateModule, activateSection, activateSpecificOverlay,
+    closeActiveModule, closeAllModules, closeControlCenter, closeOverlayByName, closeOverlays,
+    deactivateModule, dispatchModuleEvent, executeWhenModuleReady, getActiveModule, getActiveSection,
+    getAllSectionStates, getAppliedColor, getAppliedFontScale, getAppliedTextStyle, getCurrentActiveOverlay,
+    getModuleInfo, getModulePreference, getSystemStatus, initControlCenter, initNewOverlayModules,
+    initSidebarMobile, initSidebarSections, isAnyModuleActive, isAnyOverlayActive, isControlCenterActive
+};
 
-    waitForModuleReady,
-    executeWhenModuleReady,
-    
-    dispatchModuleEvent,
-    onModuleActivated,
-    onModuleDeactivated,
-    onOverlayChanged,
-    
-    setModulePreference,
-    getModulePreference,
-
-    getAppliedColor,
-    getAppliedFontScale,
-    getAppliedTextStyle
+export {
+    isModuleActive, isModuleBusy, isModuleCurrentlyChanging, logAllStates, logModuleStates, logSectionStates,
+    onModuleActivated, onModuleDeactivated, onOverlayChanged, resetModuleChangeFlag, setModulePreference,
+    showControlCenterMenu, showSpecificOverlay, switchControlCenterMenu, switchOverlay, switchToSection,
+    toggleModuleByName as toggleModule, waitForModuleReady
 };

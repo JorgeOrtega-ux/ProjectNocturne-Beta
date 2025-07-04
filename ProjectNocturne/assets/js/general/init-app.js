@@ -1,60 +1,27 @@
 // ========== APPLICATION MAIN INITIALIZER - UPDATED FOR UNIFIED MODULE MANAGER ==========
 
-import {
-    initSidebarMobile,
-    initSidebarSections,
-    initControlCenter,
-    logModuleStates,
-    logSectionStates,
-    initNewOverlayModules,
-    logAllStates,
-    getAppliedTextStyle,
-    getAppliedColor,
-    getAppliedFontScale
-} from './main.js';
+import { initLocationManager } from '../general/location-manager.js';
 
-import {
-    initModuleManager,
-    updateMenuLabels,
-    applyInitialStates as applyModuleManagerInitialStates,
-    setTranslationFunction as setModuleManagerTranslationFunction,
-    getCurrentLanguage as getModuleManagerCurrentLanguage,
-    getCurrentTheme as getModuleManagerCurrentTheme,
-    isLoading as isModuleManagerLoading
-} from './module-manager.js';
-
-import {
-    initializeTooltipSystem,
-    refreshTooltips,
-    batchMigrateTooltips,
-    initializeMobileSidebarTooltips,
-    updateTooltipTextMap,
-    setTranslationGetter as setTooltipTranslationGetter
-} from './tooltip-controller.js';
-
-import {
-    initMobileDragController
-} from './drag-controller.js';
-
-import {
-    initTranslationSystem,
-    refreshTranslations,
-    updateDynamicMenuLabels,
-    translateElementsWithDataTranslate,
-    getTranslation as getTranslationFunction,
-    getCurrentLanguage as getTranslationCurrentLanguage
-} from './translations-controller.js';
 import { initColorSearchSystem } from '../tools/color-search-system.js';
-import {
-    initializeCategorySliderService,
-    initializeCentralizedFontManager,
-    initializeFullScreenManager
-} from '../tools/general-tools.js';
+import { initializeEverything } from '../tools/everything-controller.js';
+import { initializeCategorySliderService, initializeCentralizedFontManager, initializeFullScreenManager, initializeCardEventListeners } from '../tools/general-tools.js';
+import { initColorTextSystem, refreshColorSystem, applyCollapsedSectionsState, setupCollapsibleSectionEvents } from '../tools/palette-colors.js';
+import { initializeZoneInfoTool } from '../tools/zoneinfo-controller.js';
 
-import {
-    initColorTextSystem,
-    refreshColorSystem
-} from '../tools/palette-colors.js';
+import { initConfirmationModal } from './confirmation-modal-controller.js';
+import { initMobileDragController } from './drag-controller.js';
+import { initSidebarMobile, initSidebarSections, initControlCenter, initNewOverlayModules, logAllStates, getAppliedTextStyle, getAppliedColor, getAppliedFontScale } from './main.js';
+import { initModuleManager, updateMenuLabels, applyInitialStates as applyModuleManagerInitialStates, setTranslationFunction as setModuleManagerTranslationFunction, getCurrentLanguage as getModuleManagerCurrentLanguage, getCurrentTheme as getModuleManagerCurrentTheme, isLoading as isModuleManagerLoading } from './module-manager.js';
+import { initializeTooltipSystem, refreshTooltips, batchMigrateTooltips, initializeMobileSidebarTooltips, updateTooltipTextMap, setTranslationGetter as setTooltipTranslationGetter } from './tooltip-controller.js';
+import { initTranslationSystem, refreshTranslations, updateDynamicMenuLabels, translateElementsWithDataTranslate, getTranslation as getTranslationFunction, getCurrentLanguage as getTranslationCurrentLanguage } from './translations-controller.js';
+
+import { initMenuInteractions } from '../tools/menu-interactions.js';
+
+import { initializeStopwatch } from '../tools/stopwatch-controller.js';
+import { initializeTimerController } from '../tools/timer-controller.js';
+import { initializeAlarmClock } from '../tools/alarm-controller.js';
+import { initWorldClock } from '../tools/worldClock-controller.js';
+import { initDynamicIsland } from './dynamic-island-controller.js';
 
 // ========== CONFIGURATION CONSTANTS ==========
 
@@ -185,15 +152,13 @@ function createRefreshConfig(options = {}) {
 function forceRefresh(options = {}) {
     const config = createRefreshConfig(options);
     const now = Date.now();
-    
-    // FIX: List of sources that should bypass throttling for immediate UI feedback.
+
     const criticalUiSources = [
         REFRESH_SOURCES.SEARCH_UPDATE,
         REFRESH_SOURCES.RECENT_COLORS_RENDERED,
         REFRESH_SOURCES.DYNAMIC_ELEMENTS
     ];
 
-    // FIX: Modify throttling guard to allow critical sources through.
     if (now - applicationState.lastRefreshTime < TIMING_CONFIG.MIN_INTERVAL_BETWEEN_REFRESHES && !criticalUiSources.includes(config.source)) {
         if (debugConfig.enableLogs) {
             console.log(`⏸️ Refresh skipped - Too frequent (${config.source})`);
@@ -226,8 +191,7 @@ function forceRefresh(options = {}) {
     }
 
     const executeRefresh = () => performRefreshOperation(config);
-    
-    // FIX: Keep immediate execution logic for critical sources.
+
     if (config.immediate || criticalUiSources.includes(config.source)) {
         executeRefresh();
     } else {
@@ -378,14 +342,25 @@ function initializeMainComponents() {
     initSidebarSections();
     initControlCenter();
     initMobileDragController();
+    initMenuInteractions();
     initNewOverlayModules();
-
-    // ========== GENERAL TOOLS INITIALIZATION ==========
+    initializeZoneInfoTool();
+    initializeEverything();
+    initDynamicIsland();
+    applyCollapsedSectionsState();
+    setupCollapsibleSectionEvents();
+    initConfirmationModal();
     initializeCategorySliderService();
     initializeCentralizedFontManager();
     initializeFullScreenManager();
+    initializeCardEventListeners();
     initColorTextSystem();
-  initColorSearchSystem(); 
+    initColorSearchSystem();
+    initializeAlarmClock();
+    initWorldClock();
+    initializeStopwatch();
+    initializeTimerController();
+    initLocationManager();
     setupEventListeners();
     batchMigrateTooltips();
     initializeMobileSidebarTooltips();
@@ -510,16 +485,6 @@ function getLanguageDisplayName(language) {
         'fr-fr': 'Français (France)'
     };
     return languageNames[language] || language;
-}
-
-function getAppliedThemeClass() {
-    const html = document.documentElement;
-    if (html.classList.contains('dark-mode')) {
-        return 'dark-mode';
-    } else if (html.classList.contains('light-mode')) {
-        return 'light-mode';
-    }
-    return 'none';
 }
 
 // ========== EVENT LISTENERS CONFIGURATION - OPTIMIZED ==========

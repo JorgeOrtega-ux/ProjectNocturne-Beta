@@ -9,6 +9,7 @@
                     data-translate-target="tooltip">
                     <span class="material-symbols-rounded">add_alarm</span>
                 </div>
+                <div class="info-tool" data-timezone-alarm></div>
             </div>
             <div class="tool-options-content body-title">
                 <div class="increse-font-zise">
@@ -65,5 +66,7 @@
             </div>
         </div>
     </div>
-    <div class="section-bottom">3</div>
+    <div class="section-bottom">
+        <div class="alarms-list-wrapper"></div>
+    </div>
 </div>

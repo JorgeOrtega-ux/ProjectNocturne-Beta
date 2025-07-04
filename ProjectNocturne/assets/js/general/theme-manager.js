@@ -45,11 +45,11 @@ function initThemeManager() {
                 themeState.current = 'system';
                 localStorage.setItem('app-theme', themeState.current);
             }
-            
+
             applyThemeClass(themeState.current);
             setupSystemThemeListener();
             themeState.isSystemReady = true;
-            
+
             resolve();
         } catch (error) {
             console.error('❌ Error initializing Theme Manager:', error);
@@ -58,38 +58,13 @@ function initThemeManager() {
     });
 }
 
-// ========== CANCEL THEME CHANGE FUNCTION ==========
-
-function cancelThemeChange() {
-    if (!themeState.isChanging) {
-        return false;
-    }
-
-    console.log('🚫 Cancelling theme change process');
-
-    if (themeState.changeTimeout) {
-        clearTimeout(themeState.changeTimeout);
-        themeState.changeTimeout = null;
-    }
-
-    const previousTheme = themeState.current;
-    revertThemeChange(previousTheme);
-
-    themeState.isChanging = false;
-    themeState.pendingTheme = null;
-    themeState.isCancellable = false;
-
-    console.log('✅ Theme change cancelled, reverted to:', previousTheme);
-    return true;
-}
-
 // ========== UPDATED THEME MANAGEMENT ==========
 
 function applyTheme(theme) {
     if (themeState.isChanging || theme === themeState.current) {
         return Promise.resolve(false);
     }
-    
+
     const previousTheme = themeState.current;
     themeState.isChanging = true;
     themeState.pendingTheme = theme;
@@ -105,16 +80,16 @@ function applyTheme(theme) {
                 themeState.current = theme;
                 localStorage.setItem('app-theme', theme);
                 completeThemeChange(theme);
-                
+
                 if (onThemeChangeCallback && typeof onThemeChangeCallback === 'function') {
                     onThemeChangeCallback();
                 }
-                
+
                 const event = new CustomEvent('themeChanged', {
                     detail: { theme: theme, previousTheme: previousTheme }
                 });
                 document.dispatchEvent(event);
-                
+
                 return true;
             } else {
                 console.log('🚫 Theme change was cancelled during process');
@@ -253,29 +228,29 @@ function removeSpinnerFromLink(link) {
 
 function applyThemeStates() {
     const now = Date.now();
-    
+
     if (now - themeState.lastStateApplication < TIMING_CONFIG.MIN_INTERVAL_BETWEEN_OPERATIONS) {
         return;
     }
-    
+
     if (themeState.isChanging) {
         return;
     }
-    
+
     themeState.lastStateApplication = now;
-    
+
     try {
         const themeLinks = document.querySelectorAll('.menu-link[data-theme]');
         themeLinks.forEach(link => {
             const linkTheme = link.getAttribute('data-theme');
             link.classList.remove('active', 'preview-active', 'disabled-interactive');
             removeSpinnerFromLink(link);
-            
+
             if (linkTheme === themeState.current) {
                 link.classList.add('active');
             }
         });
-        
+
     } catch (error) {
         console.error('❌ Error applying theme states:', error);
     }
@@ -293,7 +268,7 @@ function updateThemeLabel() {
             const currentThemeTranslationKey = getThemeTranslationKey(themeState.current);
             const currentThemeText = getTranslation(currentThemeTranslationKey, 'menu');
             const newText = `${appearanceText}: ${currentThemeText}`;
-            
+
             if (appearanceLink.textContent !== newText) {
                 appearanceLink.textContent = newText;
                 console.log('🎨 Updated appearance label:', newText);
@@ -327,7 +302,7 @@ function setupSystemThemeListener() {
             if (themeState.current === 'system' && !themeState.isChanging) {
                 console.log('🌓 System theme preference changed, updating...');
                 applyThemeClass('system');
-                
+
                 setTimeout(() => {
                     if (onThemeChangeCallback && typeof onThemeChangeCallback === 'function') {
                         onThemeChangeCallback();
@@ -374,7 +349,7 @@ function resetThemeStates() {
         clearTimeout(themeState.changeTimeout);
         themeState.changeTimeout = null;
     }
-    
+
     themeState.isChanging = false;
     themeState.pendingTheme = null;
     themeState.isCancellable = false;
@@ -384,7 +359,7 @@ function resetThemeStates() {
 
 function setTranslationFunction(translationFn) {
     getTranslation = translationFn;
-    
+
     if (themeState.isSystemReady) {
         setTimeout(() => {
             updateThemeLabel();
@@ -439,11 +414,11 @@ function debugThemeManager() {
     console.log('Pending Theme:', themeState.pendingTheme);
     console.log('System Ready:', themeState.isSystemReady);
     console.log('Supported Themes:', SUPPORTED_THEMES);
-    
+
     const activeThemeLinks = document.querySelectorAll('.menu-link[data-theme].active');
-    console.log('Active Theme Links:', activeThemeLinks.length, 
+    console.log('Active Theme Links:', activeThemeLinks.length,
         Array.from(activeThemeLinks).map(el => el.getAttribute('data-theme')));
-    
+
     console.log('HTML Classes:', document.documentElement.className);
     console.groupEnd();
 }
@@ -451,24 +426,11 @@ function debugThemeManager() {
 // ========== EXPORTS ==========
 
 export {
-    initThemeManager,
-    applyTheme,
-    getCurrentTheme,
-    getSupportedThemes,
-    getThemeDisplayNames,
-    isThemeChanging,
-    isThemeSystemReady,
-    getThemeState,
-    
-    applyThemeStates,
-    updateThemeLabel,
-    cleanThemeLoadingStates,
-    setupThemeEventListeners,
-    
-    setTranslationFunction,
-    setThemeChangeCallback,
-    
-    resetThemeStates,
-    
-    debugThemeManager
+    applyTheme, applyThemeStates, cleanThemeLoadingStates, debugThemeManager, getCurrentTheme,
+    getSupportedThemes, getThemeDisplayNames, getThemeState, initThemeManager, isThemeChanging,
+    isThemeSystemReady, resetThemeStates, setThemeChangeCallback
+};
+
+export {
+    setTranslationFunction, setupThemeEventListeners, updateThemeLabel
 };

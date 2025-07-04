@@ -65,31 +65,6 @@ function initLanguageManager() {
     });
 }
 
-// ========== CANCEL LANGUAGE CHANGE FUNCTION ==========
-
-function cancelLanguageChange() {
-    if (!languageState.isChanging) {
-        return false;
-    }
-
-    console.log('🚫 Cancelling language change process');
-
-    if (languageState.changeTimeout) {
-        clearTimeout(languageState.changeTimeout);
-        languageState.changeTimeout = null;
-    }
-
-    const previousLanguage = languageState.current;
-    revertLanguageChange(previousLanguage);
-
-    languageState.isChanging = false;
-    languageState.pendingLanguage = null;
-    languageState.isCancellable = false;
-
-    console.log('✅ Language change cancelled, reverted to:', previousLanguage);
-    return true;
-}
-
 // ========== BROWSER LANGUAGE DETECTION ==========
 
 function detectBrowserLanguage() {

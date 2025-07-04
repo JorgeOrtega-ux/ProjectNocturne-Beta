@@ -100,53 +100,68 @@ function applyTranslations() {
     translateLegacyElements();
     updateDynamicMenuLabels();
     updateTooltipTranslations();
-    updateSearchPlaceholders();
     updateColorSystemHeaders();
 }
 
 // ========== NEW UNIFIED SYSTEM WITH data-translate ==========
 
-function translateElementsWithDataTranslate() {
-    const elementsToTranslate = document.querySelectorAll('[data-translate]');
+function translateElementsWithDataTranslate(parentElement = document.body) {
+    const elementsToTranslate = parentElement.querySelectorAll('[data-translate]');
 
     elementsToTranslate.forEach(element => {
         const translateKey = element.getAttribute('data-translate');
         const translateCategory = element.getAttribute('data-translate-category') || 'menu';
         const translateTarget = element.getAttribute('data-translate-target') || 'text';
+        const placeholdersAttr = element.getAttribute('data-placeholders');
 
         if (!translateKey) return;
+        if (isDynamicMenuElement(element)) return;
 
-        if (isDynamicMenuElement(element)) {
-            return;
+        let translatedText = getTranslation(translateKey, translateCategory);
+
+        if (placeholdersAttr) {
+            try {
+                const placeholders = JSON.parse(placeholdersAttr);
+                for (const placeholder in placeholders) {
+                    if (Object.prototype.hasOwnProperty.call(placeholders, placeholder)) {
+                        translatedText = translatedText.replace(`{${placeholder}}`, placeholders[placeholder]);
+                    }
+                }
+            } catch (e) {
+                console.error("Error parsing data-placeholders JSON", e);
+            }
         }
-
-        const translatedText = getTranslation(translateKey, translateCategory);
 
         switch (translateTarget) {
             case 'text':
                 element.textContent = translatedText;
                 break;
-
             case 'tooltip':
                 break;
-
             case 'title':
                 element.setAttribute('title', translatedText);
                 break;
-
             case 'placeholder':
                 element.setAttribute('placeholder', translatedText);
                 break;
-
             case 'aria-label':
                 element.setAttribute('aria-label', translatedText);
                 break;
-
             default:
                 element.textContent = translatedText;
         }
     });
 }
+
+function translateElementTree(element) {
+    if (element) {
+        if (element.hasAttribute('data-translate')) {
+            translateElementsWithDataTranslate(new DocumentFragment().appendChild(element.cloneNode(false)));
+        }
+        translateElementsWithDataTranslate(element);
+    }
+}
+
 
 // ========== FUNCTION TO DETECT DYNAMIC CONTROL CENTER ELEMENTS ==========
 
@@ -154,7 +169,7 @@ function isDynamicMenuElement(element) {
     const menuLink = element.closest('.menu-link');
     if (menuLink) {
         const toggle = menuLink.getAttribute('data-toggle');
-        if (toggle === 'appearance' || toggle === 'language') {
+        if (toggle === 'appearance' || toggle === 'language' || toggle === 'location') {
             return true;
         }
     }
@@ -162,22 +177,6 @@ function isDynamicMenuElement(element) {
 }
 
 // ========== NEW FUNCTIONS FOR SPECIFIC CATEGORIES ==========
-
-function updateSearchPlaceholders() {
-    const colorSearchInput = document.querySelector('.menu-paletteColors .search-content-text input');
-    if (colorSearchInput) {
-        const placeholderText = getTranslation('search_placeholder', 'search');
-        if (placeholderText && placeholderText !== 'search_placeholder') {
-            colorSearchInput.placeholder = placeholderText;
-        }
-    }
-
-    const otherSearchInputs = document.querySelectorAll('.search-content-text input:not(.menu-paletteColors .search-content-text input)');
-    otherSearchInputs.forEach(input => {
-        const placeholderText = getTranslation('search', 'tooltips') || 'Search...';
-        input.placeholder = placeholderText;
-    });
-}
 
 function updateColorSystemHeaders() {
     const colorSections = [
@@ -277,6 +276,7 @@ function updateDynamicMenuLabels() {
 
     updateAppearanceLabel();
     updateLanguageLabel();
+    updateLocationLabel();
 }
 
 function updateAppearanceLabel() {
@@ -299,6 +299,20 @@ function updateLanguageLabel() {
 
         if (languageKey && translations.menu[languageKey] && translations.menu.language) {
             languageLink.textContent = `${translations.menu.language}: ${translations.menu[languageKey]}`;
+        }
+    }
+}
+
+function updateLocationLabel() {
+    const locationLinkSpan = document.querySelector('.menu-link[data-toggle="location"] .menu-link-text span');
+    if (locationLinkSpan && typeof window.getCurrentLocation === 'function') {
+        const locationLabel = getTranslation('location', 'menu');
+        const currentLocationData = window.getCurrentLocation();
+        const currentLocationName = currentLocationData ? currentLocationData.name : getTranslation('none_selected', 'menu');
+        const newText = `${locationLabel}: ${currentLocationName}`;
+
+        if (locationLinkSpan.textContent !== newText) {
+            locationLinkSpan.textContent = newText;
         }
     }
 }
@@ -429,19 +443,11 @@ window.getColorSystemTranslation = getColorSystemTranslation;
 // ========== EXPORTS ==========
 
 export {
-    initTranslationSystem,
-    setCurrentLanguage,
-    getCurrentLanguage,
-    getTranslation,
-    getSearchTranslation,
-    getSearchSectionTranslation,
-    getColorSystemTranslation,
-    isSystemReady,
-    refreshTranslations,
-    updateDynamicMenuLabels,
-    applyTranslations,
-    translateElementsWithDataTranslate,
-    updateSearchPlaceholders,
-    updateColorSystemHeaders,
-    debugTranslationsController
+    applyTranslations, debugTranslationsController, getColorSystemTranslation, getCurrentLanguage,
+    getSearchSectionTranslation, getSearchTranslation, getTranslation, initTranslationSystem,
+    isSystemReady, refreshTranslations, setCurrentLanguage, translateElementTree
+};
+
+export {
+    translateElementsWithDataTranslate, updateColorSystemHeaders, updateDynamicMenuLabels
 };

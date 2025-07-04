@@ -164,10 +164,6 @@ function getSearchSectionTranslation(key) {
     return getTranslation(key, 'search_sections');
 }
 
-function getUnavailableText() {
-    return getTranslation('color_unavailable', 'search');
-}
-
 function getSearchPlaceholder() {
     return getTranslation('search_placeholder', 'search');
 }
@@ -208,14 +204,6 @@ function isValidForTheme(hex) {
         console.warn('Error validating color for theme (fallback):', e);
         return true;
     }
-}
-
-function getAutoColor() {
-    if (typeof window.colorTextManager === 'object' && typeof window.colorTextManager.getAutoColor === 'function') {
-        return window.colorTextManager.getAutoColor();
-    }
-    const currentTheme = getCurrentTheme();
-    return currentTheme === 'dark' ? '#ffffff' : '#000000';
 }
 
 // ========== SECTION VISIBILITY MANAGEMENT ==========
@@ -324,9 +312,6 @@ function handleSearchKeydown(e) {
             clearSearchColors();
         }
     } else if (e.key === 'Escape') {
-        // CORRECCIÓN: Simplemente desenfocar el input.
-        // El manejador global de "Esc" se encargará de cerrar el módulo,
-        // lo cual disparará el evento 'moduleDeactivated' que llama a 'clearSearchColors' una sola vez.
         e.target.blur();
     }
 }
@@ -411,10 +396,10 @@ function processSearchQuery(query) {
         results.desaturatedVariations = generateDesaturatedVariations(chromaColor).filter(c => isValidForTheme(c.hex));
         results.warmVariations = generateWarmVariations(chromaColor).filter(c => isValidForTheme(c.hex));
         results.coolVariations = generateCoolVariations(chromaColor).filter(c => isValidForTheme(c.hex));
-        
-        const arePremiumFeaturesEnabled = window.colorTextManager && typeof window.colorTextManager.arePremiumFeaturesEnabled === 'function' 
-                                      ? window.colorTextManager.arePremiumFeaturesEnabled() 
-                                      : false;
+
+        const arePremiumFeaturesEnabled = window.colorTextManager && typeof window.colorTextManager.arePremiumFeaturesEnabled === 'function'
+            ? window.colorTextManager.arePremiumFeaturesEnabled()
+            : false;
 
         if (arePremiumFeaturesEnabled) {
             results.shades = generateShades(chromaColor).filter(c => isValidForTheme(c.hex));
@@ -454,12 +439,10 @@ function getBaseColorFromQuery(query) {
     const lang = (typeof window.getCurrentLanguage === 'function') ? window.getCurrentLanguage() : 'en-us';
     const currentDb = COLOR_DATABASES[lang] || COLOR_DATABASES['en-us'];
 
-    // 1. Búsqueda exacta en la base de datos del idioma actual.
     if (currentDb[lowerQuery]) {
         return currentDb[lowerQuery];
     }
 
-    // 2. Si la búsqueda estricta está desactivada, buscar de forma exacta en otros idiomas.
     if (!COLOR_SEARCH_CONFIG.SEARCH_STRICT_LANGUAGE) {
         for (const dbLang in COLOR_DATABASES) {
             if (Object.prototype.hasOwnProperty.call(COLOR_DATABASES, dbLang)) {
@@ -470,19 +453,16 @@ function getBaseColorFromQuery(query) {
             }
         }
     }
-    
-    // 3. Como último recurso, intentar interpretar el color con chroma.js,
-    //    PERO solo si la búsqueda estricta está desactivada O si el idioma actual es inglés.
+
     if (!COLOR_SEARCH_CONFIG.SEARCH_STRICT_LANGUAGE || lang === 'en-us') {
         try {
             const color = chroma(lowerQuery);
             return { hex: color.hex(), key: null };
         } catch (error) {
-            // Ignorar errores de chroma si no es un nombre de color válido
+
         }
     }
 
-    // 4. Si no se encontró nada, devolver null.
     return null;
 }
 
@@ -495,7 +475,7 @@ function getColorName(colorHex, originalQuery) {
             return name;
         }
     }
-    
+
     for (const dbLang in COLOR_DATABASES) {
         if (Object.prototype.hasOwnProperty.call(COLOR_DATABASES, dbLang)) {
             const db = COLOR_DATABASES[dbLang];
@@ -756,7 +736,7 @@ function displaySearchResults(results) {
         { key: 'shades', titleKey: 'shades', icon: 'dark_mode' },
         { key: 'tones', titleKey: 'tones', icon: 'contrast' }
     ];
-    
+
     const fragment = document.createDocumentFragment();
     sections.forEach(sectionInfo => {
         const data = results[sectionInfo.key];
@@ -771,7 +751,7 @@ function displaySearchResults(results) {
             fragment.appendChild(sectionElement);
         }
     });
-    
+
     searchResultsWrapper.appendChild(fragment);
 
     if (typeof attachTooltipsToNewElements === 'function') {
@@ -860,9 +840,6 @@ function handleSearchColorClick(colorData) {
     document.dispatchEvent(event);
 }
 
-// ========== ERROR AND STATE HANDLING ==========
-
-// ========== ERROR AND STATE HANDLING - UPDATED ==========
 
 function displaySearchError(message) {
     const searchResultsWrapper = document.querySelector(COLOR_SEARCH_CONFIG.searchColorsWrapper);
@@ -870,27 +847,14 @@ function displaySearchError(message) {
 
     searchResultsWrapper.innerHTML = '';
 
-    // Crear solo el contenido general sin header
     const errorContent = document.createElement('div');
     errorContent.className = 'menu-content-general';
-    
+
     const errorMessage = document.createElement('p');
     errorMessage.textContent = message;
-    
+
     errorContent.appendChild(errorMessage);
     searchResultsWrapper.appendChild(errorContent);
-}
-
-// También puedes usar esta versión alternativa más minimalista:
-function displaySearchErrorMinimal(message) {
-    const searchResultsWrapper = document.querySelector(COLOR_SEARCH_CONFIG.searchColorsWrapper);
-    if (!searchResultsWrapper) return;
-
-    searchResultsWrapper.innerHTML = `
-        <div class="menu-content-general" style="padding: 20px;">
-            <p style="color: #888; text-align: center; margin: 0;">${message}</p>
-        </div>
-    `;
 }
 
 function showSearchSectionWrapper() {
@@ -932,22 +896,6 @@ function clearSearchColors() {
     if (typeof window.forceRefresh === 'function') {
         window.forceRefresh({ source: 'searchCleared', preset: 'TOOLTIPS_ONLY' });
     }
-}
-
-// ========== UTILITIES ==========
-
-function isLightColor(hex) {
-    if (typeof chroma !== 'undefined') {
-        try {
-            return chroma(hex).luminance() > 0.7;
-        } catch (e) {
-        }
-    }
-    const r = parseInt(hex.substr(1, 2), 16);
-    const g = parseInt(hex.substr(3, 2), 16);
-    const b = parseInt(hex.substr(5, 2), 16);
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.7;
 }
 
 // ========== PUBLIC API ==========
@@ -1118,20 +1066,11 @@ window.colorSearchManager = {
 // ========== EXPORTS ==========
 
 export {
-    initColorSearchSystem, // <--- CAMBIO: Se exporta la nueva función de inicialización
-    initializeSearchInput,
-    refreshSearchSystem,
-    clearSearchColors,
-    addCustomColor,
-    removeCustomColor,
-    getSearchState,
-    debugSearchSystem,
-    hideOtherColorSections,
-    showOtherColorSections,
-    performSearch,
-    isValidForTheme,
-    getCurrentTheme,
-    updateSearchPlaceholder,
-    showSearchSectionWrapper,
-    hideSearchSectionWrapper
+    addCustomColor, clearSearchColors, debugSearchSystem, getCurrentTheme, getSearchState,
+    hideOtherColorSections, hideSearchSectionWrapper, initializeSearchInput, initColorSearchSystem,
+    isValidForTheme, performSearch, refreshSearchSystem
+};
+
+export {
+    removeCustomColor, showOtherColorSections, showSearchSectionWrapper, updateSearchPlaceholder
 };

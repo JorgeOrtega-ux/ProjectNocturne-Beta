@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
     <link rel="stylesheet" type="text/css" href="assets/css/general/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/css/general/dark-mode.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/tools/tools.css">
     <script src="assets/js/general/initial-theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <title>ProjectNocturne - Home</title>
 </head>
 
@@ -26,7 +28,7 @@
                     <div class="scrollable-content overflow-y">
                         <div class="general-content-bottom">
                             <div class="section-content">
-                                <div class="section-everything active">Everything</div>
+                                <?php include 'includes/sections/everything.php'; ?>
                                 <?php include 'includes/sections/alarm.php'; ?>
                                 <?php include 'includes/sections/timer.php'; ?>
                                 <?php include 'includes/sections/stopwatch.php'; ?>
@@ -39,18 +41,31 @@
         </div>
     </div>
 
-    <script type="module" src="assets/js/general/translations-controller.js"></script>
+    <!-- General scripts -->
+    <script type="module" src="assets/js/general/init-app.js"></script>
     <script type="module" src="assets/js/general/main.js"></script>
+    <script type="module" src="assets/js/general/translations-controller.js"></script>
+    <script type="module" src="assets/js/general/location-manager.js"></script>
     <script type="module" src="assets/js/general/module-manager.js"></script>
     <script type="module" src="assets/js/general/theme-manager.js"></script>
     <script type="module" src="assets/js/general/language-manager.js"></script>
     <script type="module" src="assets/js/general/tooltip-controller.js"></script>
     <script type="module" src="assets/js/general/drag-controller.js"></script>
-    <script type="module" src="assets/js/general/init-app.js"></script>
+    <script type="module" src="assets/js/general/dynamic-island-controller.js"></script>
+    <script type="module" src="assets/js/general/confirmation-modal-controller.js"></script>
+    
+    <!-- Tools scripts -->
     <script type="module" src="assets/js/tools/general-tools.js"></script>
     <script type="module" src="assets/js/tools/palette-colors.js"></script>
     <script type="module" src="assets/js/tools/color-search-system.js"></script>
+    <script type="module" src="assets/js/tools/everything-controller.js"></script>
     <script type="module" src="assets/js/tools/alarm-controller.js"></script>
+    <script type="module" src="assets/js/tools/timer-controller.js"></script>
+    <script type="module" src="assets/js/tools/stopwatch-controller.js"></script>
+    <script type="module" src="assets/js/tools/worldClock-controller.js"></script>
+    <script type="module" src="assets/js/tools/menu-interactions.js"></script>
+    <script type="module" src="assets/js/tools/zoneinfo-controller.js"></script>
+
 </body>
 
 </html>
