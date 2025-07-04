@@ -578,10 +578,16 @@ export function addTimerAndRender(timerData) {
 
     const timerLimit = getTimerLimit();
     if (userTimers.length >= timerLimit) {
-        showDynamicIslandNotification('system', 'limit_reached', 'limit_reached_generic', 'notifications', {
-            type: getTranslation('timer', 'tooltips'),
-            limit: timerLimit
-        });
+        if (PREMIUM_FEATURES) {
+            showDynamicIslandNotification('system', 'limit_reached_premium', 'premium_limit_reached_message', 'notifications', {
+                type: getTranslation('timer', 'tooltips'),
+            });
+        } else {
+            showDynamicIslandNotification('system', 'limit_reached', 'limit_reached_generic', 'notifications', {
+                type: getTranslation('timer', 'tooltips'),
+                limit: timerLimit
+            });
+        }
         return;
     }
 

@@ -37,6 +37,8 @@
     "limit_reached": "Limite de {limit} {type}s atteinte.",
     "limit_reached_generic": "Limite de {limit} {type}s atteinte. Mettez à niveau pour en ajouter plus.",
     "loading_countries_error": "Erreur lors du chargement de la liste des pays.",
+    "limit_reached_premium_title": "Limite maximale atteinte",
+    "premium_limit_reached_message": "La limite maximale de {type} disponibles a été atteinte.",
     "dismiss": "Rejeter"
   },
   "color_system": {

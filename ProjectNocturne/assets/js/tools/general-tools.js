@@ -45,7 +45,7 @@ async function saveAudioToDB(id, name, fileBlob) {
     const db = await openDB();
     const transaction = db.transaction(AUDIO_STORE_NAME, 'readwrite');
     const store = transaction.objectStore(AUDIO_STORE_NAME);
-    
+
     return new Promise((resolve, reject) => {
         const audioRecord = { id, name, file: fileBlob };
         const request = store.put(audioRecord);
@@ -62,7 +62,7 @@ async function getAllAudiosFromDB() {
     const db = await openDB();
     const transaction = db.transaction(AUDIO_STORE_NAME, 'readonly');
     const store = transaction.objectStore(AUDIO_STORE_NAME);
-    
+
     return new Promise((resolve, reject) => {
         const request = store.getAll();
 
@@ -139,7 +139,7 @@ function replaceDeletedAudioInTools(deletedAudioId, defaultSoundId) {
     }
     if (window.timerManager && typeof window.timerManager.getAllTimers === 'function') {
         const { userTimers, defaultTimers } = window.timerManager.getAllTimers();
-         let changed = false;
+        let changed = false;
         [...userTimers, ...defaultTimers].forEach(timer => {
             if (timer.sound === deletedAudioId) {
                 timer.sound = defaultSoundId;
@@ -274,7 +274,7 @@ export async function generateSoundList(listElement, actionName, activeSoundId =
         <div class="menu-link-text"><span data-translate="upload_audio" data-translate-category="sounds">${getTranslation('upload_audio', 'sounds')}</span></div>
     `;
     listElement.appendChild(uploadLink);
-    
+
     const defaultSoundsHeader = document.createElement('div');
     defaultSoundsHeader.className = 'menu-content-header';
     defaultSoundsHeader.innerHTML = `<span>${getTranslation('default_audios', 'sounds')}</span>`;
@@ -329,11 +329,16 @@ export async function handleAudioUpload(callback) {
     const maxSizeInMB = PREMIUM_FEATURES ? '1 GB' : '256 MB';
 
     if (userAudiosCache.length >= uploadLimit) {
-        const messageKey = PREMIUM_FEATURES ? 'limit_reached_generic' : 'limit_reached_audio_free';
-        showDynamicIslandNotification('system', 'premium_required', messageKey, 'notifications', {
-            type: getTranslation('audio', 'sounds'),
-            limit: uploadLimit
-        });
+        if (PREMIUM_FEATURES) {
+            showDynamicIslandNotification('system', 'limit_reached_premium', 'premium_limit_reached_message', 'notifications', {
+                type: getTranslation('audio', 'sounds')
+            });
+        } else {
+            showDynamicIslandNotification('system', 'premium_required', 'limit_reached_generic', 'notifications', {
+                type: getTranslation('audio', 'sounds'),
+                limit: uploadLimit
+            });
+        }
         return;
     }
 
@@ -353,7 +358,7 @@ export async function handleAudioUpload(callback) {
             showDynamicIslandNotification('system', 'error', 'file_too_large', 'notifications', { maxSize: maxSizeInMB });
             return;
         }
-        
+
         try {
             const newAudio = await saveUserAudio(file.name, file);
             if (callback && typeof callback === 'function') {
@@ -1054,7 +1059,7 @@ export function initializeFullScreenManager() {
         });
         return;
     }
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         const fullScreenButton = event.target.closest('[data-action="toggleFullScreen"]');
         if (!fullScreenButton) return;
         event.preventDefault();
@@ -1177,8 +1182,8 @@ function handleAlarmCardAction(action, alarmId, target) {
             window.alarmManager.handleDeleteAlarm(alarmId);
             break;
         case 'dismiss-alarm':
-             window.alarmManager.dismissAlarm(alarmId);
-             break;
+            window.alarmManager.dismissAlarm(alarmId);
+            break;
     }
 }
 
@@ -1219,7 +1224,7 @@ function handleWorldClockCardAction(action, clockId, target) {
         return;
     }
 
-    switch(action) {
+    switch (action) {
         case 'pin-clock':
             window.worldClockManager.pinClock(target);
             break;
@@ -1233,4 +1238,4 @@ function handleWorldClockCardAction(action, clockId, target) {
     }
 }
 
-export {deleteUserAudio, handleAlarmCardAction, handleTimerCardAction, handleWorldClockCardAction, getSoundNameById };
+export { deleteUserAudio, handleAlarmCardAction, handleTimerCardAction, handleWorldClockCardAction, getSoundNameById };

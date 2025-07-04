@@ -244,10 +244,16 @@ export function getAlarmLimit() {
 function createAlarm(title, hour, minute, sound) {
     const alarmLimit = getAlarmLimit();
     if (userAlarms.length >= alarmLimit) {
-        showDynamicIslandNotification('system', 'limit_reached', 'limit_reached_generic', 'notifications', {
-            type: getTranslation('alarms', 'tooltips'),
-            limit: alarmLimit
-        });
+        if (PREMIUM_FEATURES) {
+            showDynamicIslandNotification('system', 'limit_reached_premium', 'premium_limit_reached_message', 'notifications', {
+                type: getTranslation('alarms', 'tooltips')
+            });
+        } else {
+            showDynamicIslandNotification('system', 'limit_reached', 'limit_reached_generic', 'notifications', {
+                type: getTranslation('alarms', 'tooltips'),
+                limit: alarmLimit
+            });
+        }
         return false;
     }
     const alarm = {

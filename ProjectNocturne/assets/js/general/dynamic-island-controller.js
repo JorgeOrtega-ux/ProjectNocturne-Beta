@@ -79,8 +79,15 @@ export function showDynamicIslandNotification(toolType, actionType, messageKey, 
     }
     iconSymbol.textContent = ICONS[iconKey] || ICONS.default;
 
-    const titleKey = `${toolType}_${actionType}_title`;
+    let titleKey;
+    if (actionType === 'limit_reached_premium') {
+        titleKey = 'limit_reached_premium_title';
+    } else {
+        titleKey = `${toolType}_${actionType}_title`;
+    }
+    
     titleP.setAttribute('data-translate', titleKey);
+    titleP.setAttribute('data-translate-category', 'notifications');
 
     messageP.setAttribute('data-translate', messageKey);
     if (data && Object.keys(data).length > 0) {

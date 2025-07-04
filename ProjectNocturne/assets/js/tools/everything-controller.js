@@ -29,38 +29,44 @@ const WIDGET_DEFINITIONS = {
             <div class="tool-grid active">
                 <div class="action-item" data-module="toggleMenuAlarm">
                     <div class="action-item-content">
-                        <div class="action-item-icon-wrapper-square">
-                            <span class="material-symbols-rounded action-item-icon">add_alarm</span>
+                        <div class="action-item-main-content">
+                            <div class="action-item-icon-wrapper-square">
+                                <span class="material-symbols-rounded action-item-icon">add_alarm</span>
+                            </div>
+                            <div class="action-item-text-wrapper">
+                                <span class="action-item-title" data-translate="new_alarm" data-translate-category="everything"></span>
+                                <span class="action-item-description">Crea y personaliza una nueva alarma.</span>
+                            </div>
                         </div>
-                        <div class="action-item-text-wrapper">
-                            <span class="action-item-title" data-translate="new_alarm" data-translate-category="everything"></span>
-                            <span class="action-item-description">Crea y personaliza una nueva alarma.</span>
-                            <span class="action-item-count" id="alarms-count-details"></span>
-                        </div>
+                        <span class="action-item-count" id="alarms-count-details"></span>
                     </div>
                 </div>
                 <div class="action-item" data-module="toggleMenuTimer">
                     <div class="action-item-content">
-                        <div class="action-item-icon-wrapper-square">
-                            <span class="material-symbols-rounded action-item-icon">add_circle</span>
+                        <div class="action-item-main-content">
+                            <div class="action-item-icon-wrapper-square">
+                                <span class="material-symbols-rounded action-item-icon">add_circle</span>
+                            </div>
+                            <div class="action-item-text-wrapper">
+                                <span class="action-item-title" data-translate="new_timer" data-translate-category="everything"></span>
+                                <span class="action-item-description">Inicia un temporizador o cuenta regresiva.</span>
+                            </div>
                         </div>
-                        <div class="action-item-text-wrapper">
-                            <span class="action-item-title" data-translate="new_timer" data-translate-category="everything"></span>
-                            <span class="action-item-description">Inicia un temporizador o cuenta regresiva.</span>
-                            <span class="action-item-count" id="timers-count-details"></span>
-                        </div>
+                        <span class="action-item-count" id="timers-count-details"></span>
                     </div>
                 </div>
                 <div class="action-item" data-module="toggleMenuWorldClock">
                     <div class="action-item-content">
-                         <div class="action-item-icon-wrapper-square">
-                            <span class="material-symbols-rounded action-item-icon">public</span>
+                        <div class="action-item-main-content">
+                            <div class="action-item-icon-wrapper-square">
+                                <span class="material-symbols-rounded action-item-icon">public</span>
+                            </div>
+                            <div class="action-item-text-wrapper">
+                                <span class="action-item-title" data-translate="add_clock" data-translate-category="everything"></span>
+                                <span class="action-item-description">Añade relojes de otras partes del mundo.</span>
+                            </div>
                         </div>
-                        <div class="action-item-text-wrapper">
-                            <span class="action-item-title" data-translate="add_clock" data-translate-category="everything"></span>
-                             <span class="action-item-description">Añade relojes de otras partes del mundo.</span>
-                             <span class="action-item-count" id="clocks-count-details"></span>
-                        </div>
+                        <span class="action-item-count" id="clocks-count-details"></span>
                     </div>
                 </div>
             </div>
