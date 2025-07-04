@@ -85,7 +85,7 @@ export function showDynamicIslandNotification(toolType, actionType, messageKey, 
     let finalMessageKey = messageKey; // Usamos la clave del mensaje que llega por defecto
 
     if (actionType === 'limit_reached') {
-        titleKey = 'limit_reached_premium_title'; // Título unificado para ambos casos
+        titleKey = 'limit_reached_title'; // CORREGIDO: Usar la clave correcta para el título.
         // Elegimos la descripción correcta basándonos en si el usuario es premium
         finalMessageKey = PREMIUM_FEATURES ? 'limit_reached_message_premium' : 'premium_limit_reached_message';
     } else if (toolType === 'system') {

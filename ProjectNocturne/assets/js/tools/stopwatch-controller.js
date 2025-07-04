@@ -16,6 +16,10 @@ const stopwatchState = {
 
 let displayElement, startBtn, stopBtn, lapBtn, resetBtn, lapsTableBody, sectionBottom;
 
+export function getLapLimit() {
+    return PREMIUM_FEATURES ? 10000 : 1000;
+}
+
 function saveState() {
     const stateToSave = {
         isRunning: stopwatchState.isRunning,
@@ -117,18 +121,16 @@ function resetStopwatch() {
 function recordLap() {
     if (!stopwatchState.isRunning) return;
 
-    const lapLimit = PREMIUM_FEATURES ? 1000 : 100;
+    const lapLimit = getLapLimit();
 
     if (stopwatchState.lapNumber >= lapLimit) {
-        // --- INICIO DE LA LÓGICA SIMPLIFICADA ---
         showDynamicIslandNotification(
             'system',
-            'limit_reached', // Acción genérica
-            null, // El controlador de notificaciones elegirá el mensaje
+            'limit_reached',
+            null,
             'notifications',
             { type: getTranslation('stopwatch', 'tooltips') }
         );
-        // --- FIN DE LA LÓGICA SIMPLIFICADA ---
         return;
     }
 
@@ -162,14 +164,11 @@ function renderLap(lapData) {
 
 function updateButtonStates() {
     const hasTime = stopwatchState.elapsedTime > 0;
-    let isLapDisabled = !stopwatchState.isRunning;
-
-    if (PREMIUM_FEATURES) {
-        const lapLimit = 1000;
-        if (stopwatchState.lapNumber >= lapLimit) {
-            isLapDisabled = true;
-        }
-    }
+    
+    // --- LÓGICA CORREGIDA ---
+    // El botón de vuelta solo se deshabilita si el cronómetro no está corriendo.
+    // La comprobación del límite de vueltas ya se hace en la función recordLap().
+    const isLapDisabled = !stopwatchState.isRunning;
 
     startBtn.classList.toggle('disabled-interactive', stopwatchState.isRunning);
     stopBtn.classList.toggle('disabled-interactive', !stopwatchState.isRunning);
