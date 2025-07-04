@@ -499,10 +499,10 @@
     color: #ffffff;
 }
 
-.dark-mode .alarm-count-badge,
-.dark-mode .timer-count-badge {
+.dark-mode .alarm-count-badge, .dark-mode .timer-count-badge {
     color: #fff;
-    background-color: #ffffff20;
+    background-color: transparent;
+    border-color: #ffffff20;
 }
 
 .dark-mode .tool-card .card-title {
