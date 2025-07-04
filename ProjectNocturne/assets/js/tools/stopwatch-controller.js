@@ -120,14 +120,15 @@ function recordLap() {
     const lapLimit = PREMIUM_FEATURES ? 1000 : 100;
 
     if (stopwatchState.lapNumber >= lapLimit) {
-        const messageKey = PREMIUM_FEATURES ? 'limit_reached_message_premium' : 'premium_limit_reached_message';
+        // --- INICIO DE LA LÓGICA SIMPLIFICADA ---
         showDynamicIslandNotification(
             'system',
-            PREMIUM_FEATURES ? 'limit_reached' : 'limit_reached_premium',
-            messageKey,
+            'limit_reached', // Acción genérica
+            null, // El controlador de notificaciones elegirá el mensaje
             'notifications',
             { type: getTranslation('stopwatch', 'tooltips') }
         );
+        // --- FIN DE LA LÓGICA SIMPLIFICADA ---
         return;
     }
 

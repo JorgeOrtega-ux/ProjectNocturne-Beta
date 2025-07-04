@@ -304,14 +304,15 @@ function createAndStartClockCard(title, country, timezone, existingId = null, sa
     const hasLocalClock = document.querySelector('.local-clock-card');
     const actualCurrentClocks = hasLocalClock && existingId !== 'local' ? totalCurrentClocks - 1 : totalCurrentClocks;
     if (save && actualCurrentClocks >= totalClockLimit) {
-        const messageKey = PREMIUM_FEATURES ? 'limit_reached_message_premium' : 'premium_limit_reached_message';
+        // --- INICIO DE LA LÓGICA SIMPLIFICADA ---
         showDynamicIslandNotification(
             'system',
-            PREMIUM_FEATURES ? 'limit_reached' : 'limit_reached_premium',
-            messageKey,
+            'limit_reached', // Acción genérica
+            null, // El controlador de notificaciones elegirá el mensaje
             'notifications',
             { type: getTranslation('world_clock', 'tooltips') }
         );
+        // --- FIN DE LA LÓGICA SIMPLIFICADA ---
         return;
     }
     const ct = window.ct;
@@ -393,7 +394,7 @@ function createAndStartClockCard(title, country, timezone, existingId = null, sa
     if (save) {
         userClocks.push({ id: cardId, title, country, timezone, countryCode });
         saveClocksToStorage();
-        showDynamicIslandNotification('worldclock', 'created', 'worldclock_created', 'notifications', { title: title });
+        showDynamicIslandNotification('worldClock', 'created', 'worldclock_created', 'notifications', { title: title });
         if (typeof updateEverythingWidgets === 'function') {
             updateEverythingWidgets();
         }
@@ -430,7 +431,7 @@ function updateClockCard(id, newData) {
             window.attachTooltipsToNewElements(card);
         }
     }, 0);
-    showDynamicIslandNotification('worldclock', 'updated', 'worldclock_updated', 'notifications', { title: newData.title });
+    showDynamicIslandNotification('worldClock', 'updated', 'worldclock_updated', 'notifications', { title: newData.title });
     if (typeof updateEverythingWidgets === 'function') {
         updateEverythingWidgets();
     }
@@ -545,7 +546,7 @@ function deleteClock(clockId) {
             pinClock(localPinBtn);
         }
 
-        showDynamicIslandNotification('worldclock', 'deleted', 'worldclock_deleted', 'notifications', {
+        showDynamicIslandNotification('worldClock', 'deleted', 'worldclock_deleted', 'notifications', {
             title: clockTitle
         });
 

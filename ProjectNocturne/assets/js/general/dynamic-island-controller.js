@@ -1,4 +1,5 @@
 import { translateElementTree } from './translations-controller.js';
+import { PREMIUM_FEATURES } from '../general/main.js'; // <-- IMPORTANTE: Añadir esta línea
 
 let dynamicIslandElement = null;
 let notificationTimeout = null;
@@ -79,40 +80,43 @@ export function showDynamicIslandNotification(toolType, actionType, messageKey, 
     }
     iconSymbol.textContent = ICONS[iconKey] || ICONS.default;
 
+    // --- INICIO DE LA LÓGICA CORREGIDA ---
     let titleKey;
-    // CORRECCIÓN: Lógica para generar la clave del título correctamente.
-    if (toolType === 'system') {
-        // Para notificaciones del sistema, la clave se deriva directamente de la acción.
-     if (actionType === 'limit_reached_premium') {
-        titleKey = 'limit_reached_premium_title';
-    } else if (actionType === 'premium_required') {
-        titleKey = 'limit_reached_premium_title'; // Changed from 'premium_required_title'
-    } else if (actionType === 'limit_reached') {
+    let finalMessageKey = messageKey; // Usamos la clave del mensaje que llega por defecto
+
+    if (actionType === 'limit_reached') {
+        titleKey = 'limit_reached_premium_title'; // Título unificado para ambos casos
+        // Elegimos la descripción correcta basándonos en si el usuario es premium
+        finalMessageKey = PREMIUM_FEATURES ? 'limit_reached_message_premium' : 'premium_limit_reached_message';
+    } else if (toolType === 'system') {
+        // Mantenemos la lógica para otras notificaciones del sistema
+        if (actionType === 'premium_required') {
+             titleKey = 'premium_required_title';
         } else {
-            // Para otras acciones del sistema como 'info', 'error', etc.
-            titleKey = `${actionType}_title`;
+             titleKey = `${actionType}_title`;
         }
     } else {
-        // Para otros tipos de herramientas, se combina como 'alarm_ringing_title'.
+        // Lógica para notificaciones que no son de límite (creado, borrado, sonando, etc.)
         titleKey = `${toolType}_${actionType}_title`;
     }
-    
+    // --- FIN DE LA LÓGICA CORREGIDA ---
+
     titleP.setAttribute('data-translate', titleKey);
     titleP.setAttribute('data-translate-category', 'notifications');
 
-    messageP.setAttribute('data-translate', messageKey);
+    messageP.setAttribute('data-translate', finalMessageKey); // Usamos la clave de mensaje final
     if (data && Object.keys(data).length > 0) {
         messageP.setAttribute('data-placeholders', JSON.stringify(data));
     } else {
         messageP.removeAttribute('data-placeholders');
     }
-    
+
     if (typeof translateElementTree === 'function') {
         translateElementTree(dynamicIslandElement);
     } else {
         console.error("translateElementTree function is not available.");
     }
-    
+
     if (actionType === 'ringing') {
         dynamicIslandElement.classList.add('active-tool-ringing');
         dismissCallback = onDismiss;
@@ -124,14 +128,14 @@ export function showDynamicIslandNotification(toolType, actionType, messageKey, 
     }
 
     dynamicIslandElement.classList.add('expanded');
-    console.log(`Dynamic Island Display: ${toolType} ${actionType} - TitleKey: ${titleKey}, MsgKey: ${messageKey}`);
+    console.log(`Dynamic Island Display: ${toolType} ${actionType} - TitleKey: ${titleKey}, MsgKey: ${finalMessageKey}`);
 }
 
 export function hideDynamicIsland() {
     if (!dynamicIslandElement) return;
     if (notificationTimeout) clearTimeout(notificationTimeout);
     notificationTimeout = null;
-    
+
     dynamicIslandElement.classList.remove('expanded', 'active-tool-ringing');
     dismissCallback = null;
     currentRingingToolId = null;

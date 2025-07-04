@@ -21,7 +21,7 @@
     "info_title": "Information",
     "error_title": "Erreur",
     "premium_title": "Fonctionnalité Premium",
-    "limit_reached_title": "Limite atteinte",
+    "limit_reached_title": "Limite maximale atteinte",
     "premium_required_title": "Premium Requis",
     "alarm_ringing": "Le temps est écoulé pour '{title}'.",
     "alarm_created": "L'alarme '{title}' a été configurée correctement.",
@@ -34,11 +34,9 @@
     "worldclock_created": "L'horloge '{title}' a été ajoutée correctement.",
     "worldclock_updated": "L'horloge '{title}' a été mise à jour correctement.",
     "worldclock_deleted": "L'horloge '{title}' a été supprimée.",
-    "limit_reached": "Limite de {limit} {type}s atteinte.",
-    "limit_reached_generic": "Limite de {limit} {type}s atteinte. Mettez à niveau pour en ajouter plus.",
     "loading_countries_error": "Erreur lors du chargement de la liste des pays.",
-    "limit_reached_premium_title": "Limite maximale atteinte",
-    "premium_limit_reached_message": "La limite maximale de {type} disponibles a été atteinte.",
+    "premium_limit_reached_message": "Devenez premium pour augmenter la limite disponible",
+    "limit_reached_message_premium": "La limite maximale de {type} disponibles a été atteinte.",
     "dismiss": "Rejeter"
   },
   "color_system": {
@@ -166,21 +164,21 @@
     "everything": "Accueil",
     "fullscreen": "Plein écran",
     "italic": "Italique",
+    "lap": "Tour",
     "linear_gradient_90deg": "Dégradé linéaire 90°",
     "menu": "Menu",
     "pause": "Pause",
+    "pin_clock": "Épingler l'horloge",
+    "pin_timer": "Épingler le minuteur",
     "play": "Démarrer",
     "remove": "Réduire la taille de la police",
     "reset": "Réinitialiser",
     "settings": "Paramètres",
     "stop": "Arrêter",
     "stopwatch": "Chronomètre",
-    "lap": "Tour",
     "timer": "Minuteur",
     "timezone": "Fuseau horaire",
-    "world_clock": "Horloge mondiale",
-    "pin_clock": "Épingler l'horloge",
-    "pin_timer": "Épingler le minuteur"
+    "world_clock": "Horloge mondiale"
   },
   "stopwatch": {
     "lap_header": "Tour",
@@ -231,7 +229,8 @@
     "urgent_beep": "Bip urgent",
     "upload_audio": "Télécharger l'audio",
     "uploaded_audios": "Audios téléchargés",
-    "default_audios": "Audios par défaut"
+    "default_audios": "Audios par défaut",
+    "audio_singular": "Audio"
   },
   "timer": {
     "countdown": "Compte à rebours",

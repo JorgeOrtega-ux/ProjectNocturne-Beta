@@ -244,14 +244,15 @@ export function getAlarmLimit() {
 function createAlarm(title, hour, minute, sound) {
     const alarmLimit = getAlarmLimit();
     if (userAlarms.length >= alarmLimit) {
-        const messageKey = PREMIUM_FEATURES ? 'limit_reached_message_premium' : 'premium_limit_reached_message';
+        // --- INICIO DE LA LÓGICA SIMPLIFICADA ---
         showDynamicIslandNotification(
             'system',
-            PREMIUM_FEATURES ? 'limit_reached' : 'limit_reached_premium',
-            messageKey,
+            'limit_reached', // Acción genérica
+            null, // El controlador de notificaciones elegirá el mensaje
             'notifications',
             { type: getTranslation('alarms', 'tooltips') }
         );
+        // --- FIN DE LA LÓGICA SIMPLIFICADA ---
         return false;
     }
     const alarm = {

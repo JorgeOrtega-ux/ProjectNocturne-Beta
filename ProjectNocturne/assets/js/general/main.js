@@ -8,7 +8,7 @@ import { isGradientColor } from '../tools/palette-colors.js';
 export let use24HourFormat = true;
 
 // ========== PREMIUM FEATURES CONSTANT ==========
-export const PREMIUM_FEATURES = true;
+export const PREMIUM_FEATURES = false;
 
 // ========== CARD MOVEMENT SETTING ==========
 export let allowCardMovement = true;
