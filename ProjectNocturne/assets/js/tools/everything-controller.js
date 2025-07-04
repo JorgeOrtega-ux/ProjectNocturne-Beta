@@ -11,7 +11,7 @@ const WIDGET_DEFINITIONS = {
                 <div class="clock-date" id="main-clock-date"></div>
             </div>
             <div class="add-button-container">
-                <button class="header-button add-btn" data-action="toggle-add-menu" data-tooltip="Add">
+                <button class="header-button add-btn" data-action="toggle-add-menu" data-translate="add_element" data-translate-category="tooltips" data-translate-target="tooltip">
                     <span class="material-symbols-rounded">add</span>
                 </button>
                 <div class="add-menu-container disabled">
@@ -108,11 +108,6 @@ function updateActionCounts() {
         const limit = window.alarmManager.getAlarmLimit();
         const isDisabled = count >= limit;
         alarmMenuItem.classList.toggle('disabled-interactions', isDisabled);
-        if (isDisabled) {
-            alarmMenuItem.setAttribute('data-tooltip', getTranslation('limit_reached', 'everything'));
-        } else {
-            alarmMenuItem.removeAttribute('data-tooltip');
-        }
     }
 
     const timerMenuItem = document.querySelector('.add-menu-container .menu-link[data-module="toggleMenuTimer"]');
@@ -121,11 +116,6 @@ function updateActionCounts() {
         const limit = window.timerManager.getTimerLimit();
         const isDisabled = count >= limit;
         timerMenuItem.classList.toggle('disabled-interactions', isDisabled);
-        if (isDisabled) {
-            timerMenuItem.setAttribute('data-tooltip', getTranslation('limit_reached', 'everything'));
-        } else {
-            timerMenuItem.removeAttribute('data-tooltip');
-        }
     }
 
     const clockMenuItem = document.querySelector('.add-menu-container .menu-link[data-module="toggleMenuWorldClock"]');
@@ -134,11 +124,6 @@ function updateActionCounts() {
         const limit = window.worldClockManager.getClockLimit();
         const isDisabled = count >= limit;
         clockMenuItem.classList.toggle('disabled-interactions', isDisabled);
-        if (isDisabled) {
-            clockMenuItem.setAttribute('data-tooltip', getTranslation('limit_reached', 'everything'));
-        } else {
-            clockMenuItem.removeAttribute('data-tooltip');
-        }
     }
 
     if (typeof refreshTooltips === 'function') {

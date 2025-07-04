@@ -1270,10 +1270,17 @@ html.light-mode .dynamic-island {
     top: calc(100% + 5px);
     right: 0;
     width: 225px;
+    border: 1px solid transparent;
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 12px;
     filter: drop-shadow(0 4px 12px #00000020);
     z-index: 10;
+}
+
+
+.dark-mode .add-menu-container {
+    filter: unset;
+    border-color: #ffffff20;
 }
 
 .add-menu-container .menu-list {
