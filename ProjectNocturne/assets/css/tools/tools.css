@@ -1235,6 +1235,70 @@ html.light-mode .dynamic-island {
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
+}/* ... (todo el contenido existente de styles.css) ... */
+
+/* ---- ESTILOS PARA EL NUEVO BOTÓN Y MENÚ ---- */
+.widget-clock {
+    position: relative;
+}
+
+
+.add-button-container {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
+.add-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #00000020;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-btn:hover {
+    background-color: #f5f5fa;
+}
+
+.add-menu-container {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    width: 225px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    filter: drop-shadow(0 4px 12px #00000020);
+    z-index: 10;
+}
+
+.add-menu-container .menu-list {
+    padding: 8px;
+}
+
+.dark-mode .add-btn {
+    border-color: #ffffff20;
+    color: #fff;
+}
+
+.dark-mode .add-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .add-menu-container {
+    background-color: #252627;
+    border-color: #ffffff20;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.menu-link.disabled-interactions {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
 }
 
 .widget-icon {
