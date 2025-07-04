@@ -1,6 +1,6 @@
 // ========== APPLICATION MAIN INITIALIZER - UPDATED FOR UNIFIED MODULE MANAGER ==========
 
-import { initLocationManager } from '../general/location-manager.js';
+import { initLocationManager, resetLocationSearch } from '../general/location-manager.js';
 
 import { initColorSearchSystem } from '../tools/color-search-system.js';
 import { initializeEverything } from '../tools/everything-controller.js';
@@ -492,6 +492,15 @@ function getLanguageDisplayName(language) {
 function setupEventListeners() {
     setupRefreshEventListeners();
     setupMutationObserver();
+
+    // AÑADE ESTE BLOQUE
+    document.addEventListener('moduleDeactivated', (e) => {
+        if (e.detail && (e.detail.module === 'controlCenter' || e.detail.module === 'toggleControlCenter')) {
+            if (typeof resetLocationSearch === 'function') {
+                resetLocationSearch();
+            }
+        }
+    });
 }
 
 function setupRefreshEventListeners() {

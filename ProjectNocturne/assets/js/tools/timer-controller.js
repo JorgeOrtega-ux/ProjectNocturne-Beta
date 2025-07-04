@@ -53,14 +53,19 @@ function updatePinnedTimerNameDisplay() {
 }
 
 function renderTimerSearchResults(searchTerm) {
-    const resultsWrapper = document.querySelector('.timer-search-results-wrapper');
-    const creationWrapper = document.querySelector('.timer-creation-wrapper');
+    const menuElement = document.querySelector('.menu-timer[data-menu="Timer"]');
+    if (!menuElement) return;
 
-    if (!resultsWrapper || !creationWrapper) return;
+    const resultsWrapper = menuElement.querySelector('.timer-search-results-wrapper');
+    const creationWrapper = menuElement.querySelector('.timer-creation-wrapper');
+    const typeSelector = menuElement.querySelector('.menu-content-selector');
+
+    if (!resultsWrapper || !creationWrapper || !typeSelector) return;
 
     if (!searchTerm) {
         resultsWrapper.classList.add('disabled');
         creationWrapper.classList.remove('disabled');
+        typeSelector.classList.remove('disabled');
         resultsWrapper.innerHTML = '';
         return;
     }
@@ -72,6 +77,7 @@ function renderTimerSearchResults(searchTerm) {
     });
 
     creationWrapper.classList.add('disabled');
+    typeSelector.classList.add('disabled');
     resultsWrapper.classList.remove('disabled');
     resultsWrapper.innerHTML = '';
 
@@ -341,7 +347,10 @@ function initializeTimerController() {
 
     document.addEventListener('moduleDeactivated', (e) => {
         if (e.detail && e.detail.module === 'toggleMenuTimer') {
-            const searchInput = document.getElementById('timer-search-input');
+            const menuElement = document.querySelector('.menu-timer[data-menu="Timer"]');
+            if (!menuElement) return;
+
+            const searchInput = menuElement.querySelector('#timer-search-input');
             if (searchInput) {
                 searchInput.value = '';
                 renderTimerSearchResults('');
@@ -582,15 +591,13 @@ export function addTimerAndRender(timerData) {
 
     const timerLimit = getTimerLimit();
     if (userTimers.length >= timerLimit) {
-        // --- INICIO DE LA LÓGICA SIMPLIFICADA ---
         showDynamicIslandNotification(
             'system',
-            'limit_reached', // Acción genérica
-            null, // El controlador de notificaciones elegirá el mensaje
+            'limit_reached',
+            null,
             'notifications',
             { type: getTranslation('timer', 'tooltips') }
         );
-        // --- FIN DE LA LÓGICA SIMPLIFICADA ---
         return;
     }
 

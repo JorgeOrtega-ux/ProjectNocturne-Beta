@@ -847,14 +847,15 @@ function displaySearchError(message) {
 
     searchResultsWrapper.innerHTML = '';
 
-    const errorContent = document.createElement('div');
-    errorContent.className = 'menu-content-general';
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'menu-content-general';
 
-    const errorMessage = document.createElement('p');
-    errorMessage.textContent = message;
+    const errorMessageElement = document.createElement('div');
+    errorMessageElement.className = 'no-results-message';
+    errorMessageElement.textContent = message;
 
-    errorContent.appendChild(errorMessage);
-    searchResultsWrapper.appendChild(errorContent);
+    errorContainer.appendChild(errorMessageElement);
+    searchResultsWrapper.appendChild(errorContainer);
 }
 
 function showSearchSectionWrapper() {

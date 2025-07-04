@@ -7,6 +7,15 @@ import { addTimerAndRender, updateTimer, getTimersCount, getTimerLimit } from '.
 import { showDynamicIslandNotification } from '../general/dynamic-island-controller.js';
 import { playSound, stopSound, generateSoundList, handleAudioUpload, deleteUserAudio, getSoundNameById } from './general-tools.js';
 
+// --- NUEVO: ESTADO PARA EL AUTO-INCREMENTO ---
+const autoIncrementState = {
+    isActive: false,
+    intervalId: null,
+    timeoutId: null,
+    initialDelay: 500,
+    repeatInterval: 120
+};
+
 const initialState = {
     alarm: { hour: 0, minute: 0, sound: 'classic_beep' },
     timer: {
@@ -51,6 +60,26 @@ const getMenuElement = (menuName) => {
     };
     return document.querySelector(menuSelectorMap[menuName]);
 };
+
+// --- NUEVO: FUNCIONES PARA CONTROLAR EL AUTO-INCREMENTO ---
+function startAutoIncrement(actionFn) {
+    stopAutoIncrement();
+    autoIncrementState.isActive = true;
+
+    actionFn(); // Ejecutar una vez al presionar
+
+    autoIncrementState.timeoutId = setTimeout(() => {
+        autoIncrementState.intervalId = setInterval(actionFn, autoIncrementState.repeatInterval);
+    }, autoIncrementState.initialDelay);
+}
+
+function stopAutoIncrement() {
+    if (autoIncrementState.timeoutId) clearTimeout(autoIncrementState.timeoutId);
+    if (autoIncrementState.intervalId) clearInterval(autoIncrementState.intervalId);
+    autoIncrementState.isActive = false;
+    autoIncrementState.timeoutId = null;
+    autoIncrementState.intervalId = null;
+}
 
 function addSpinnerToCreateButton(button) {
     button.classList.add('disabled-interactive');
@@ -681,7 +710,9 @@ async function populateTimezoneDropdown(parentMenu, countryCode) {
     }
 }
 
+// --- MODIFICADO: FUNCIÓN DE EVENTOS GLOBALES ---
 function setupGlobalEventListeners() {
+    // Listener para clics generales (cerrar dropdowns, etc.)
     document.addEventListener('click', (event) => {
         const isClickInsideDropdown = event.target.closest('.dropdown-menu-container');
         const isClickOnToggle = event.target.closest('[data-action]')?.dataset.action in dropdownMap;
@@ -691,6 +722,7 @@ function setupGlobalEventListeners() {
         }
     });
 
+    // Listener para búsqueda de países
     document.body.addEventListener('input', (event) => {
         const searchInput = event.target.closest('#country-search-input');
         if (searchInput) {
@@ -714,49 +746,92 @@ function setupGlobalEventListeners() {
             if (matchesFound === 0 && searchTerm) {
                 if (!noResultsMsg) {
                     noResultsMsg = document.createElement('div');
-                    noResultsMsg.className = 'menu-link-text no-results-message';
-                    noResultsMsg.style.padding = '8px 12px'; noResultsMsg.style.textAlign = 'center'; noResultsMsg.style.color = '#888';
+                    noResultsMsg.className = 'no-results-message';
                     countryList.appendChild(noResultsMsg);
                 }
                 const noResultsText = (typeof getTranslation === 'function') ? getTranslation('no_results', 'search') : 'No results found for';
                 noResultsMsg.textContent = `${noResultsText} "${searchInput.value}"`;
-                noResultsMsg.style.display = 'block';
             } else {
-                if (noResultsMsg) noResultsMsg.style.display = 'none';
+                if (noResultsMsg) noResultsMsg.remove();
             }
         }
     });
 
-   document.body.addEventListener('click', async (event) => {
-    const parentMenu = event.target.closest('.menu-alarm, .menu-timer, .menu-worldClock');
-    if (!parentMenu) return;
+    // Listener principal para acciones de clic
+    document.body.addEventListener('click', async (event) => {
+        const parentMenu = event.target.closest('.menu-alarm, .menu-timer, .menu-worldClock');
+        if (!parentMenu) return;
 
-    const tabTarget = event.target.closest('.menu-timer-type .menu-link[data-tab]');
+        // Si ya hay un auto-incremento, el clic no hace nada
+        if (autoIncrementState.isActive) return;
+
+        const actionTarget = event.target.closest('[data-action]');
+        if (!actionTarget) return;
+
+        handleActionClick(actionTarget, parentMenu);
+    });
+
+    // --- NUEVO: LISTENERS PARA AUTO-INCREMENTO ---
+    const incrementDecrementActions = {
+        'increaseHour': (p) => { state.alarm.hour = (state.alarm.hour + 1) % 24; updateAlarmDisplay(p); },
+        'decreaseHour': (p) => { state.alarm.hour = (state.alarm.hour - 1 + 24) % 24; updateAlarmDisplay(p); },
+        'increaseMinute': (p) => { state.alarm.minute = (state.alarm.minute + 1) % 60; updateAlarmDisplay(p); },
+        'decreaseMinute': (p) => { state.alarm.minute = (state.alarm.minute - 1 + 60) % 60; updateAlarmDisplay(p); },
+        'increaseTimerHour': (p) => { state.timer.duration.hours = (state.timer.duration.hours + 1) % 100; updateTimerDurationDisplay(p); },
+        'decreaseTimerHour': (p) => { state.timer.duration.hours = (state.timer.duration.hours - 1 + 100) % 100; updateTimerDurationDisplay(p); },
+        'increaseTimerMinute': (p) => { state.timer.duration.minutes = (state.timer.duration.minutes + 1) % 60; updateTimerDurationDisplay(p); },
+        'decreaseTimerMinute': (p) => { state.timer.duration.minutes = (state.timer.duration.minutes - 1 + 60) % 60; updateTimerDurationDisplay(p); },
+        'increaseTimerSecond': (p) => { state.timer.duration.seconds = (state.timer.duration.seconds + 1) % 60; updateTimerDurationDisplay(p); },
+        'decreaseTimerSecond': (p) => { state.timer.duration.seconds = (state.timer.duration.seconds - 1 + 60) % 60; updateTimerDurationDisplay(p); },
+    };
+
+    Object.keys(incrementDecrementActions).forEach(action => {
+        const buttons = document.querySelectorAll(`[data-action="${action}"]`);
+        buttons.forEach(button => {
+            const parentMenu = button.closest('.menu-alarm, .menu-timer');
+            if (!parentMenu) return;
+
+            const actionFn = () => incrementDecrementActions[action](parentMenu);
+
+            button.addEventListener('mousedown', () => startAutoIncrement(actionFn));
+            button.addEventListener('touchstart', (e) => { e.preventDefault(); startAutoIncrement(actionFn); });
+        });
+    });
+
+    // Listeners para detener el auto-incremento
+    ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(eventType => {
+        document.addEventListener(eventType, stopAutoIncrement);
+    });
+}
+
+// --- NUEVO: FUNCIÓN CENTRALIZADA PARA MANEJAR CLICS ---
+async function handleActionClick(actionTarget, parentMenu) {
+    const action = actionTarget.dataset.action;
+
+    // Abrir/Cerrar dropdowns
+    if (dropdownMap[action]) {
+        toggleDropdown(action, parentMenu);
+        return;
+    }
+
+    const tabTarget = actionTarget.closest('.menu-timer-type .menu-link[data-tab]');
     if (tabTarget) {
         event.stopPropagation();
         state.timer.currentTab = tabTarget.dataset.tab;
         updateTimerTabView(parentMenu);
         const dropdown = tabTarget.closest('.dropdown-menu-container');
-        if (dropdown) {
-            dropdown.classList.add('disabled');
-        }
+        if (dropdown) dropdown.classList.add('disabled');
         return;
     }
 
-    const dayTarget = event.target.closest('.calendar-days .day:not(.other-month)');
-    if (dayTarget && dayTarget.dataset.day) { event.stopPropagation(); selectCalendarDate(parseInt(dayTarget.dataset.day, 10), parentMenu); return; }
-
-    const actionTarget = event.target.closest('[data-action]');
-    if (!actionTarget) return;
-
-    const action = actionTarget.dataset.action;
-    if (dropdownMap[action]) { toggleDropdown(action, parentMenu); return; }
+    const dayTarget = actionTarget.closest('.calendar-days .day:not(.other-month)');
+    if (dayTarget && dayTarget.dataset.day) {
+        event.stopPropagation();
+        selectCalendarDate(parseInt(dayTarget.dataset.day, 10), parentMenu);
+        return;
+    }
 
     switch (action) {
-        case 'increaseHour': state.alarm.hour = (state.alarm.hour + 1) % 24; updateAlarmDisplay(parentMenu); break;
-        case 'decreaseHour': state.alarm.hour = (state.alarm.hour - 1 + 24) % 24; updateAlarmDisplay(parentMenu); break;
-        case 'increaseMinute': state.alarm.minute = (state.alarm.minute + 1) % 60; updateAlarmDisplay(parentMenu); break;
-        case 'decreaseMinute': state.alarm.minute = (state.alarm.minute - 1 + 60) % 60; updateAlarmDisplay(parentMenu); break;
         case 'selectAlarmSound':
             event.stopPropagation();
             handleSelect(actionTarget, '#alarm-selected-sound');
@@ -767,12 +842,6 @@ function setupGlobalEventListeners() {
             }
             actionTarget.classList.add('active');
             break;
-        case 'increaseTimerHour': state.timer.duration.hours = (state.timer.duration.hours + 1) % 100; updateTimerDurationDisplay(parentMenu); break;
-        case 'decreaseTimerHour': state.timer.duration.hours = (state.timer.duration.hours - 1 + 100) % 100; updateTimerDurationDisplay(parentMenu); break;
-        case 'increaseTimerMinute': state.timer.duration.minutes = (state.timer.duration.minutes + 1) % 60; updateTimerDurationDisplay(parentMenu); break;
-        case 'decreaseTimerMinute': state.timer.duration.minutes = (state.timer.duration.minutes - 1 + 60) % 60; updateTimerDurationDisplay(parentMenu); break;
-        case 'increaseTimerSecond': state.timer.duration.seconds = (state.timer.duration.seconds + 1) % 60; updateTimerDurationDisplay(parentMenu); break;
-        case 'decreaseTimerSecond': state.timer.duration.seconds = (state.timer.duration.seconds - 1 + 60) % 60; updateTimerDurationDisplay(parentMenu); break;
         case 'selectTimerEndAction': event.stopPropagation(); handleSelect(actionTarget, '#timer-selected-end-action'); state.timer.endAction = actionTarget.dataset.endAction; break;
         case 'selectCountdownSound':
             event.stopPropagation();
@@ -886,12 +955,11 @@ function setupGlobalEventListeners() {
                 });
             }
             break;
-            
-        // --- INICIO DE LA LÓGICA CORREGIDA ---
+
         case 'createAlarm': {
             const alarmLimit = window.alarmManager?.getAlarmLimit() ?? (PREMIUM_FEATURES ? 100 : 5);
             const currentAlarmCount = window.alarmManager?.getAlarmCount() ?? 0;
-            
+
             if (currentAlarmCount >= alarmLimit) {
                 showDynamicIslandNotification(
                     'system',
@@ -918,7 +986,7 @@ function setupGlobalEventListeners() {
                 resetAlarmMenu(parentMenu);
             }, 500);
             break;
-        } 
+        }
         case 'createTimer': {
             const timerLimit = getTimerLimit();
             if (getTimersCount() >= timerLimit) {
@@ -967,7 +1035,7 @@ function setupGlobalEventListeners() {
         case 'addWorldClock': {
             const clockLimit = window.worldClockManager?.getClockLimit() ?? (PREMIUM_FEATURES ? 100 : 5);
             const currentClockCount = window.worldClockManager?.getClockCount() ?? 0;
-            
+
             if (currentClockCount >= clockLimit) {
                 showDynamicIslandNotification(
                     'system',
@@ -978,7 +1046,7 @@ function setupGlobalEventListeners() {
                 );
                 return;
             }
-            
+
             const clockTitle = parentMenu.querySelector('#worldclock-title').value.trim();
             const { country, timezone } = state.worldClock;
             if (!clockTitle || !country || !timezone) return;
@@ -995,8 +1063,6 @@ function setupGlobalEventListeners() {
             }, 500);
             break;
         }
-        // --- FIN DE LA LÓGICA CORREGIDA ---
-
         case 'saveAlarmChanges': {
             const editingId = parentMenu.getAttribute('data-editing-id');
             const alarmTitleInput = parentMenu.querySelector('#alarm-title');
@@ -1088,7 +1154,7 @@ function setupGlobalEventListeners() {
             break;
         }
     }
-});
 }
+
 
 export { initMenuInteractions };

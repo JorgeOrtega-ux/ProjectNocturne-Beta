@@ -14,7 +14,7 @@ const WIDGET_DEFINITIONS = {
                 <button class="header-button add-btn" data-action="toggle-add-menu" data-translate="add_element" data-translate-category="tooltips" data-translate-target="tooltip">
                     <span class="material-symbols-rounded">add</span>
                 </button>
-                <div class="add-menu-container disabled">
+                <div class="dropdown-menu-container add-menu-custom disabled">
                     <div class="menu-list">
                         <div class="menu-link" data-module="toggleMenuAlarm">
                             <div class="menu-link-icon"><span class="material-symbols-rounded">add_alarm</span></div>
@@ -49,14 +49,14 @@ function createWidgetElement(id) {
 }
 
 function rebindEventListeners() {
-    const actionItems = document.querySelectorAll('.add-menu-container .menu-link[data-module]');
+    const actionItems = document.querySelectorAll('.add-menu-custom .menu-link[data-module]');
     actionItems.forEach(item => {
         const moduleName = item.dataset.module;
         if (moduleName) {
             item.addEventListener('click', () => {
                 if (!item.classList.contains('disabled-interactions')) {
                     toggleModule(moduleName);
-                    const menu = item.closest('.add-menu-container');
+                    const menu = item.closest('.add-menu-custom');
                     if (menu) {
                         menu.classList.add('disabled');
                     }
@@ -69,7 +69,7 @@ function rebindEventListeners() {
     if (addMenuButton) {
         addMenuButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            const menu = document.querySelector('.add-menu-container');
+            const menu = document.querySelector('.add-menu-custom');
             if (menu) {
                 menu.classList.toggle('disabled');
             }
@@ -77,7 +77,7 @@ function rebindEventListeners() {
     }
 
     document.addEventListener('click', (e) => {
-        const menu = document.querySelector('.add-menu-container');
+        const menu = document.querySelector('.add-menu-custom');
         const addButton = document.querySelector('[data-action="toggle-add-menu"]');
         if (menu && !menu.classList.contains('disabled') && !menu.contains(e.target) && !addButton.contains(e.target)) {
             menu.classList.add('disabled');
@@ -102,7 +102,7 @@ function renderAllWidgets() {
 }
 
 function updateActionCounts() {
-    const alarmMenuItem = document.querySelector('.add-menu-container .menu-link[data-module="toggleMenuAlarm"]');
+    const alarmMenuItem = document.querySelector('.add-menu-custom .menu-link[data-module="toggleMenuAlarm"]');
     if (alarmMenuItem && window.alarmManager) {
         const count = window.alarmManager.getAlarmCount();
         const limit = window.alarmManager.getAlarmLimit();
@@ -110,7 +110,7 @@ function updateActionCounts() {
         alarmMenuItem.classList.toggle('disabled-interactions', isDisabled);
     }
 
-    const timerMenuItem = document.querySelector('.add-menu-container .menu-link[data-module="toggleMenuTimer"]');
+    const timerMenuItem = document.querySelector('.add-menu-custom .menu-link[data-module="toggleMenuTimer"]');
     if (timerMenuItem && window.timerManager) {
         const count = window.timerManager.getTimersCount();
         const limit = window.timerManager.getTimerLimit();
@@ -118,7 +118,7 @@ function updateActionCounts() {
         timerMenuItem.classList.toggle('disabled-interactions', isDisabled);
     }
 
-    const clockMenuItem = document.querySelector('.add-menu-container .menu-link[data-module="toggleMenuWorldClock"]');
+    const clockMenuItem = document.querySelector('.add-menu-custom .menu-link[data-module="toggleMenuWorldClock"]');
     if (clockMenuItem && window.worldClockManager) {
         const count = window.worldClockManager.getClockCount();
         const limit = window.worldClockManager.getClockLimit();

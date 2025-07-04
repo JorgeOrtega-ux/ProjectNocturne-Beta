@@ -308,20 +308,24 @@ function filterCountryList(query) {
     if (matchesFound === 0 && normalizedQuery) {
         if (!noResultsMsg) {
             noResultsMsg = document.createElement('div');
-            noResultsMsg.className = 'menu-link-text no-results-message';
-            noResultsMsg.style.padding = '12px';
-            noResultsMsg.style.textAlign = 'center';
-            noResultsMsg.style.color = '#888';
+            noResultsMsg.className = 'no-results-message';
             menuList.appendChild(noResultsMsg);
         }
         const noResultsText = getTranslation('no_results', 'search');
         noResultsMsg.textContent = `${noResultsText} "${query}"`;
-        noResultsMsg.style.display = 'block';
     } else {
         if (noResultsMsg) {
-            noResultsMsg.style.display = 'none';
+            noResultsMsg.remove();
         }
     }
+}
+
+function resetLocationSearch() {
+    const searchInput = document.querySelector('#location-search-input');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    filterCountryList('');
 }
 
 function addEventListeners() {
@@ -360,6 +364,8 @@ function resetLocationStates() {
     state.isCancellable = false;
 }
 
+
+
 function cleanLocationChangeStates() {
     const previousCountry = state.selectedCountry;
     resetLocationStates();
@@ -375,4 +381,4 @@ function getCurrentLocation() {
 }
 window.getCurrentLocation = getCurrentLocation;
 
-export { initLocationManager, getCurrentLocation, isLocationChanging, resetLocationStates, cleanLocationChangeStates };
+export { initLocationManager, getCurrentLocation, isLocationChanging, resetLocationStates, cleanLocationChangeStates, resetLocationSearch };

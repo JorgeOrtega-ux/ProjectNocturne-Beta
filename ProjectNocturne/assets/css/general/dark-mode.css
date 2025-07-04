@@ -662,3 +662,12 @@
 .dark-mode .menu-delete-btns .confirm-btn:hover {
     background-color: #ef9a9a;
 }
+
+.dark-mode .add-btn {
+    border-color: #ffffff20;
+    color: #fff;
+}
+
+.dark-mode .add-btn:hover {
+    background-color: #ffffff20;
+}

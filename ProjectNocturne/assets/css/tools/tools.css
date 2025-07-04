@@ -740,6 +740,7 @@
 .no-results-message {
     padding: 20px;
     text-align: center;
+    overflow-wrap: break-word;
     color: #888;
 }
 
