@@ -349,14 +349,34 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: auto;
-    padding: 8px;
-    gap: 8px;
+    max-height: 450px; /* Altura estandarizada para todos los menús */
+    padding: 0; 
+    gap: 0;
     color: #000000;
     background-color: #ffffff;
     border-radius: 12px;
     border: 1px solid transparent;
     filter: drop-shadow(0 4px 12px #00000020);
+}
+
+.menu-header {
+    flex-shrink: 0;
+    padding: 8px;
+    border-bottom: 1px solid #00000020;
+}
+
+.menu-body {
+    flex-grow: 1;
+    padding: 8px;
+    min-height: 0;
+}
+
+.menu-control-center[data-menu="location"] .menu-body {
+    padding: 0 8px 8px 8px;
+}
+
+.menu-control-center[data-menu="location"] .menu-list {
+    padding-top: 8px;
 }
 
 .module-overlay {
@@ -1101,6 +1121,7 @@ body {
         border-bottom: 0;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+        max-height: 70vh;
     }
 
     .pill-container {
@@ -1229,7 +1250,7 @@ body {
     display: none;
 }
 
-.alarm-search-result {
+    .alarm-search-result {
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -1402,10 +1423,10 @@ body {
     background-color: transparent;
     border-radius: 8px;
     border: 1px solid #0000001a;
-    padding: 16px; /* Aumentamos el padding para más espacio */
+    padding: 16px;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    min-height: 140px; /* Aumentamos la altura mínima */
+    min-height: 140px;
 }
 
 .action-item:hover {
@@ -1414,34 +1435,11 @@ body {
 
 .action-item-content {
     display: flex;
-    flex-direction: column; /* Organiza los elementos verticalmente */
-    justify-content: space-between; /* Empuja el contenido principal hacia arriba y el contador hacia abajo */
+    flex-direction: column;
+    justify-content: space-between;
     align-items: flex-start;
     gap: 4px;
-    flex-grow: 1; /* Permite que el contenedor crezca y ocupe el espacio */
-}
-/* ====================================== */
-/* =========== LOCATION MENU FIX ======== */
-/* ====================================== */
-.menu-control-center[data-menu="location"] {
-    /* Establecemos una altura máxima para el menú en vista de escritorio */
-    max-height: 450px;
-    flex-direction: column;
-}
-
-.menu-control-center[data-menu="location"] .menu-control-center-bottom {
-    /* Hacemos que esta sección (la lista) ocupe el espacio disponible */
-    flex: 1;
-    /* Esto es crucial para que el overflow funcione correctamente en un contenedor flex */
-    min-height: 0;
-}
-
-/* Adaptamos la altura para la vista en móviles */
-@media (max-width: 468px) {
-    .menu-control-center[data-menu="location"] {
-        /* Usamos un porcentaje de la altura de la pantalla (viewport height) */
-        max-height: 70vh;
-    }
+    flex-grow: 1;
 }
 
 .action-item-main-content {
@@ -1503,7 +1501,7 @@ body {
     border-color: #ffffff20;
 }
 .dark-mode .action-item-icon-wrapper-square {
-    background-color: transparent; /* Lo hacemos transparente para que no desentone */
+    background-color: transparent;
     border-color: #ffffff30;
 }
 
@@ -1519,5 +1517,8 @@ body {
 .dark-mode .action-item-count {
     background-color: transparent;
     color: #fff;
+    border-color: #ffffff20;
+}
+.dark-mode .menu-header {
     border-color: #ffffff20;
 }
