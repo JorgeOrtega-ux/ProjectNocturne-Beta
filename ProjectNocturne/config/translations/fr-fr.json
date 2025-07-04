@@ -22,7 +22,7 @@
     "error_title": "Erreur",
     "premium_title": "Fonctionnalité Premium",
     "limit_reached_title": "Limite atteinte",
-    "premium_required_title": "Fonctionnalité Premium requise",
+    "premium_required_title": "Premium Requis",
     "alarm_ringing": "Le temps est écoulé pour '{title}'.",
     "alarm_created": "L'alarme '{title}' a été configurée correctement.",
     "alarm_updated": "L'alarme '{title}' a été mise à jour correctement.",
@@ -312,6 +312,22 @@
     "limit_reached": "Limite maximale atteinte",
     "no_active_alarms": "Aucune alarme active",
     "no_running_timers": "Aucun minuteur en cours",
-    "upcoming_festivities": "Festivités à venir"
+    "upcoming_festivities": "Festivités à venir",
+    "new_alarm_desc": "Créez et personnalisez une nouvelle alarme.",
+    "new_timer_desc": "Démarrez une minuterie ou un compte à rebours.",
+    "add_clock_desc": "Ajoutez des horloges d'autres parties du monde.",
+    "limit_available": "Limite disponible ({available} / {limit})"
+  },
+  "confirmation": {
+    "confirm_delete_title_alarm": "Supprimer l'alarme?",
+    "confirm_delete_message_alarm": "Vous êtes sur le point de supprimer l'alarme {name}. Cette action est irréversible.",
+    "confirm_delete_title_timer": "Supprimer le minuteur?",
+    "confirm_delete_message_timer": "Vous êtes sur le point de supprimer le minuteur {name}. Cette action est irréversible.",
+    "confirm_delete_title_world-clock": "Supprimer l'horloge?",
+    "confirm_delete_message_world-clock": "Vous êtes sur le point de supprimer l'horloge {name}. Cette action est irréversible.",
+    "confirm_delete_title_audio": "Supprimer l'audio?",
+    "confirm_delete_message_audio": "Vous êtes sur le point de supprimer l'audio {name}. Il sera remplacé dans les alarmes/minuteurs qui l'utilisent. Cette action est irréversible.",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
   }
 }

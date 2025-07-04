@@ -897,9 +897,8 @@ function setupGlobalEventListeners() {
                             type: getTranslation('alarms', 'tooltips'),
                         });
                     } else {
-                        showDynamicIslandNotification('system', 'premium_required', 'limit_reached_generic', 'notifications', {
-                            type: getTranslation('alarms', 'tooltips'),
-                            limit: alarmLimit
+                        showDynamicIslandNotification('system', 'premium_required', 'premium_limit_reached_message', 'notifications', {
+                            type: getTranslation('alarms', 'tooltips')
                         });
                     }
                     console.warn('⚠️ Alarm creation blocked: limit reached.');
@@ -1001,9 +1000,8 @@ function setupGlobalEventListeners() {
                             type: getTranslation('timer', 'tooltips'),
                         });
                     } else {
-                        showDynamicIslandNotification('system', 'premium_required', 'limit_reached_generic', 'notifications', {
-                            type: getTranslation('timer', 'tooltips'),
-                            limit: timerLimit
+                        showDynamicIslandNotification('system', 'premium_required', 'premium_limit_reached_message', 'notifications', {
+                            type: getTranslation('timer', 'tooltips')
                         });
                     }
                     console.warn('⚠️ Timer creation blocked: limit reached.');
@@ -1127,9 +1125,8 @@ function setupGlobalEventListeners() {
                             type: getTranslation('world_clock', 'tooltips'),
                         });
                     } else {
-                        showDynamicIslandNotification('system', 'premium_required', 'limit_reached_generic', 'notifications', {
-                            type: getTranslation('world_clock', 'tooltips'),
-                            limit: clockLimit
+                        showDynamicIslandNotification('system', 'premium_required', 'premium_limit_reached_message', 'notifications', {
+                            type: getTranslation('world_clock', 'tooltips')
                         });
                     }
                     console.warn('⚠️ World Clock creation blocked: limit reached.');

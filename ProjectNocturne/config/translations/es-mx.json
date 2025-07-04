@@ -22,23 +22,22 @@
     "error_title": "Error",
     "premium_title": "Función Premium",
     "limit_reached_title": "Límite alcanzado",
-    "premium_required_title": "Función Premium requerida",
+    "premium_required_title": "Premium Requerido",
     "alarm_ringing": "El tiempo para '{title}' ha finalizado.",
-    "alarm_created": "Se ha configurado la alarma '{title}' correctamente.",
+    "alarm_created": "Se ha agregado la alarma '{title}' correctamente.",
     "alarm_updated": "Se ha actualizado la alarma '{title}' correctamente.",
     "alarm_deleted": "Se ha eliminado la alarma '{title}'.",
     "timer_ringing": "El tiempo para '{title}' ha finalizado.",
-    "timer_created": "Se ha iniciado el temporizador '{title}' correctamente.",
+    "timer_created": "Se ha agregado el temporizador '{title}' correctamente.",
     "timer_updated": "Se ha actualizado el temporizador '{title}' correctamente.",
     "timer_deleted": "Se ha eliminado el temporizador '{title}'.",
     "worldclock_created": "Se ha agregado el reloj '{title}' correctamente.",
     "worldclock_updated": "Se ha actualizado el reloj '{title}' correctamente.",
     "worldclock_deleted": "Se ha eliminado el reloj '{title}'.",
     "limit_reached": "Se alcanzó el límite de {limit} {type}s.",
-    "limit_reached_generic": "Límite de {limit} {type}s alcanzado. Actualiza para añadir más.",
+    "premium_limit_reached_message": "Se ha alcanzado el límite máximo de {type} disponibles.",
     "loading_countries_error": "Error al cargar la lista de países.",
     "limit_reached_premium_title": "Se ha alcanzado el límite máximo",
-    "premium_limit_reached_message": "Se ha alcanzado el límite máximo de {type} disponibles.",
     "dismiss": "Descartar"
   },
   "color_system": {
@@ -231,7 +230,8 @@
     "urgent_beep": "Beep Urgente",
     "upload_audio": "Subir Audio",
     "uploaded_audios": "Audios Subidos",
-    "default_audios": "Audios Predeterminados"
+    "default_audios": "Audios Predeterminados",
+    "audio_singular": "Audio"
   },
   "timer": {
     "countdown": "Cuenta regresiva",
@@ -313,7 +313,11 @@
     "no_active_alarms": "No hay alarmas activas",
     "no_running_timers": "No hay timers corriendo",
     "upcoming_festivities": "Próximas Festividades",
-    "festivities_not_available": "Las festividades no están disponibles para esta ubicación."
+    "festivities_not_available": "Las festividades no están disponibles para esta ubicación.",
+    "new_alarm_desc": "Crea y personaliza una nueva alarma.",
+    "new_timer_desc": "Inicia un temporizador o cuenta regresiva.",
+    "add_clock_desc": "Añade relojes de otras partes del mundo.",
+    "limit_available": "Limite disponible ({available} / {limit})"
   },
   "confirmation": {
     "confirm_delete_title_alarm": "¿Eliminar Alarma?",

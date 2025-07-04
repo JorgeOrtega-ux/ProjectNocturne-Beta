@@ -14,6 +14,7 @@ const state = {
     isChanging: false,
     changeTimeout: null,
     pendingCountry: null,
+    isCancellable: false,
     selectedCountry: null,
     countries: [],
 };
@@ -40,12 +41,6 @@ async function initLocationManager() {
     }
 }
 
-
-function getCurrentLocation() {
-    return state.selectedCountry;
-}
-window.getCurrentLocation = getCurrentLocation;
-
 function applyCountryChange(country) {
     if (state.isChanging || (state.selectedCountry && state.selectedCountry.code === country.code)) {
         return Promise.resolve(false);
@@ -54,6 +49,7 @@ function applyCountryChange(country) {
     const previousCountry = state.selectedCountry;
     state.isChanging = true;
     state.pendingCountry = country;
+    state.isCancellable = true;
 
     console.log(`✈️ Applying country change: ${country.name} (${country.code})`);
     setupCountryLoadingUI(country);
@@ -64,8 +60,11 @@ function applyCountryChange(country) {
                 setCountry(country);
                 completeCountryChange(country);
                 return true;
+            } else {
+                console.log('🚫 Location change was cancelled during process');
+                revertCountryChange(previousCountry);
+                return false;
             }
-            return false;
         })
         .catch(error => {
             console.error('Error changing country:', error);
@@ -76,6 +75,7 @@ function applyCountryChange(country) {
             setTimeout(() => {
                 state.isChanging = false;
                 state.pendingCountry = null;
+                state.isCancellable = false;
             }, 100);
         });
 }
@@ -141,8 +141,6 @@ function revertCountryChange(previousCountry) {
         }
     });
 }
-
-// --- UTILIDADES DE SPINNER ---
 
 function addSpinnerToLink(link) {
     removeSpinnerFromLink(link);
@@ -351,4 +349,30 @@ function addEventListeners() {
     });
 }
 
-export { initLocationManager, getCurrentLocation };
+function resetLocationStates() {
+    if (state.changeTimeout) {
+        clearTimeout(state.changeTimeout);
+        state.changeTimeout = null;
+    }
+    
+    state.isChanging = false;
+    state.pendingCountry = null;
+    state.isCancellable = false;
+}
+
+function cleanLocationChangeStates() {
+    const previousCountry = state.selectedCountry;
+    resetLocationStates();
+    revertCountryChange(previousCountry);
+}
+
+function isLocationChanging() {
+    return state.isChanging;
+}
+
+function getCurrentLocation() {
+    return state.selectedCountry;
+}
+window.getCurrentLocation = getCurrentLocation;
+
+export { initLocationManager, getCurrentLocation, isLocationChanging, resetLocationStates, cleanLocationChangeStates };

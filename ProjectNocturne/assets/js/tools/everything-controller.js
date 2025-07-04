@@ -35,7 +35,7 @@ const WIDGET_DEFINITIONS = {
                             </div>
                             <div class="action-item-text-wrapper">
                                 <span class="action-item-title" data-translate="new_alarm" data-translate-category="everything"></span>
-                                <span class="action-item-description">Crea y personaliza una nueva alarma.</span>
+                                <span class="action-item-description" data-translate="new_alarm_desc" data-translate-category="everything"></span>
                             </div>
                         </div>
                         <span class="action-item-count" id="alarms-count-details"></span>
@@ -49,7 +49,7 @@ const WIDGET_DEFINITIONS = {
                             </div>
                             <div class="action-item-text-wrapper">
                                 <span class="action-item-title" data-translate="new_timer" data-translate-category="everything"></span>
-                                <span class="action-item-description">Inicia un temporizador o cuenta regresiva.</span>
+                                <span class="action-item-description" data-translate="new_timer_desc" data-translate-category="everything"></span>
                             </div>
                         </div>
                         <span class="action-item-count" id="timers-count-details"></span>
@@ -63,7 +63,7 @@ const WIDGET_DEFINITIONS = {
                             </div>
                             <div class="action-item-text-wrapper">
                                 <span class="action-item-title" data-translate="add_clock" data-translate-category="everything"></span>
-                                <span class="action-item-description">Añade relojes de otras partes del mundo.</span>
+                                <span class="action-item-description" data-translate="add_clock_desc" data-translate-category="everything"></span>
                             </div>
                         </div>
                         <span class="action-item-count" id="clocks-count-details"></span>
@@ -75,6 +75,7 @@ const WIDGET_DEFINITIONS = {
 };
 
 let smartUpdateInterval = null;
+let updateTimeout = null;
 
 function createWidgetElement(id) {
     const definition = WIDGET_DEFINITIONS[id];
@@ -135,7 +136,10 @@ function updateActionCounts() {
         if (count >= limit) {
             alarmsCountEl.textContent = getTranslation('limit_reached', 'everything');
         } else {
-            alarmsCountEl.textContent = `Te quedan ${limit - count} de ${limit}`;
+            const translation = getTranslation('limit_available', 'everything');
+            alarmsCountEl.textContent = translation
+                .replace('{available}', limit - count)
+                .replace('{limit}', limit);
         }
     }
 
@@ -146,7 +150,10 @@ function updateActionCounts() {
         if (count >= limit) {
             timersCountEl.textContent = getTranslation('limit_reached', 'everything');
         } else {
-            timersCountEl.textContent = `Te quedan ${limit - count} de ${limit}`;
+            const translation = getTranslation('limit_available', 'everything');
+            timersCountEl.textContent = translation
+                .replace('{available}', limit - count)
+                .replace('{limit}', limit);
         }
     }
 
@@ -157,7 +164,10 @@ function updateActionCounts() {
         if (count >= limit) {
             clocksCountEl.textContent = getTranslation('limit_reached', 'everything');
         } else {
-            clocksCountEl.textContent = `Te quedan ${limit - count} de ${limit}`;
+            const translation = getTranslation('limit_available', 'everything');
+            clocksCountEl.textContent = translation
+                .replace('{available}', limit - count)
+                .replace('{limit}', limit);
         }
     }
 }
@@ -167,12 +177,10 @@ export function initializeEverything() {
     renderAllWidgets();
     updateCurrentDate();
     updateActionCounts();
-    smartUpdateInterval = setInterval(() => {
-        updateCurrentDate();
-        updateActionCounts();
-    }, 1000);
+    smartUpdateInterval = setInterval(updateCurrentDate, 1000);
     console.log('✅ Controlador "Everything" con nuevo diseño de acciones inicializado.');
-    document.addEventListener('translationsApplied', updateCurrentDate);
+    // CORRECCIÓN: Llamar a updateEverythingWidgets para una actualización completa
+    document.addEventListener('translationsApplied', updateEverythingWidgets);
 }
 
 function updateCurrentDate() {
@@ -193,7 +201,21 @@ function updateCurrentDate() {
 }
 
 export function updateEverythingWidgets() {
-    console.log('🔄 Actualizando widgets de "Everything"...');
-    updateCurrentDate();
-    updateActionCounts();
+    if (updateTimeout) {
+        clearTimeout(updateTimeout);
+    }
+
+    updateTimeout = setTimeout(() => {
+        console.log('🔄 Actualizando widgets de "Everything" (On-Demand)...');
+        // Se añade la función para volver a traducir los elementos estáticos
+        if (typeof translateElementTree === 'function') {
+            const mainContainer = document.querySelector('.everything-grid-container');
+            if (mainContainer) {
+                translateElementTree(mainContainer);
+            }
+        }
+        updateCurrentDate();
+        updateActionCounts();
+        updateTimeout = null;
+    }, 50);
 }

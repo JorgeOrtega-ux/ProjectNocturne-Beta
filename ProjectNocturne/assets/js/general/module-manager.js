@@ -5,6 +5,7 @@
 import { initializeMenuForOverlay, resetMenuForOverlay } from '../tools/menu-interactions.js';
 import { applyLanguageStates, getCurrentLanguage, initLanguageManager, isLanguageChanging, resetLanguageStates, setLanguage, setLanguageChangeCallback, setTranslationFunction as setLanguageTranslationFunction, setupLanguageEventListeners, updateLanguageLabel } from './language-manager.js';
 import { applyTheme, applyThemeStates, getCurrentTheme, initThemeManager, isThemeChanging, resetThemeStates, setThemeChangeCallback, setTranslationFunction as setThemeTranslationFunction, setupThemeEventListeners, updateThemeLabel } from './theme-manager.js';
+import { isLocationChanging, cleanLocationChangeStates } from './location-manager.js';
 
 
 // ========== CONSTANTS AND CONFIGURATION ==========
@@ -129,6 +130,12 @@ function cancelAllActiveProcesses(reason = 'unknown') {
         console.log(`🚫 Cancelling active language change (${reason})`);
 
         cleanLanguageChangeStates();
+        processesCancelled = true;
+    }
+
+    if (isLocationChanging()) {
+        console.log(`🚫 Cancelling active location change (${reason})`);
+        cleanLocationChangeStates();
         processesCancelled = true;
     }
 

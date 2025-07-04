@@ -125,9 +125,8 @@ function recordLap() {
             updateButtonStates();
             return;
         } else {
-            showDynamicIslandNotification('system', 'premium_required', 'limit_reached_generic', 'notifications', {
-                type: getTranslation('stopwatch', 'tooltips'),
-                limit: lapLimit
+            showDynamicIslandNotification('system', 'premium_required', 'premium_limit_reached_message', 'notifications', {
+                type: getTranslation('stopwatch', 'tooltips')
             });
             return;
         }

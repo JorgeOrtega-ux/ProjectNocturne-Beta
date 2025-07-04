@@ -1417,8 +1417,31 @@ body {
     flex-direction: column; /* Organiza los elementos verticalmente */
     justify-content: space-between; /* Empuja el contenido principal hacia arriba y el contador hacia abajo */
     align-items: flex-start;
-    gap: 12px;
+    gap: 4px;
     flex-grow: 1; /* Permite que el contenedor crezca y ocupe el espacio */
+}
+/* ====================================== */
+/* =========== LOCATION MENU FIX ======== */
+/* ====================================== */
+.menu-control-center[data-menu="location"] {
+    /* Establecemos una altura máxima para el menú en vista de escritorio */
+    max-height: 450px;
+    flex-direction: column;
+}
+
+.menu-control-center[data-menu="location"] .menu-control-center-bottom {
+    /* Hacemos que esta sección (la lista) ocupe el espacio disponible */
+    flex: 1;
+    /* Esto es crucial para que el overflow funcione correctamente en un contenedor flex */
+    min-height: 0;
+}
+
+/* Adaptamos la altura para la vista en móviles */
+@media (max-width: 468px) {
+    .menu-control-center[data-menu="location"] {
+        /* Usamos un porcentaje de la altura de la pantalla (viewport height) */
+        max-height: 70vh;
+    }
 }
 
 .action-item-main-content {
@@ -1441,24 +1464,24 @@ body {
 
 .action-item-icon {
     font-size: 24px;
-    color: #333;
+    color: #000;
 }
 
 .action-item-text-wrapper {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    gap: 4px;
+
 }
 
 .action-item-title {
-    font-size: 1rem;
+    font-size: 14px;
     font-weight: 600;
-    color: #1d1d1f;
+    color: #000000;
 }
 
 .action-item-description {
-    font-size: 0.8rem;
+    font-size: 12px;
     color: #6e6e73;
     line-height: 1.4;
 }
@@ -1470,10 +1493,9 @@ body {
     font-size: 0.75rem;
     border: 1px solid #00000020;
     font-weight: 500;
-    color: rgba(0, 0, 0, 0.7);
+    color: #000000;
     background-color: transparent;
     border-radius: 50px;
-    margin-top: auto; /* Empuja el contador hacia abajo */
 }
 
 /* ---- MODOS OSCUROS ---- */
@@ -1487,7 +1509,7 @@ body {
 
 .dark-mode .action-item-icon,
 .dark-mode .action-item-title {
-    color: #f5f5f7;
+    color: #f5f5fa;
 }
 
 .dark-mode .action-item-description {
@@ -1495,7 +1517,7 @@ body {
 }
 
 .dark-mode .action-item-count {
-    background-color: #48484a;
-    color: #aeaeae;
-    border-color: transparent;
+    background-color: transparent;
+    color: #fff;
+    border-color: #ffffff20;
 }

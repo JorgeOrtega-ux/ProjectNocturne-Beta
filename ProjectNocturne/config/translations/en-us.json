@@ -312,6 +312,22 @@
     "limit_reached": "Maximum limit reached",
     "no_active_alarms": "No active alarms",
     "no_running_timers": "No running timers",
-    "upcoming_festivities": "Upcoming Festivities"
+    "upcoming_festivities": "Upcoming Festivities",
+    "new_alarm_desc": "Create and customize a new alarm.",
+    "new_timer_desc": "Start a timer or countdown.",
+    "add_clock_desc": "Add clocks from other parts of the world.",
+    "limit_available": "Limit available ({available} / {limit})"
+  },
+  "confirmation": {
+    "confirm_delete_title_alarm": "Delete Alarm?",
+    "confirm_delete_message_alarm": "You are about to delete the alarm {name}. This action cannot be undone.",
+    "confirm_delete_title_timer": "Delete Timer?",
+    "confirm_delete_message_timer": "You are about to delete the timer {name}. This action cannot be undone.",
+    "confirm_delete_title_world-clock": "Delete Clock?",
+    "confirm_delete_message_world-clock": "You are about to delete the clock {name}. This action cannot be undone.",
+    "confirm_delete_title_audio": "Delete Audio?",
+    "confirm_delete_message_audio": "You are about to delete the audio {name}. It will be replaced in any alarms/timers using it. This action cannot be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete"
   }
 }

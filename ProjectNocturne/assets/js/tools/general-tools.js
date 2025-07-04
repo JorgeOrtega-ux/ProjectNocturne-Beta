@@ -331,12 +331,11 @@ export async function handleAudioUpload(callback) {
     if (userAudiosCache.length >= uploadLimit) {
         if (PREMIUM_FEATURES) {
             showDynamicIslandNotification('system', 'limit_reached_premium', 'premium_limit_reached_message', 'notifications', {
-                type: getTranslation('audio', 'sounds')
+                type: getTranslation('audio_singular', 'sounds')
             });
         } else {
-            showDynamicIslandNotification('system', 'premium_required', 'limit_reached_generic', 'notifications', {
-                type: getTranslation('audio', 'sounds'),
-                limit: uploadLimit
+            showDynamicIslandNotification('system', 'premium_required', 'premium_limit_reached_message', 'notifications', {
+                type: getTranslation('audio_singular', 'sounds')
             });
         }
         return;
