@@ -525,7 +525,7 @@ function refreshTooltips() {
     refreshTooltipsTimeout = setTimeout(() => {
         isRefreshingTooltips = true;
         try {
-            cleanupAllTooltips();
+   
             attachEventListeners();
             initializeMobileSidebarTooltips();
 

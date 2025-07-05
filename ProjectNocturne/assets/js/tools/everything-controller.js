@@ -125,10 +125,6 @@ function updateActionCounts() {
         const isDisabled = count >= limit;
         clockMenuItem.classList.toggle('disabled-interactions', isDisabled);
     }
-
-    if (typeof refreshTooltips === 'function') {
-        refreshTooltips();
-    }
 }
 
 export function initializeEverything() {
