@@ -78,8 +78,12 @@
                                             <span class="material-symbols-rounded">expand_more</span>
                                         </div>
                                     </div>
-                                    <div class="dropdown-menu-container menu-alarm-sound overflow-y disabled body-title" data-menu="alarmSoundMenu">
-                                        <div class="menu-list">
+                                    <div class="dropdown-menu-container dropdown-menu--structured menu-alarm-sound disabled body-title" data-menu="alarmSoundMenu">
+                                        <div class="dropdown-menu-top">
+                                            </div>
+                                        <div class="dropdown-menu-bottom overflow-y">
+                                            <div class="menu-list">
+                                                </div>
                                         </div>
                                     </div>
                                     <div class="menu-action-button" data-action="previewAlarmSound">

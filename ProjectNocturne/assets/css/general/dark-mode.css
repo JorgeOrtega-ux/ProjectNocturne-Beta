@@ -568,6 +568,10 @@
 
 .dark-mode .widget-list-item:hover {
     background-color: #3a3a3c;
+}/* ===== NUEVA REGLA AÑADIDA ===== */
+.dark-mode .menu-content-header-sm {
+    background-color: transparent;
+    border-color: #ffffff20;
 }
 .dark-mode .expandable-card-toggle-btn:hover {
     background-color: #ffffff20;
