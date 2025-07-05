@@ -251,7 +251,9 @@ function createExpandableTimerContainer(type, titleKey, icon) {
                 <div class="expandable-card-header-icon">
                     <span class="material-symbols-rounded">${icon}</span>
                 </div>
-                <h3 data-translate="${titleKey}" data-translate-category="timer">${getTranslation(titleKey, 'timer')}</h3>
+                <div class="expandable-card-header-title">
+                    <h3 data-translate="${titleKey}" data-translate-category="timer">${getTranslation(titleKey, 'timer')}</h3>
+                </div>
             </div>
             <div class="expandable-card-header-right">
                 <span class="timer-count-badge" data-count-for="${type}">0</span>

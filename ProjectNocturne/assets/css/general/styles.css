@@ -1148,10 +1148,18 @@ body {
     .menu-worldClock {
         height: auto;
         max-height: 85%;
-        padding-top: 0;
         border-bottom: 0;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+    }
+
+    .menu-header,
+    .menu-body {
+        padding-top: 0;
+    }
+
+    .menu-section-top {
+        padding-top: 0;
     }
 }
 
@@ -1524,4 +1532,23 @@ body {
     height: auto;
     max-height: none;
     overflow-y: hidden;
+}.expandable-card-header-title {
+    display: flex;
+    align-items: center;
+    min-width: 0; /* Permite que el texto se reduzca */
+    flex: 1; /* Toma el espacio disponible */
+}
+
+.expandable-card-header-title h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    
+    /* Elipsis para texto largo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0; /* Importante para que funcione el ellipsis en flexbox */
 }

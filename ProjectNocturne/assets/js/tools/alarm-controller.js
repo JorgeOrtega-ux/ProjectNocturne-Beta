@@ -179,6 +179,8 @@ function getNextAlarmDetails() {
     return `${title} (${timeString})`;
 }
 
+// En alarm-controller.js - función createExpandableContainer actualizada
+
 function createExpandableContainer(type, titleKey, icon) {
     const container = document.createElement('div');
     container.className = 'alarms-container';
@@ -189,7 +191,9 @@ function createExpandableContainer(type, titleKey, icon) {
                 <div class="expandable-card-header-icon">
                     <span class="material-symbols-rounded">${icon}</span>
                 </div>
-                <h3 data-translate="${titleKey}" data-translate-category="alarms">${getTranslation(titleKey, 'alarms')}</h3>
+                <div class="expandable-card-header-title">
+                    <h3 data-translate="${titleKey}" data-translate-category="alarms">${getTranslation(titleKey, 'alarms')}</h3>
+                </div>
             </div>
             <div class="expandable-card-header-right">
                 <span class="alarm-count-badge" data-count-for="${type}">0</span>

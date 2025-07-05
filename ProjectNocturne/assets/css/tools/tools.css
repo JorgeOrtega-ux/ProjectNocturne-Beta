@@ -430,6 +430,7 @@
     align-items: center;
     gap: 8px;
 }
+
 .tool-card .card-tag {
     padding: 4px 12px;
     font-size: 0.85rem;
@@ -439,6 +440,7 @@
     background-color: transparent;
     border-radius: 29px;
 }
+
 .tool-card .card-pin-btn,
 .tool-card .card-menu-btn {
     display: flex;
@@ -777,12 +779,17 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
+    /* Permite que el contenido se reduzca */
+    flex: 1;
+    /* Toma el espacio disponible antes del lado derecho */
 }
 
 .expandable-card-header-icon {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex: 0 0 auto;
     width: 40px;
     height: 40px;
     border-radius: 8px;
@@ -802,9 +809,9 @@
     gap: 8px;
 }
 
-.alarm-count-badge, .timer-count-badge {
-    display: flex
-;
+.alarm-count-badge,
+.timer-count-badge {
+    display: flex;
     justify-content: center;
     align-items: center;
     min-width: 24px;
@@ -1208,9 +1215,11 @@ html.light-mode .dynamic-island {
 .dark-mode .action-item:hover {
     background-color: #ffffff20;
 }
+
 .dark-mode .tool-card:hover {
     background-color: #ffffff20;
 }
+
 .widget.sortable-chosen {
     cursor: grabbing;
 }
@@ -1237,7 +1246,9 @@ html.light-mode .dynamic-island {
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
-}/* ... (todo el contenido existente de styles.css) ... */
+}
+
+/* ... (todo el contenido existente de styles.css) ... */
 
 /* ---- ESTILOS PARA EL NUEVO BOTÓN Y MENÚ ---- */
 .widget-clock {
@@ -1301,7 +1312,7 @@ html.light-mode .dynamic-island {
 .dark-mode .add-menu-container {
     background-color: #252627;
     border-color: #ffffff20;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .menu-link.disabled-interactions {

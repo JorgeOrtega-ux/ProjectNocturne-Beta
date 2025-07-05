@@ -569,7 +569,9 @@
 .dark-mode .widget-list-item:hover {
     background-color: #3a3a3c;
 }
-
+.dark-mode .expandable-card-toggle-btn:hover {
+    background-color: #ffffff20;
+}
 .dark-mode .widget-list-item-icon {
     color: #8d8d92;
 }
