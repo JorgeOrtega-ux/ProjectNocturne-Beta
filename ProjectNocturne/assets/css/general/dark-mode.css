@@ -242,6 +242,8 @@
 
 .dark-mode .shadow {
     box-shadow: unset;
+    border-bottom: 1px solid #ffffff20;
+    transition: box-shadow 0.2s ease-in-out;
 }
 
 .dark-mode .collapse-btn {

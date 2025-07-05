@@ -96,7 +96,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 999;
+    z-index: 10;
 }
 
 .sidebar-wrapper.mobile-sidebar .sidebar {
@@ -382,7 +382,7 @@ body {
 
 .module-overlay {
     position: absolute;
-    z-index: 998;
+    z-index: 999;
     width: 360px;
     height: 100%;
     padding: 8px;
@@ -417,7 +417,9 @@ body {
 }
 
 .shadow {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: none;
+    transition: box-shadow 0.2s ease-in-out;
 }
 
 .menu-section-center {
