@@ -1182,3 +1182,38 @@ document.addEventListener('translationsApplied', () => {
 
 
 export { initializeTimerController };
+
+
+
+export function initializeScrollShadow() {
+    const menus = document.querySelectorAll('.menu-alarm, .menu-timer, .menu-worldClock, .menu-paletteColors, .menu-control-center');
+
+    menus.forEach(menu => {
+        const topContainer = menu.querySelector('.menu-section-top, .menu-header');
+        
+        // Búsqueda mejorada para el contenedor de scroll
+        let scrollableContainer = menu.querySelector('.menu-section-center.overflow-y');
+        
+        // Si no lo encuentra, usa los selectores anteriores como respaldo (para el Centro de Control)
+        if (!scrollableContainer) {
+           scrollableContainer = menu.querySelector('.menu-content-scrolleable, .menu-body.overflow-y');
+        }
+
+        if (topContainer && scrollableContainer) {
+            // Elimina listeners antiguos para evitar duplicados si la función se llama de nuevo
+            scrollableContainer.removeEventListener('scroll', handleScroll);
+            
+            // Define una función con nombre para poder eliminarla después
+            function handleScroll() {
+                if (scrollableContainer.scrollTop > 0) {
+                    topContainer.classList.add('shadow');
+                } else {
+                    topContainer.classList.remove('shadow');
+                }
+            }
+
+            scrollableContainer.addEventListener('scroll', handleScroll);
+        }
+    });
+}
+ initializeScrollShadow() 

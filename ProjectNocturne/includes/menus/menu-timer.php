@@ -13,37 +13,40 @@
                 </div>
             </div>
         </div>
-
-        <div class="menu-content menu-content-selector" style="padding: 8px;">
-            <div class="custom-select-wrapper">
-                <div class="custom-select-content" data-action="toggleTimerTypeDropdown">
-                    <div class="custom-select-content-left">
-                        <div class="custom-select-content-left-inner">
-                            <span class="material-symbols-rounded" id="timer-type-icon">timer</span>
-                            <span id="timer-type-display" data-translate="countdown" data-translate-category="timer"></span>
-                        </div>
-                    </div>
-                    <div class="custom-select-content-right">
-                        <span class="material-symbols-rounded">expand_more</span>
-                    </div>
-                </div>
-                <div class="dropdown-menu-container menu-timer-type disabled body-title" data-menu="timerTypeMenu">
-                    <div class="menu-list">
-                        <div class="menu-link active" data-tab="countdown">
-                            <div class="menu-link-icon"><span class="material-symbols-rounded">timer</span></div>
-                            <div class="menu-link-text"><span data-translate="countdown" data-translate-category="timer"></span></div>
-                        </div>
-                        <div class="menu-link" data-tab="count_to_date">
-                             <div class="menu-link-icon"><span class="material-symbols-rounded">event</span></div>
-                            <div class="menu-link-text"><span data-translate="count_to_date" data-translate-category="timer"></span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         <div class="menu-content-scrolleable overflow-y">
             <div class="timer-search-results-wrapper disabled"></div>
             <div class="timer-creation-wrapper active">
+                
+                <!-- Selector de tipo de temporizador movido aquí -->
+                <div class="menu-section-selector">
+                    <div class="custom-select-wrapper">
+                        <div class="custom-select-content" data-action="toggleTimerTypeDropdown">
+                            <div class="custom-select-content-left">
+                                <div class="custom-select-content-left-inner">
+                                    <span class="material-symbols-rounded" id="timer-type-icon">timer</span>
+                                    <span id="timer-type-display" data-translate="countdown" data-translate-category="timer"></span>
+                                </div>
+                            </div>
+                            <div class="custom-select-content-right">
+                                <span class="material-symbols-rounded">expand_more</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu-container menu-timer-type disabled body-title" data-menu="timerTypeMenu">
+                            <div class="menu-list">
+                                <div class="menu-link active" data-tab="countdown">
+                                    <div class="menu-link-icon"><span class="material-symbols-rounded">timer</span></div>
+                                    <div class="menu-link-text"><span data-translate="countdown" data-translate-category="timer"></span></div>
+                                </div>
+                                <div class="menu-link" data-tab="count_to_date">
+                                     <div class="menu-link-icon"><span class="material-symbols-rounded">event</span></div>
+                                    <div class="menu-link-text"><span data-translate="count_to_date" data-translate-category="timer"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="menu-section-center overflow-y">
                     <div class="menu-content-wrapper active" data-tab-content="countdown">
                         <div class="menu-content">
@@ -103,7 +106,7 @@
                     <div class="menu-content-wrapper disabled" data-tab-content="count_to_date">
                         <div class="menu-content">
                             <div class="menu-content-header">
-                                <div class="menu-content-header-primary"><span class="material-symbols-rounded">label</span><span data-translate="timer_title" data-translate-category="timer">Título</span></div>
+                                <div class="menu-content-header-primary"><span class="material-symbols-rounded">label</span><span data-translate="timer_title" data-translate-category="timer"></span></div>
                             </div>
                             <div class="menu-content-general">
                                 <div class="enter-text-tool"><input type="text" id="countto-title" data-translate="my_event_placeholder" data-translate-category="timer" data-translate-target="placeholder"></div>
