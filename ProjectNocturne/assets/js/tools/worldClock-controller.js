@@ -394,7 +394,7 @@ function createAndStartClockCard(title, country, timezone, existingId = null, sa
     if (save) {
         userClocks.push({ id: cardId, title, country, timezone, countryCode });
         saveClocksToStorage();
-        showDynamicIslandNotification('worldClock', 'created', 'worldclock_created', 'notifications', { title: title });
+        showDynamicIslandNotification('worldclock', 'created', 'worldclock_created', 'notifications', { title: title });
         if (typeof updateEverythingWidgets === 'function') {
             updateEverythingWidgets();
         }
@@ -431,7 +431,7 @@ function updateClockCard(id, newData) {
             window.attachTooltipsToNewElements(card);
         }
     }, 0);
-    showDynamicIslandNotification('worldClock', 'updated', 'worldclock_updated', 'notifications', { title: newData.title });
+    showDynamicIslandNotification('worldclock', 'updated', 'worldclock_updated', 'notifications', { title: newData.title });
     if (typeof updateEverythingWidgets === 'function') {
         updateEverythingWidgets();
     }
@@ -546,7 +546,7 @@ function deleteClock(clockId) {
             pinClock(localPinBtn);
         }
 
-        showDynamicIslandNotification('worldClock', 'deleted', 'worldclock_deleted', 'notifications', {
+        showDynamicIslandNotification('worldclock', 'deleted', 'worldclock_deleted', 'notifications', {
             title: clockTitle
         });
 

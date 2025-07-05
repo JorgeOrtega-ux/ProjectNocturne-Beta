@@ -1214,7 +1214,8 @@ html.light-mode .dynamic-island {
 
 .dark-mode .action-item:hover {
     background-color: #ffffff20;
-}.menu-content-header-sm {
+}
+.menu-content-header-sm {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -1472,5 +1473,11 @@ html.light-mode .dynamic-island {
 
 .dark-mode .menu-link[data-action="upload-audio"] {
     border-color: #ffffff20;
+}
+.enter-text-tool.input-error {
+    border-color: #d32f2f;
+}
 
+.custom-select-content.input-error {
+    border-color: #d32f2f;
 }

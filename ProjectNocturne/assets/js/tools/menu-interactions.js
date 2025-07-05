@@ -104,6 +104,19 @@ function removeSpinnerFromCreateButton(button) {
     }
 }
 
+function validateField(element, condition) {
+    if (condition) {
+        element.classList.remove('input-error');
+        return true;
+    } else {
+        element.classList.add('input-error');
+        if (navigator.vibrate) {
+            navigator.vibrate(100);
+        }
+        return false;
+    }
+}
+
 const setAlarmDefaults = () => {
     const now = new Date();
     now.setMinutes(now.getMinutes() + 10);
@@ -118,7 +131,7 @@ const resetAlarmMenu = (menuElement) => {
     if (titleInput) {
         titleInput.value = '';
         titleInput.removeAttribute('disabled');
-        titleInput.parentElement.classList.remove('disabled-interactive');
+        titleInput.parentElement.classList.remove('disabled-interactive', 'input-error');
     }
     const searchInput = menuElement.querySelector('.search-content-text input');
     if (searchInput) searchInput.value = '';
@@ -152,13 +165,13 @@ const resetTimerMenu = (menuElement) => {
     if (countdownTitle) {
         countdownTitle.value = '';
         countdownTitle.removeAttribute('disabled');
-        countdownTitle.parentElement.classList.remove('disabled-interactive');
+        countdownTitle.parentElement.classList.remove('disabled-interactive', 'input-error');
     }
     const countToTitle = menuElement.querySelector('#countto-title');
     if (countToTitle) {
         countToTitle.value = '';
         countToTitle.removeAttribute('disabled');
-        countToTitle.parentElement.classList.remove('disabled-interactive');
+        countToTitle.parentElement.classList.remove('disabled-interactive', 'input-error');
     }
     updateTimerTabView(menuElement);
     updateTimerDurationDisplay(menuElement);
@@ -195,7 +208,10 @@ const resetWorldClockMenu = (menuElement) => {
     }
     state.worldClock = JSON.parse(JSON.stringify(initialState.worldClock));
     const titleInput = menuElement.querySelector('#worldclock-title');
-    if (titleInput) titleInput.value = '';
+    if (titleInput) {
+        titleInput.value = '';
+        titleInput.parentElement.classList.remove('input-error');
+    }
     const countrySearchInput = menuElement.querySelector('#country-search-input');
     if (countrySearchInput) countrySearchInput.value = '';
     const countryList = menuElement.querySelector('.menu-worldclock-country .menu-list');
@@ -207,8 +223,12 @@ const resetWorldClockMenu = (menuElement) => {
     }
     resetDropdownDisplay(menuElement, '#worldclock-selected-country', 'select_a_country', 'world_clock');
     resetDropdownDisplay(menuElement, '#worldclock-selected-timezone', 'select_a_timezone', 'world_clock');
+    menuElement.querySelector('[data-action="toggleCountryDropdown"]').classList.remove('input-error');
     const timezoneSelector = menuElement.querySelector('[data-action="toggleTimezoneDropdown"]');
-    if (timezoneSelector) timezoneSelector.classList.add('disabled-interactive');
+    if (timezoneSelector) {
+        timezoneSelector.classList.add('disabled-interactive');
+        timezoneSelector.classList.remove('input-error');
+    }
     const createButton = menuElement.querySelector('.create-tool');
     if (createButton) {
         if (createButton.classList.contains('disabled-interactive')) removeSpinnerFromCreateButton(createButton);
@@ -218,6 +238,7 @@ const resetWorldClockMenu = (menuElement) => {
     }
     menuElement.removeAttribute('data-editing-id');
 };
+
 
 export function prepareAlarmForEdit(alarmData) {
     const menuElement = getMenuElement('menuAlarm');
@@ -485,8 +506,11 @@ const resetDropdownDisplay = (menuElement, displaySelector, translateKey, transl
 
 const updateAlarmDisplay = (parent) => {
     let finalHourText;
+    const hourUnit = getTranslation('h', 'timer');
+    const minuteUnit = getTranslation('min', 'timer');
+    
     if (use24HourFormat) {
-        finalHourText = `${state.alarm.hour} h`;
+        finalHourText = `${state.alarm.hour} ${hourUnit}`;
     } else {
         const hour = state.alarm.hour;
         const ampm = hour >= 12 ? 'PM' : 'AM';
@@ -495,14 +519,17 @@ const updateAlarmDisplay = (parent) => {
         finalHourText = `${hour12} ${ampm}`;
     }
     updateDisplay('#hour-display', finalHourText, parent);
-    updateDisplay('#minute-display', `${state.alarm.minute} min`, parent);
+    updateDisplay('#minute-display', `${state.alarm.minute} ${minuteUnit}`, parent);
 };
 
 const updateTimerDurationDisplay = (timerMenu) => {
     if (!timerMenu) return;
-    updateDisplay('#timer-hour-display', `${state.timer.duration.hours} h`, timerMenu);
-    updateDisplay('#timer-minute-display', `${state.timer.duration.minutes} min`, timerMenu);
-    updateDisplay('#timer-second-display', `${state.timer.duration.seconds} s`, timerMenu);
+    const hourText = getTranslation('h', 'timer');
+    const minuteText = getTranslation('min', 'timer');
+    const secondText = getTranslation('s', 'timer');
+    updateDisplay('#timer-hour-display', `${state.timer.duration.hours} ${hourText}`, timerMenu);
+    updateDisplay('#timer-minute-display', `${state.timer.duration.minutes} ${minuteText}`, timerMenu);
+    updateDisplay('#timer-second-display', `${state.timer.duration.seconds} ${secondText}`, timerMenu);
 };
 
 const updateTimerTabView = (timerMenu) => {
@@ -726,6 +753,19 @@ function setupGlobalEventListeners() {
     ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(eventType => {
         document.addEventListener(eventType, stopAutoIncrement);
     });
+    
+    document.querySelectorAll('.enter-text-tool input, .custom-select-content').forEach(el => {
+        const parentWrapper = el.closest('.enter-text-tool, .custom-select-content');
+        if (!parentWrapper) return;
+
+        el.addEventListener('input', () => parentWrapper.classList.remove('input-error'));
+        el.addEventListener('click', () => {
+            const dropdown = parentWrapper.nextElementSibling;
+            if (dropdown && dropdown.classList.contains('dropdown-menu-container')) {
+                 dropdown.addEventListener('click', () => parentWrapper.classList.remove('input-error'), { once: true });
+            }
+        });
+    });
 }
 
 async function handleMenuClick(event, parentMenu) {
@@ -851,18 +891,20 @@ async function handleMenuClick(event, parentMenu) {
             if (audioIdToDelete) deleteUserAudio(audioIdToDelete, (listElement, actionName, activeSoundId) => generateSoundList(listElement, actionName, activeSoundId));
             break;
         case 'createAlarm': {
+            const alarmTitleInput = parentMenu.querySelector('#alarm-title');
+            const isTitleValid = validateField(alarmTitleInput.parentElement, alarmTitleInput.value.trim());
+
+            if (!isTitleValid) return;
+            
             const alarmLimit = window.alarmManager?.getAlarmLimit() ?? (PREMIUM_FEATURES ? 100 : 5);
             const currentAlarmCount = window.alarmManager?.getAlarmCount() ?? 0;
             if (currentAlarmCount >= alarmLimit) {
                 showDynamicIslandNotification('system', 'limit_reached', null, 'notifications', { type: getTranslation('alarms', 'tooltips') });
                 return;
             }
-            const alarmTitleInput = parentMenu.querySelector('#alarm-title');
-            const alarmTitle = alarmTitleInput ? alarmTitleInput.value.trim() : '';
-            if (!alarmTitle) return;
             addSpinnerToCreateButton(actionTarget);
             setTimeout(() => {
-                if (window.alarmManager?.createAlarm(alarmTitle, state.alarm.hour, state.alarm.minute, state.alarm.sound)) {
+                if (window.alarmManager?.createAlarm(alarmTitleInput.value.trim(), state.alarm.hour, state.alarm.minute, state.alarm.sound)) {
                     deactivateModule('overlayContainer', { source: 'create-alarm' });
                 } else removeSpinnerFromCreateButton(actionTarget);
                 resetAlarmMenu(parentMenu);
@@ -870,48 +912,80 @@ async function handleMenuClick(event, parentMenu) {
             break;
         }
         case 'createTimer': {
-            if (getTimersCount() >= getTimerLimit()) {
-                showDynamicIslandNotification('system', 'limit_reached', null, 'notifications', { type: getTranslation('timer', 'tooltips') });
-                return;
-            }
-            addSpinnerToCreateButton(actionTarget);
-            setTimeout(() => {
-                let success = false;
-                if (state.timer.currentTab === 'countdown') {
-                    const timerTitle = parentMenu.querySelector('#timer-title').value.trim() || getTranslation('my_new_timer_placeholder', 'timer');
-                    const { hours, minutes, seconds } = state.timer.duration;
-                    if (hours > 0 || minutes > 0 || seconds > 0) {
-                        addTimerAndRender({ type: 'countdown', title: timerTitle, duration: (hours * 3600 + minutes * 60 + seconds) * 1000, endAction: state.timer.endAction, sound: state.timer.sound });
-                        success = true;
-                    }
-                } else {
-                    const eventTitle = parentMenu.querySelector('#countto-title').value.trim();
-                    const { selectedDate, selectedHour, selectedMinute } = state.timer.countTo;
-                    if (eventTitle && selectedDate != null && typeof selectedHour === 'number' && typeof selectedMinute === 'number') {
-                        const targetDate = new Date(selectedDate);
-                        targetDate.setHours(selectedHour, selectedMinute, 0, 0);
-                        addTimerAndRender({ type: 'count_to_date', title: eventTitle, targetDate: targetDate.toISOString(), sound: state.timer.countTo.sound });
-                        success = true;
-                    }
+            let isValid = true;
+            if (state.timer.currentTab === 'countdown') {
+                const timerTitleInput = parentMenu.querySelector('#timer-title');
+                const { hours, minutes, seconds } = state.timer.duration;
+
+                isValid = validateField(timerTitleInput.parentElement, timerTitleInput.value.trim());
+
+                if (hours === 0 && minutes === 0 && seconds === 0) {
+                    console.error("Timer duration must be greater than zero.");
+                    isValid = false;
                 }
-                if (success) deactivateModule('overlayContainer', { source: 'create-timer' });
-                else removeSpinnerFromCreateButton(actionTarget);
-                resetTimerMenu(parentMenu);
-            }, 500);
+                
+                if (!isValid) return;
+
+                if (getTimersCount() >= getTimerLimit()) {
+                    showDynamicIslandNotification('system', 'limit_reached', null, 'notifications', { type: getTranslation('timer', 'tooltips') });
+                    return;
+                }
+                
+                addSpinnerToCreateButton(actionTarget);
+                setTimeout(() => {
+                    addTimerAndRender({ type: 'countdown', title: timerTitleInput.value.trim(), duration: (hours * 3600 + minutes * 60 + seconds) * 1000, endAction: state.timer.endAction, sound: state.timer.sound });
+                    deactivateModule('overlayContainer', { source: 'create-timer' });
+                    resetTimerMenu(parentMenu);
+                }, 500);
+
+            } else {
+                const eventTitleInput = parentMenu.querySelector('#countto-title');
+                const { selectedDate, selectedHour, selectedMinute } = state.timer.countTo;
+                
+                isValid = validateField(eventTitleInput.parentElement, eventTitleInput.value.trim());
+                isValid = validateField(parentMenu.querySelector('[data-action="toggleCalendarDropdown"]'), selectedDate) && isValid;
+                isValid = validateField(parentMenu.querySelector('[data-action="toggleTimerHourDropdown"]'), typeof selectedHour === 'number') && isValid;
+
+                if (!isValid) return;
+                
+                if (getTimersCount() >= getTimerLimit()) {
+                    showDynamicIslandNotification('system', 'limit_reached', null, 'notifications', { type: getTranslation('timer', 'tooltips') });
+                    return;
+                }
+                addSpinnerToCreateButton(actionTarget);
+                setTimeout(() => {
+                    const targetDate = new Date(selectedDate);
+                    targetDate.setHours(selectedHour, selectedMinute, 0, 0);
+                    addTimerAndRender({ type: 'count_to_date', title: eventTitleInput.value.trim(), targetDate: targetDate.toISOString(), sound: state.timer.countTo.sound });
+                    deactivateModule('overlayContainer', { source: 'create-timer' });
+                    resetTimerMenu(parentMenu);
+                }, 500);
+            }
             break;
         }
         case 'addWorldClock': {
+            const clockTitleInput = parentMenu.querySelector('#worldclock-title');
+            const { country, timezone } = state.worldClock;
+            const countrySelector = parentMenu.querySelector('[data-action="toggleCountryDropdown"]');
+            const timezoneSelector = parentMenu.querySelector('[data-action="toggleTimezoneDropdown"]');
+
+            let isValid = validateField(clockTitleInput.parentElement, clockTitleInput.value.trim());
+            isValid = validateField(countrySelector, country) && isValid;
+            
+            if (!timezoneSelector.classList.contains('disabled-interactive')) {
+                isValid = validateField(timezoneSelector, timezone) && isValid;
+            }
+
+            if (!isValid) return;
+
             const clockLimit = window.worldClockManager?.getClockLimit() ?? (PREMIUM_FEATURES ? 100 : 5);
             if ((window.worldClockManager?.getClockCount() ?? 0) >= clockLimit) {
                 showDynamicIslandNotification('system', 'limit_reached', null, 'notifications', { type: getTranslation('world_clock', 'tooltips') });
                 return;
             }
-            const clockTitle = parentMenu.querySelector('#worldclock-title').value.trim();
-            const { country, timezone } = state.worldClock;
-            if (!clockTitle || !country || !timezone) return;
             addSpinnerToCreateButton(actionTarget);
             setTimeout(() => {
-                if (window.worldClockManager?.createAndStartClockCard(clockTitle, country, timezone)) {
+                if (window.worldClockManager?.createAndStartClockCard(clockTitleInput.value.trim(), country, timezone)) {
                     deactivateModule('overlayContainer', { source: 'add-world-clock' });
                 } else removeSpinnerFromCreateButton(actionTarget);
                 resetWorldClockMenu(parentMenu);
@@ -920,11 +994,12 @@ async function handleMenuClick(event, parentMenu) {
         }
         case 'saveAlarmChanges': {
             const editingId = parentMenu.getAttribute('data-editing-id');
-            const alarmTitle = parentMenu.querySelector('#alarm-title')?.value.trim();
-            if (!editingId || !alarmTitle) return;
+            const alarmTitleInput = parentMenu.querySelector('#alarm-title');
+            if (!editingId || !validateField(alarmTitleInput.parentElement, alarmTitleInput.value.trim())) return;
+            
             addSpinnerToCreateButton(actionTarget);
             setTimeout(() => {
-                window.alarmManager?.updateAlarm(editingId, { title: alarmTitle, hour: state.alarm.hour, minute: state.alarm.minute, sound: state.alarm.sound });
+                window.alarmManager?.updateAlarm(editingId, { title: alarmTitleInput.value.trim(), hour: state.alarm.hour, minute: state.alarm.minute, sound: state.alarm.sound });
                 deactivateModule('overlayContainer', { source: 'save-alarm' });
                 resetAlarmMenu(parentMenu);
             }, 500);
@@ -933,12 +1008,15 @@ async function handleMenuClick(event, parentMenu) {
         case 'saveTimerChanges': {
             const editingId = parentMenu.getAttribute('data-editing-id');
             if (!editingId) return;
+
+            const timerTitleInput = parentMenu.querySelector('#timer-title');
+            if (!validateField(timerTitleInput.parentElement, timerTitleInput.value.trim())) return;
+
             addSpinnerToCreateButton(actionTarget);
             setTimeout(() => {
-                const timerTitle = parentMenu.querySelector('#timer-title').value.trim() || getTranslation('my_new_timer_placeholder', 'timer');
                 const { hours, minutes, seconds } = state.timer.duration;
                 if (hours > 0 || minutes > 0 || seconds > 0) {
-                    updateTimer(editingId, { title: timerTitle, duration: (hours * 3600 + minutes * 60 + seconds) * 1000, endAction: state.timer.endAction, sound: state.timer.sound });
+                    updateTimer(editingId, { title: timerTitleInput.value.trim(), duration: (hours * 3600 + minutes * 60 + seconds) * 1000, endAction: state.timer.endAction, sound: state.timer.sound });
                     deactivateModule('overlayContainer', { source: 'save-timer' });
                 } else removeSpinnerFromCreateButton(actionTarget);
                 resetTimerMenu(parentMenu);
@@ -948,28 +1026,40 @@ async function handleMenuClick(event, parentMenu) {
         case 'saveCountToDateChanges': {
             const editingId = parentMenu.getAttribute('data-editing-id');
             if (!editingId) return;
+
+            const eventTitleInput = parentMenu.querySelector('#countto-title');
+            const { selectedDate, selectedHour, selectedMinute } = state.timer.countTo;
+
+            let isValid = validateField(eventTitleInput.parentElement, eventTitleInput.value.trim());
+            isValid = validateField(parentMenu.querySelector('[data-action="toggleCalendarDropdown"]'), selectedDate) && isValid;
+            isValid = validateField(parentMenu.querySelector('[data-action="toggleTimerHourDropdown"]'), typeof selectedHour === 'number') && isValid;
+            
+            if (!isValid) return;
+
             addSpinnerToCreateButton(actionTarget);
             setTimeout(() => {
-                const eventTitle = parentMenu.querySelector('#countto-title')?.value.trim();
-                const { selectedDate, selectedHour, selectedMinute } = state.timer.countTo;
-                if (eventTitle && selectedDate != null && typeof selectedHour === 'number' && typeof selectedMinute === 'number') {
-                    const targetDate = new Date(selectedDate);
-                    targetDate.setHours(selectedHour, selectedMinute, 0, 0);
-                    updateTimer(editingId, { type: 'count_to_date', title: eventTitle, targetDate: targetDate.toISOString(), sound: state.timer.countTo.sound });
-                    deactivateModule('overlayContainer', { source: 'save-timer' });
-                } else removeSpinnerFromCreateButton(actionTarget);
+                const targetDate = new Date(selectedDate);
+                targetDate.setHours(selectedHour, selectedMinute, 0, 0);
+                updateTimer(editingId, { type: 'count_to_date', title: eventTitleInput.value.trim(), targetDate: targetDate.toISOString(), sound: state.timer.countTo.sound });
+                deactivateModule('overlayContainer', { source: 'save-timer' });
                 resetTimerMenu(parentMenu);
             }, 500);
             break;
         }
         case 'saveWorldClockChanges': {
             const editingId = parentMenu.getAttribute('data-editing-id');
-            const clockTitle = parentMenu.querySelector('#worldclock-title')?.value.trim();
+            const clockTitleInput = parentMenu.querySelector('#worldclock-title');
             const { country, timezone } = state.worldClock;
-            if (!editingId || !clockTitle || !country || !timezone) return;
+            
+            let isValid = validateField(clockTitleInput.parentElement, clockTitleInput.value.trim());
+            isValid = validateField(parentMenu.querySelector('[data-action="toggleCountryDropdown"]'), country) && isValid;
+            isValid = validateField(parentMenu.querySelector('[data-action="toggleTimezoneDropdown"]'), timezone) && isValid;
+
+            if (!editingId || !isValid) return;
+
             addSpinnerToCreateButton(actionTarget);
             setTimeout(() => {
-                window.worldClockManager?.updateClockCard(editingId, { title: clockTitle, country, timezone });
+                window.worldClockManager?.updateClockCard(editingId, { title: clockTitleInput.value.trim(), country, timezone });
                 deactivateModule('overlayContainer', { source: 'save-world-clock' });
                 resetWorldClockMenu(parentMenu);
             }, 500);

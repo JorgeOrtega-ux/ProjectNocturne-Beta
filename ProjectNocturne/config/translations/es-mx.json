@@ -194,7 +194,7 @@
     "alarm_settings": "Configuración de la alarma",
     "alarm_sound": "Sonido de la alarma",
     "create_alarm": "Crear alarma",
-    "my_alarms": "Mis Alarmas",
+    "my_alarms": "Mis alarmas",
     "edit_alarm": "Editar Alarma",
     "delete_alarm": "Eliminar Alarma",
     "test_alarm": "Probar Alarma",
@@ -235,6 +235,9 @@
     "audio_singular": "Audio"
   },
   "timer": {
+    "h": "h",
+    "min": "min",
+    "s": "s",
     "countdown": "Cuenta regresiva",
     "count_to_date": "Contar hasta fecha",
     "timer_title": "Título del temporizador",

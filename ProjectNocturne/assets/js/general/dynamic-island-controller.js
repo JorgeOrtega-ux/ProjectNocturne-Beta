@@ -20,7 +20,7 @@ const ANIMATION_TIMING = {
 const ICONS = {
     'alarm': 'alarm',
     'timer': 'timer',
-    'worldClock': 'schedule',
+    'worldclock': 'schedule',
     'system_info': 'info',
     'system_error': 'error',
     'system_premium': 'workspace_premium',
@@ -137,7 +137,7 @@ function setupNotificationContent(toolType, actionType, messageKey, category, da
     if (!iconSymbol || !titleP || !messageP) return;
 
     // Configurar ícono
-    let iconKey = toolType;
+    let iconKey = toolType.toLowerCase();
     if (toolType === 'system') {
         if (actionType.includes('error')) iconKey = 'system_error';
         else if (actionType.includes('premium') || actionType.includes('limit')) iconKey = 'system_premium';
@@ -160,7 +160,7 @@ function setupNotificationContent(toolType, actionType, messageKey, category, da
              titleKey = `${actionType}_title`;
         }
     } else {
-        titleKey = `${toolType}_${actionType}_title`;
+        titleKey = `${toolType.toLowerCase()}_${actionType}_title`;
     }
 
     // Configurar atributos de traducción

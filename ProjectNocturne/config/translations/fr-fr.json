@@ -235,6 +235,9 @@
     "audio_singular": "Audio"
   },
   "timer": {
+    "h": "h",
+    "min": "min",
+    "s": "s",
     "countdown": "Compte à rebours",
     "count_to_date": "Compter jusqu'à la date",
     "timer_title": "Titre du minuteur",
