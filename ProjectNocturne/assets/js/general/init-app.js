@@ -21,7 +21,6 @@ import { initializeStopwatch } from '../tools/stopwatch-controller.js';
 import { initializeTimerController } from '../tools/timer-controller.js';
 import { initializeAlarmClock } from '../tools/alarm-controller.js';
 import { initWorldClock } from '../tools/worldClock-controller.js';
-import { initDynamicIsland } from './dynamic-island-controller.js';
 
 // ========== CONFIGURATION CONSTANTS ==========
 
@@ -76,40 +75,30 @@ const REFRESH_PRESETS = {
         skipTranslations: false,
         skipTooltips: false,
         skipMenuLabels: true,
-        skipMobileSidebar: false,
-        skipInitialStates: true,
         skipColorSystem: false
     },
     TRANSLATIONS_ONLY: {
         skipTranslations: false,
         skipTooltips: true,
         skipMenuLabels: true,
-        skipMobileSidebar: true,
-        skipInitialStates: true,
         skipColorSystem: true
     },
     TOOLTIPS_ONLY: {
         skipTranslations: true,
         skipTooltips: false,
         skipMenuLabels: true,
-        skipMobileSidebar: false,
-        skipInitialStates: true,
         skipColorSystem: true
     },
     COLOR_SYSTEM_ONLY: {
         skipTranslations: true,
         skipTooltips: true,
         skipMenuLabels: true,
-        skipMobileSidebar: true,
-        skipInitialStates: true,
         skipColorSystem: false
     },
     MINIMAL: {
         skipTranslations: true,
         skipTooltips: true,
         skipMenuLabels: true,
-        skipMobileSidebar: true,
-        skipInitialStates: true,
         skipColorSystem: true
     }
 };
@@ -227,10 +216,6 @@ function performRefreshOperation(config) {
             refreshTooltips();
         }
 
-        if (!config.skipMobileSidebar) {
-            initializeMobileSidebarTooltips();
-        }
-
         if (!config.skipColorSystem) {
             refreshColorSystem();
         }
@@ -346,7 +331,6 @@ function initializeMainComponents() {
     initNewOverlayModules();
     initializeZoneInfoTool();
     initializeEverything();
-    initDynamicIsland();
     applyCollapsedSectionsState();
     setupCollapsibleSectionEvents();
     initConfirmationModal();

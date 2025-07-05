@@ -132,7 +132,6 @@ export function initializeEverything() {
     renderAllWidgets();
     updateCurrentDate();
     smartUpdateInterval = setInterval(updateCurrentDate, 1000);
-    console.log('✅ Controlador "Everything" con nuevo diseño de acciones inicializado.');
     document.addEventListener('translationsApplied', updateEverythingWidgets);
 }
 
@@ -161,7 +160,6 @@ export function updateEverythingWidgets() {
     }
 
     updateTimeout = setTimeout(() => {
-        console.log('🔄 Actualizando widgets de "Everything" (On-Demand)...');
         if (typeof translateElementTree === 'function') {
             const mainContainer = document.querySelector('.everything-grid-container');
             if (mainContainer) {

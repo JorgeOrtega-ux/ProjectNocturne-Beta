@@ -56,8 +56,6 @@ function createDynamicIslandDOM() {
     if (dismissButton) {
         dismissButton.addEventListener('click', handleDismissClick);
     }
-
-    console.log('✨ Dynamic Island created with improved animations.');
 }
 
 function handleDismissClick(e) {
@@ -80,13 +78,11 @@ function destroyDynamicIslandDOM() {
         
         dynamicIslandElement.remove();
         dynamicIslandElement = null;
-        console.log('🏝️ Dynamic Island removed from DOM.');
     }
 }
 
 export function showDynamicIslandNotification(toolType, actionType, messageKey, category, data = {}, onDismiss = null) {
     if (isAnimating) {
-        console.log('⏳ Animation in progress, queuing notification...');
         setTimeout(() => {
             showDynamicIslandNotification(toolType, actionType, messageKey, category, data, onDismiss);
         }, 100);
@@ -336,8 +332,3 @@ window.addEventListener('beforeunload', () => {
     forceHideDynamicIsland();
     window.removeEventListener('resize', handleWindowResize);
 });
-
-export function initDynamicIsland() {
-    // La inicialización ahora es completamente bajo demanda
-    console.log('🏝️ Dynamic Island controller initialized (on-demand creation)');
-}

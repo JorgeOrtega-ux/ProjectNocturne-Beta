@@ -30,7 +30,6 @@ async function initLocationManager() {
         addEventListeners();
         updateLocationDisplay();
         
-        console.log('Location initialized, dispatching initial event.');
         const event = new CustomEvent('locationChanged', { detail: { country: state.selectedCountry } });
         document.dispatchEvent(event);
 

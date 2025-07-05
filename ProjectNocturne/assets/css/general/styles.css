@@ -38,6 +38,7 @@ body {
 .tool-timer span,
 .tool-stopwatch span,
 .tool-worldClock span {
+    text-align: center;
     background-image: none;
     background-clip: unset;
     color: unset;
@@ -1343,7 +1344,7 @@ body {
 .menu-delete {
     max-width: 450px;
     width: calc(100% - 40px);
-    padding: 24px;
+    padding: 32px;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);

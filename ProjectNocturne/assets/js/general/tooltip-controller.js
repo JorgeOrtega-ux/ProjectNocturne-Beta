@@ -433,8 +433,6 @@ function attachEventListeners() {
         }
         _attachListenersToSingleElement(element);
     });
-
-    initializeMobileSidebarTooltips();
 }
 
 function handleWindowResize() {
@@ -527,7 +525,6 @@ function refreshTooltips() {
         try {
    
             attachEventListeners();
-            initializeMobileSidebarTooltips();
 
         } catch (error) {
             console.error('❌ Error refreshing tooltips:', error);

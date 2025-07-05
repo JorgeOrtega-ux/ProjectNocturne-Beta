@@ -309,8 +309,6 @@ function initializeTimerController() {
         searchInput.addEventListener('input', e => renderTimerSearchResults(e.target.value.toLowerCase()));
     }
 
-    console.log('✅ Inicialización de timer completada.');
-
     window.timerManager = {
         startTimer,
         pauseTimer,
@@ -419,12 +417,10 @@ function saveAllTimersState() {
 }
 
 function saveTimersToStorage() {
-    console.log(`[LocalStorage Save] Guardando datos en la clave: '${TIMERS_STORAGE_KEY}'`, userTimers);
     localStorage.setItem(TIMERS_STORAGE_KEY, JSON.stringify(userTimers));
 }
 
 function saveDefaultTimersOrder() {
-    console.log(`[LocalStorage Save] Guardando datos en la clave: '${DEFAULT_TIMERS_STORAGE_KEY}'`, defaultTimersState);
     localStorage.setItem(DEFAULT_TIMERS_STORAGE_KEY, JSON.stringify(defaultTimersState));
 }
 

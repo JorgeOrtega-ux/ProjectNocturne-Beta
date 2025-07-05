@@ -322,6 +322,7 @@ export async function generateSoundList(listElement, actionName, activeSoundId =
         });
     }
 }
+
 function createSoundMenuItem(sound, actionName, activeSoundId, isCustom) {
     const menuLink = document.createElement('div');
     menuLink.className = 'menu-link';
