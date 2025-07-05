@@ -23,7 +23,9 @@ function createConfirmationModal() {
     `;
 
     modalElement = document.createElement('div');
-    modalElement.className = 'module-overlay confirmation-overlay';
+    // --- CORRECCIÓN AQUÍ ---
+    // Se ha eliminado la clase 'module-overlay'
+    modalElement.className = 'confirmation-overlay';
     modalElement.innerHTML = modalHTML;
     document.body.appendChild(modalElement);
 

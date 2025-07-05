@@ -2,7 +2,7 @@
 import { getTranslation } from '../general/translations-controller.js';
 import { PREMIUM_FEATURES, activateModule, getCurrentActiveOverlay, allowCardMovement } from '../general/main.js';
 import { prepareTimerForEdit, prepareCountToDateForEdit } from './menu-interactions.js';
-import { playSound, stopSound, initializeSortable, getAvailableSounds, handleTimerCardAction, getSoundNameById } from './general-tools.js';
+import { playSound, stopSound, initializeSortable, getAvailableSounds, handleTimerCardAction, getSoundNameById, createExpandableToolContainer } from './general-tools.js';
 import { showDynamicIslandNotification } from '../general/dynamic-island-controller.js';
 import { updateEverythingWidgets } from './everything-controller.js';
 import { showConfirmation } from '../general/overlay-manager.js';
@@ -240,43 +240,30 @@ function getActiveTimerDetails() {
     return `${title} (${remainingTime} ${getTranslation('remaining', 'everything') || 'restantes'})`;
 }
 
-function createExpandableTimerContainer(type, titleKey, icon) {
-    const container = document.createElement('div');
-    container.className = 'timers-container';
-    container.dataset.container = type;
-
-    container.innerHTML = `
-        <div class="expandable-card-header">
-            <div class="expandable-card-header-left">
-                <div class="expandable-card-header-icon">
-                    <span class="material-symbols-rounded">${icon}</span>
-                </div>
-                <div class="expandable-card-header-title">
-                    <h3 data-translate="${titleKey}" data-translate-category="timer">${getTranslation(titleKey, 'timer')}</h3>
-                </div>
-            </div>
-            <div class="expandable-card-header-right">
-                <span class="timer-count-badge" data-count-for="${type}">0</span>
-                <button class="expandable-card-toggle-btn">
-                    <span class="material-symbols-rounded expand-icon">expand_more</span>
-                </button>
-            </div>
-        </div>
-        <div class="tool-grid" data-timer-grid="${type}"></div>
-    `;
-
-    const header = container.querySelector('.expandable-card-header');
-    header.addEventListener('click', () => toggleTimersSection(type));
-
-    return container;
-}
-
-
 function initializeTimerController() {
     const wrapper = document.querySelector('.timers-list-wrapper');
     if (wrapper) {
-        const userContainer = createExpandableTimerContainer('user', 'my_timers', 'timer');
-        const defaultContainer = createExpandableTimerContainer('default', 'default_timers', 'timelapse');
+        const userContainer = createExpandableToolContainer({
+            type: 'user',
+            titleKey: 'my_timers',
+            translationCategory: 'timer',
+            icon: 'timer',
+            containerClass: 'timers-container',
+            badgeClass: 'timer-count-badge',
+            gridAttribute: 'data-timer-grid',
+            toggleFunction: toggleTimersSection
+        });
+
+        const defaultContainer = createExpandableToolContainer({
+            type: 'default',
+            titleKey: 'default_timers',
+            translationCategory: 'timer',
+            icon: 'timelapse',
+            containerClass: 'timers-container',
+            badgeClass: 'timer-count-badge',
+            gridAttribute: 'data-timer-grid',
+            toggleFunction: toggleTimersSection
+        });
         wrapper.appendChild(userContainer);
         wrapper.appendChild(defaultContainer);
     }

@@ -6,6 +6,7 @@ import { getTranslation } from '../general/translations-controller.js';
 import { addTimerAndRender, updateTimer, getTimersCount, getTimerLimit } from './timer-controller.js';
 import { showDynamicIslandNotification } from '../general/dynamic-island-controller.js';
 import { playSound, stopSound, generateSoundList, handleAudioUpload, deleteUserAudio, getSoundNameById } from './general-tools.js';
+import { getCurrentLocation } from '../general/location-manager.js';
 
 const autoIncrementState = {
     isActive: false,
@@ -297,6 +298,22 @@ export function prepareTimerForEdit(timerData) {
     menuElement.setAttribute('data-editing-id', timerData.id);
 }
 
+function getFormattedDate(date) {
+    const location = getCurrentLocation();
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    };
+    let locale = 'default';
+
+    if (location && location.code.toLowerCase() === 'us') {
+        locale = 'en-US';
+    }
+
+    return date.toLocaleDateString(locale, options);
+}
+
 export function prepareCountToDateForEdit(timerData) {
     const menuElement = getMenuElement('menuTimer');
     if (!menuElement) return;
@@ -320,7 +337,9 @@ export function prepareCountToDateForEdit(timerData) {
     state.timer.countTo.selectedDate = targetDate.toISOString();
     state.timer.countTo.selectedHour = targetDate.getHours();
     state.timer.countTo.selectedMinute = targetDate.getMinutes();
-    updateDisplay('#selected-date-display', targetDate.toLocaleDateString(), menuElement);
+
+    updateDisplay('#selected-date-display', getFormattedDate(targetDate), menuElement);
+
     updateDisplay('#selected-hour-display', String(targetDate.getHours()).padStart(2, '0'), menuElement);
     updateDisplay('#selected-minute-display', String(targetDate.getMinutes()).padStart(2, '0'), menuElement);
     const countToDateSoundName = getSoundNameById(timerData.sound);
@@ -551,7 +570,8 @@ const renderCalendar = (timerMenu) => {
 
 const selectCalendarDate = (day, timerMenu) => {
     state.timer.countTo.selectedDate = new Date(state.timer.countTo.date.getFullYear(), state.timer.countTo.date.getMonth(), day).toISOString();
-    updateDisplay('#selected-date-display', new Date(state.timer.countTo.selectedDate).toLocaleDateString(), timerMenu);
+    const selectedDate = new Date(state.timer.countTo.selectedDate);
+    updateDisplay('#selected-date-display', getFormattedDate(selectedDate), timerMenu);
     timerMenu.querySelector('.calendar-container')?.classList.add('disabled');
     renderCalendar(timerMenu);
 };

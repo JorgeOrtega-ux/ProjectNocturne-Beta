@@ -369,6 +369,52 @@ export async function handleAudioUpload(callback) {
     fileInput.click();
 }
 
+/**
+ * Creates a generic expandable container for tool sections like Alarms or Timers.
+ * @param {object} config - The configuration object for the container.
+ * @param {string} config.type - The type of content (e.g., 'user', 'default').
+ * @param {string} config.titleKey - The translation key for the header title.
+ * @param {string} config.translationCategory - The category for the translation.
+ * @param {string} config.icon - The Material Symbols icon name for the header.
+ * @param {string} config.containerClass - The specific class for the main container div.
+ * @param {string} config.badgeClass - The class for the count badge span.
+ * @param {string} config.gridAttribute - The data attribute for the tool grid (e.g., 'data-alarm-grid').
+ * @param {function} config.toggleFunction - The function to call when the header is clicked.
+ * @returns {HTMLElement} The created container element.
+ */
+export function createExpandableToolContainer({ type, titleKey, translationCategory, icon, containerClass, badgeClass, gridAttribute, toggleFunction }) {
+    const container = document.createElement('div');
+    container.className = containerClass;
+    container.dataset.container = type;
+
+    container.innerHTML = `
+        <div class="expandable-card-header">
+            <div class="expandable-card-header-left">
+                <div class="expandable-card-header-icon">
+                    <span class="material-symbols-rounded">${icon}</span>
+                </div>
+                <div class="expandable-card-header-title">
+                    <h3 data-translate="${titleKey}" data-translate-category="${translationCategory}">${getTranslation(titleKey, translationCategory)}</h3>
+                </div>
+            </div>
+            <div class="expandable-card-header-right">
+                <span class="${badgeClass}" data-count-for="${type}">0</span>
+                <button class="expandable-card-toggle-btn">
+                    <span class="material-symbols-rounded expand-icon">expand_more</span>
+                </button>
+            </div>
+        </div>
+        <div class="tool-grid" ${gridAttribute}="${type}"></div>
+    `;
+
+    const header = container.querySelector('.expandable-card-header');
+    if (header) {
+        header.addEventListener('click', () => toggleFunction(type));
+    }
+
+    return container;
+}
+
 export function initializeCategorySliderService() {
     const config = {
         enableService: true,

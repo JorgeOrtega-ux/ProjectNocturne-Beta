@@ -1,7 +1,7 @@
 // Ruta: /assets/js/tools/alarm-controller.js
 import { use24HourFormat, PREMIUM_FEATURES, activateModule, getCurrentActiveOverlay, allowCardMovement } from '../general/main.js';
 import { prepareAlarmForEdit } from './menu-interactions.js';
-import { playSound as playAlarmSound, stopSound as stopAlarmSound, initializeSortable, getAvailableSounds, handleAlarmCardAction, getSoundNameById } from './general-tools.js';
+import { playSound as playAlarmSound, stopSound as stopAlarmSound, initializeSortable, getAvailableSounds, handleAlarmCardAction, getSoundNameById, createExpandableToolContainer } from './general-tools.js';
 import { showDynamicIslandNotification } from '../general/dynamic-island-controller.js';
 import { updateEverythingWidgets } from './everything-controller.js';
 import { getTranslation } from '../general/translations-controller.js';
@@ -177,36 +177,6 @@ function getNextAlarmDetails() {
     const title = nextAlarm.type === 'default' ? getTranslation(nextAlarm.title, 'alarms') : nextAlarm.title;
     const timeString = nextAlarm.time.toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit', hour12: !use24HourFormat });
     return `${title} (${timeString})`;
-}
-
-// En alarm-controller.js - función createExpandableContainer actualizada
-
-function createExpandableContainer(type, titleKey, icon) {
-    const container = document.createElement('div');
-    container.className = 'alarms-container';
-    container.dataset.container = type;
-    container.innerHTML = `
-        <div class="expandable-card-header">
-            <div class="expandable-card-header-left">
-                <div class="expandable-card-header-icon">
-                    <span class="material-symbols-rounded">${icon}</span>
-                </div>
-                <div class="expandable-card-header-title">
-                    <h3 data-translate="${titleKey}" data-translate-category="alarms">${getTranslation(titleKey, 'alarms')}</h3>
-                </div>
-            </div>
-            <div class="expandable-card-header-right">
-                <span class="alarm-count-badge" data-count-for="${type}">0</span>
-                <button class="expandable-card-toggle-btn">
-                    <span class="material-symbols-rounded expand-icon">expand_more</span>
-                </button>
-            </div>
-        </div>
-        <div class="tool-grid" data-alarm-grid="${type}"></div>
-    `;
-    const header = container.querySelector('.expandable-card-header');
-    header.addEventListener('click', () => toggleAlarmsSection(type));
-    return container;
 }
 
 function updateAlarmCounts() {
@@ -695,8 +665,27 @@ export function initializeAlarmClock() {
     startClock();
     const wrapper = document.querySelector('.alarms-list-wrapper');
     if (wrapper) {
-        const userContainer = createExpandableContainer('user', 'my_alarms', 'alarm');
-        const defaultContainer = createExpandableContainer('default', 'default_alarms', 'alarm_on');
+        const userContainer = createExpandableToolContainer({
+            type: 'user',
+            titleKey: 'my_alarms',
+            translationCategory: 'alarms',
+            icon: 'alarm',
+            containerClass: 'alarms-container',
+            badgeClass: 'alarm-count-badge',
+            gridAttribute: 'data-alarm-grid',
+            toggleFunction: toggleAlarmsSection
+        });
+
+        const defaultContainer = createExpandableToolContainer({
+            type: 'default',
+            titleKey: 'default_alarms',
+            translationCategory: 'alarms',
+            icon: 'alarm_on',
+            containerClass: 'alarms-container',
+            badgeClass: 'alarm-count-badge',
+            gridAttribute: 'data-alarm-grid',
+            toggleFunction: toggleAlarmsSection
+        });
         wrapper.appendChild(userContainer);
         wrapper.appendChild(defaultContainer);
     }

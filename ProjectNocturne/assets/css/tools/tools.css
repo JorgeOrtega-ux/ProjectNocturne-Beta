@@ -1216,10 +1216,6 @@ html.light-mode .dynamic-island {
     background-color: #ffffff20;
 }
 
-.dark-mode .tool-card:hover {
-    background-color: #ffffff20;
-}
-
 .widget.sortable-chosen {
     cursor: grabbing;
 }

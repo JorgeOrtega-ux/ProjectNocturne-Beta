@@ -24,7 +24,10 @@ function initSidebarMobile() {
         return;
     }
 
-    function handleSidebarToggle() {
+    function handleSidebarToggle(e) {
+        // Detener la propagación para evitar que el listener global lo cierre inmediatamente
+        if (e) e.stopPropagation();
+
         if (btn.hasAttribute('disabled')) {
             btn.removeAttribute('disabled');
         } else {
@@ -41,6 +44,22 @@ function initSidebarMobile() {
     }
 
     btn.addEventListener('click', handleSidebarToggle);
+
+    // --- NUEVA LÓGICA ---
+    // Cierra el sidebar si se hace clic fuera de él
+    document.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('active') && !sidebar.contains(e.target) && !btn.contains(e.target)) {
+            handleSidebarToggle();
+        }
+    });
+
+    // Cierra el sidebar cuando se selecciona una nueva sección
+    document.addEventListener('sectionChanged', () => {
+        if (sidebar.classList.contains('active')) {
+            handleSidebarToggle();
+        }
+    });
+    // --- FIN DE LA NUEVA LÓGICA ---
 
     function updateSidebarVisibility() {
         const screenWidth = window.innerWidth;
