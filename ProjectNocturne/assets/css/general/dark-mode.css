@@ -1,0 +1,642 @@
+.dark-mode #upload-audio-wrapper {
+    border-color: #ffffff20;
+}
+
+.dark-mode .add-btn {
+    border-color: #ffffff20;
+    color: #fff;
+}
+
+.dark-mode .add-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .add-menu-container {
+    background-color: #252627;
+    border-color: #ffffff20;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    filter: unset;
+}
+
+.dark-mode .alarm-count-badge,
+.dark-mode .timer-count-badge {
+    color: #fff;
+    background-color: transparent;
+    border-color: #ffffff20;
+}
+
+.dark-mode .auto-color {
+    background-color: #ffffff;
+    border: 1px solid #ffffff20;
+}
+
+.dark-mode .auto-color span {
+    color: #000000;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .auto-color::before {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
+    z-index: 1;
+    opacity: 0;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    content: '';
+    transform: scale(0.8);
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+.dark-mode .black-color {
+    border: 1px solid #ffffff80;
+}
+
+.dark-mode .body-title {
+    color: #fff;
+}
+
+.dark-mode body {
+    background-color: #18191b;
+}
+
+.dark-mode .calendar-container,
+.dark-mode .time-selector-container {
+    background-color: #252627;
+    border-color: #ffffff20;
+}
+
+.dark-mode .calendar-days .day.other-month {
+    color: #555;
+}
+
+.dark-mode .calendar-days .day.selected {
+    color: #000;
+    background-color: #fff;
+}
+
+.dark-mode .calendar-days .day.today {
+    border-color: #ffffff80;
+}
+
+.dark-mode .calendar-days .day:not(.other-month):hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .calendar-nav {
+    color: #fff;
+}
+
+.dark-mode .calendar-nav:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .card-action-btn {
+    color: #ffffff;
+}
+
+.dark-mode .card-action-btn.active {
+    background-color: #ffffff20;
+}
+
+.dark-mode .card-action-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .card-dismiss-btn {
+    color: #fff;
+    background-color: #ffffff20;
+    border-color: #ffffff20;
+}
+
+.dark-mode .card-dropdown-menu {
+    background-color: #3a3b3d;
+    border-color: #ffffff20;
+    filter: unset;
+}
+
+.dark-mode .card-dropdown-menu .menu-link[data-action*="delete"] .menu-link-icon span,
+.dark-mode .card-dropdown-menu .menu-link[data-action*="delete"] .menu-link-text span {
+    color: #e57373;
+}
+
+.dark-mode .card-dropdown-menu .menu-link[data-action*="delete"]:hover {
+    background-color: rgba(239, 154, 154, 0.1);
+}
+
+.dark-mode .card-dropdown-menu .menu-link[data-action*="delete"]:hover .menu-link-icon span,
+.dark-mode .card-dropdown-menu .menu-link[data-action*="delete"]:hover .menu-link-text span {
+    color: #ef9a9a;
+}
+
+.dark-mode .card-menu-container,
+.dark-mode .tool-card .card-menu-container,
+.dark-mode .menu-link .card-menu-container {
+    background-color: #252627;
+    border: 1px solid #ffffff20;
+    filter: unset;
+}
+
+.dark-mode .clock-date {
+    color: #ffffffe6;
+    background: transparent;
+    padding: 4px 12px;
+    border-radius: 50px;
+    border-color: #ffffff20;
+}
+
+.dark-mode .clock-time {
+    color: #ffffff;
+}
+
+.dark-mode .collapse-alarms-btn,
+.dark-mode .collapse-timers-btn {
+    color: #ffffff;
+}
+
+.dark-mode .collapse-btn {
+    color: #ffffff;
+}
+
+.dark-mode .collapse-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .color-content.active .auto-color {
+    transform: scale(0.9);
+}
+
+.dark-mode .color-content.active .auto-color::before {
+    opacity: 1;
+    border-color: #ffffff;
+    transform: scale(1);
+}
+
+.dark-mode .color-content.active .color::before {
+    border-color: #fff;
+}
+
+.dark-mode .color-content:hover .auto-color {
+    border-color: #ffffff40;
+    transform: scale(0.9);
+}
+
+.dark-mode .color-content:not(.active):hover .auto-color::before {
+    opacity: 0.5;
+    border-color: #ffffff20;
+    transform: scale(1);
+}
+
+.dark-mode .color-content:not(.active):hover .color::before {
+    border-color: #ffffff20;
+}
+
+.dark-mode .color.gradient-preview {
+    border: 1px solid #ffffff20;
+}
+
+.dark-mode .create-tool {
+    color: #000000;
+    background-color: #ffffff;
+}
+
+.dark-mode .create-tool .spinning {
+    color: #000000;
+}
+
+.dark-mode .custom-select-content {
+    border-color: #ffffff20;
+}
+
+.dark-mode .custom-select-content:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .custom-text-content {
+    border-color: #ffffff20;
+}
+
+.dark-mode .drag-handle {
+    background-color: #ffffff80;
+}
+
+.dark-mode .dropdown-menu-container {
+    background-color: #252627;
+    border-color: #ffffff20;
+    filter: unset;
+}
+
+.dark-mode .dropdown-menu-top {
+    border-bottom-color: #ffffff20;
+}
+
+.dark-mode .enter-date-tool-left:hover,
+.dark-mode .enter-date-tool-right:hover,
+.dark-mode .enter-sound-content:hover,
+.dark-mode .menu-action-button:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .enter-text-tool,
+.dark-mode .enter-date-tool,
+.dark-mode .enter-sound-content,
+.dark-mode .menu-action-button {
+    color: #ffffff;
+    border-color: #ffffff20;
+}
+
+.dark-mode .enter-text-tool>input {
+    color: #fff;
+}
+
+.dark-mode .expandable-card-header {
+    background-color: #18191b;
+    border-color: #ffffff20;
+}
+
+.dark-mode .expandable-card-header h3 {
+    color: #ffffff;
+}
+
+.dark-mode .expandable-card-header-icon {
+    color: #ffffff;
+    border-color: #ffffff20;
+}
+
+.dark-mode .expandable-card-header:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .expandable-card-toggle-btn {
+    color: #fff;
+}
+
+.dark-mode .expandable-card-toggle-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .feedback-text {
+    color: #ffffff;
+}
+
+.dark-mode .general-content {
+    background-color: #18191b;
+    border-color: #ffffff20;
+}
+
+.dark-mode .general-content-top {
+    border-color: #ffffff20;
+}
+
+.dark-mode .header-button {
+    color: #ffffff;
+    background-color: transparent;
+    border-color: #ffffff20;
+}
+
+.dark-mode .header-button.active {
+    background-color: #ffffff20;
+}
+
+.dark-mode .header-button.is-ringing {
+    background-color: #ffffff20;
+    border-color: #ffffff20;
+}
+
+.dark-mode .header-button:not(.active):hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .increse-font-zise {
+    border-color: #ffffff20;
+}
+
+.dark-mode .increse-font-zise-left,
+.dark-mode .increse-font-zise-center,
+.dark-mode .increse-font-zise-right {
+    color: #ffffff;
+}
+
+.dark-mode .increse-font-zise-left:hover,
+.dark-mode .increse-font-zise-right:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .info-tool {
+    border-color: #ffffff20;
+}
+
+.dark-mode .laps-table tbody tr:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .laps-table th,
+.dark-mode .laps-table td {
+    border-bottom: 1px solid #ffffff20;
+}
+
+.dark-mode .main-content {
+    background-color: #252627;
+}
+
+.dark-mode .menu-back-btn {
+    border-color: #ffffff20;
+    color: #ffffff;
+}
+
+.dark-mode .menu-back-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .menu-button {
+    color: #fff;
+    border-color: #ffffff20;
+}
+
+.dark-mode .menu-button.menu-button--primary {
+    background-color: #ffffff20;
+    color: #ffffff;
+    border-color: #ffffff20;
+}
+
+.dark-mode .menu-button:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .menu-component,
+.dark-mode .menu-control-center {
+    color: #ffffff;
+    background-color: #252627;
+    border: 1px solid #ffffff20;
+    filter: unset;
+}
+
+.dark-mode .menu-content-header {
+    background-color: #ffffff20;
+    border-color: #ffffff20;
+}
+
+.dark-mode .menu-content-header-sm {
+    color: #a9a9b2;
+    background-color: #ffffff10;
+    border-top-color: #ffffff20;
+    border-bottom-color: #ffffff20;
+}
+
+.dark-mode .menu-header {
+    border-color: #ffffff20;
+}
+
+.dark-mode .menu-link {
+    color: #ffffff;
+}
+
+.dark-mode .menu-link .card-pin-btn {
+    color: #fff;
+}
+
+.dark-mode .menu-link .card-pin-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .menu-link-actions-wrapper {
+    background-color: #3a3b3d;
+}
+
+.dark-mode .menu-link-actions-wrapper .interactive-icon:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .menu-link-icon .material-symbols-rounded.spinning {
+    color: #ffffff;
+}
+
+.dark-mode .menu-link.active {
+    background-color: #ffffff20;
+}
+
+.dark-mode .menu-link[data-action="upload-audio"] {
+    border-color: #ffffff20;
+}
+
+.dark-mode .menu-link:not(.active):hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .menu-section-selector {
+    border-color: #ffffff20;
+}
+
+.dark-mode .menu-section-top,
+.dark-mode .menu-section-bottom {
+    border-color: #ffffff20;
+}
+
+.dark-mode .overflow-x {
+    scrollbar-color: #ffffff80 transparent;
+}
+
+.dark-mode .overflow-y {
+    scrollbar-color: #ffffff80 transparent;
+}
+
+.dark-mode .preview-active {
+    background-color: #ffffff20;
+}
+
+.dark-mode .ringing-card-icon {
+    background-color: #ffffff20;
+}
+
+.dark-mode .ringing-group {
+    color: #ffffff;
+}
+
+.dark-mode .ringing-restore-btn {
+    border-color: #ffffff20;
+    filter: unset;
+    color: #ffffff;
+}
+
+.dark-mode .ringing-restore-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .scroll-btn {
+    color: #ffffff;
+    background-color: #252627;
+    border-color: #ffffff20;
+}
+
+.dark-mode .scroll-btn:hover {
+    background-color: #18191b;
+}
+
+.dark-mode .search-content {
+    color: #ffffff;
+    border-color: #ffffff20;
+}
+
+.dark-mode .search-content-icon {
+    color: #ffffff;
+}
+
+.dark-mode .search-content-text>input {
+    color: #ffffff;
+}
+
+.dark-mode .search-result-item {
+    border-color: #ffffff20;
+}
+
+.dark-mode .search-result-item .card-menu-btn {
+    color: #fff;
+}
+
+.dark-mode .search-result-item .card-pin-btn {
+    color: #fff;
+}
+
+.dark-mode .search-result-item .card-pin-btn.active {
+    background-color: #ffffff20;
+}
+
+.dark-mode .search-result-item .card-pin-btn:hover,
+.dark-mode .search-result-item .card-menu-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .section-center {
+    border-color: #ffffff20;
+}
+
+.dark-mode .section-center:fullscreen {
+    background-color: #18191b;
+}
+
+.dark-mode .section-legal-content h1,
+.dark-mode .section-legal-content h2 {
+    border-bottom-color: #ffffff20;
+    color: #ffffffe6;
+}
+
+.dark-mode .section-legal-content .legal-link {
+    color: #58a6ff;
+}
+
+.dark-mode .section-legal-content p,
+.dark-mode .section-legal-content ul {
+    color: #ffffffe6;
+}
+
+.dark-mode .section-top {
+    border-color: #ffffff20;
+}
+
+.dark-mode .section-top .separator {
+    background-color: #ffffff20;
+}
+
+.dark-mode .shadow {
+    box-shadow: unset;
+    border-bottom: 1px solid #ffffff20;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.dark-mode .sidebar .separator {
+    background-color: #ffffff20;
+}
+
+.dark-mode .sidebar-button {
+    color: #fff;
+    border-color: #ffffff20;
+}
+
+.dark-mode .sidebar-button.active {
+    background-color: #ffffff20;
+    border-color: #ffffff20;
+}
+
+.dark-mode .sidebar-button:not(.active):hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .sidebar-wrapper.desktop-sidebar .sidebar,
+.dark-mode .sidebar-wrapper.mobile-sidebar .sidebar {
+    background-color: #18191b;
+    border-color: #ffffff20;
+}
+
+.dark-mode .time-selector-hours .hour-item.selected {
+    background-color: #ffffff40;
+}
+
+.dark-mode .time-selector-hours .hour-item:hover,
+.dark-mode .time-selector-minutes .minute-item:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .tool-card {
+    background-color: #18191b;
+    border-color: #ffffff20;
+}
+
+.dark-mode .tool-card .card-dropdown-menu .menu-link:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .tool-card .card-header,
+.dark-mode .tool-card .card-value {
+    color: #ffffff;
+}
+
+.dark-mode .tool-card .card-pin-btn,
+.dark-mode .tool-card .card-menu-btn {
+    color: #ffffff;
+}
+
+.dark-mode .tool-card .card-pin-btn.active {
+    background-color: #ffffff20;
+}
+
+.dark-mode .tool-card .card-pin-btn:hover,
+.dark-mode .tool-card .card-menu-btn:hover {
+    background-color: #ffffff20;
+}
+
+.dark-mode .tool-card .card-tag {
+    color: #ffffff;
+    border-color: #ffffff20;
+}
+
+.dark-mode .tool-card .card-title {
+    color: #ffffff;
+}
+
+.dark-mode .tool-card-placeholder {
+    border: 1px dashed #ffffff20;
+}
+
+.dark-mode .tooltip {
+    border-color: #ffffff20;
+}
+
+.dark-mode .tooltip::before {
+    border-color: #ffffff20;
+}
+
+.dark-mode .widget-icon {
+    color: #fff;
+    border-color: #ffffff20;
+}
+
+.dark-mode .widget-title {
+    color: #f5f5f7;
+}
+
+.dark-mode .widget.widget-clock {
+    border-color: #ffffff20;
+}
