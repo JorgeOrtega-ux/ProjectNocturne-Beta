@@ -663,10 +663,16 @@ function addSearchItemEventListeners(item) {
             }
         } else {
             handleAlarmCardAction(action, alarmId, actionTarget);
+            // --- INICIO DE LA CORRECCIÓN ---
+            // Se ha añadido esta línea para cerrar el menú desplegable después de una acción.
+            const dropdown = item.querySelector('.card-dropdown-menu');
+            if (dropdown) {
+                dropdown.classList.add('disabled');
+            }
+            // --- FIN DE LA CORRECCIÓN ---
         }
     });
 }
-
 function refreshSearchResults() {
     const searchInput = document.getElementById('alarm-search-input');
     if (searchInput && searchInput.value) {

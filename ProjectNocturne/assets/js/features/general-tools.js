@@ -1,7 +1,7 @@
 // jorgeortega-ux/projectnocturne-alpha/ProjectNocturne-Alpha-26af6d6a92240876cabfeecbd77228e34952e560/ProjectNocturne/assets/js/features/general-tools.js
 import { getTranslation } from '../core/translations-controller.js';
 import { showModal } from '../ui/menu-interactions.js';
-import { showDynamicIslandNotification } from '../ui/notification-controller.js';
+import { showSimpleNotification } from '../ui/notification-controller.js';
 
 const DB_NAME = 'ProjectNocturneDB';
 const DB_VERSION = 1;
@@ -147,7 +147,7 @@ async function deleteUserAudio(audioId, callback) {
         userAudiosCache = userAudiosCache.filter(audio => audio.id !== audioId);
         replaceDeletedAudioInTools(audioId, 'classic_beep');
 
-        showDynamicIslandNotification('success', 'audio_deleted', 'notifications', { name: audioToDelete.name });
+        showSimpleNotification('success', 'audio_deleted', 'notifications', { name: audioToDelete.name });
 
         if (typeof callback === 'function') {
             callback();
@@ -488,7 +488,7 @@ async function handleAudioUpload(callback) {
 
     if (userAudiosCache.length >= uploadLimit) {
         const messageKey = 'limit_reached_message_premium';
-        showDynamicIslandNotification(
+        showSimpleNotification(
             'error',
             'limit_reached_title',
             messageKey,
@@ -506,12 +506,12 @@ async function handleAudioUpload(callback) {
         if (!file) return;
 
         if (!file.type.startsWith('audio/')) {
-            showDynamicIslandNotification('error', 'invalid_file_type_title', 'invalid_file_type_message', 'notifications');
+            showSimpleNotification('error', 'invalid_file_type_title', 'invalid_file_type_message', 'notifications');
             return;
         }
 
         if (file.size > singleFileSizeLimit) {
-            showDynamicIslandNotification('error', 'file_too_large_title', 'file_too_large_message', 'notifications', { maxSize: maxSizeInMB });
+            showSimpleNotification('error', 'file_too_large_title', 'file_too_large_message', 'notifications', { maxSize: maxSizeInMB });
             return;
         }
 
@@ -1404,6 +1404,10 @@ function handleCardMenuToggle(button) {
         dropdown.popperInstance.destroy();
         dropdown.popperInstance = null;
         dropdown.classList.add('disabled');
+        // --- INICIO DE LA CORRECCIÓN ---
+        // Elimina el atributo de estilo para un reseteo completo
+        dropdown.removeAttribute('style'); 
+        // --- FIN DE LA CORRECCIÓN ---
         return;
     }
 
@@ -1413,7 +1417,10 @@ function handleCardMenuToggle(button) {
             menu.popperInstance = null;
         }
         menu.classList.add('disabled');
-        // SOLUCIÓN: Añadir 'disabled' también al contenedor padre
+        // --- INICIO DE LA CORRECCIÓN ---
+        // Asegura que todas las demás instancias también se limpien por completo
+        menu.removeAttribute('style'); 
+        // --- FIN DE LA CORRECCIÓN ---
         const parentContainer = menu.closest('.card-menu-container');
         if (parentContainer) {
             parentContainer.classList.add('disabled');
@@ -1423,7 +1430,6 @@ function handleCardMenuToggle(button) {
     dropdown.classList.remove('disabled');
 
     const popperReference = button.closest('.card-menu-container');
-    // SOLUCIÓN: Asegurarse de que el contenedor del menú que se abre está visible
     if (popperReference) {
         popperReference.classList.remove('disabled');
     }
@@ -1459,6 +1465,9 @@ function initializeCardEventListeners() {
                     menu.popperInstance = null;
                 }
                 menu.classList.add('disabled');
+                // --- INICIO DE LA CORRECCIÓN ---
+                menu.removeAttribute('style'); // Limpieza del atributo style
+                // --- FIN DE LA CORRECCIÓN ---
                 const parentContainer = menu.closest('.card-menu-container');
                 if (parentContainer) {
                     parentContainer.classList.add('disabled');
@@ -1517,6 +1526,20 @@ function initializeCardEventListeners() {
                     handleWorldClockCardAction(action, cardId, actionTarget);
                     break;
             }
+
+            // --- INICIO DE LA CORRECCIÓN ---
+            if (cardOrItem) {
+                const dropdown = cardOrItem.querySelector('.card-dropdown-menu');
+                if (dropdown) {
+                    if (dropdown.popperInstance) {
+                        dropdown.popperInstance.destroy();
+                        dropdown.popperInstance = null;
+                    }
+                    dropdown.classList.add('disabled');
+                    dropdown.removeAttribute('style'); // Limpieza del atributo style
+                }
+            }
+            // --- FIN DE LA CORRECCIÓN ---
         }
     });
 
@@ -1553,7 +1576,7 @@ function handleAlarmCardAction(action, alarmId, target) {
     // Permitir solo la acción de descartar si esta alarma específica está sonando
     if (isRinging) {
         if (!alarm || !alarm.isRinging || action !== 'dismiss-alarm') {
-            showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+            showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
             return;
         }
     }
@@ -1590,7 +1613,7 @@ function handleTimerCardAction(action, timerId, target) {
     // Permitir solo la acción de descartar si este temporizador específico está sonando
     if (isRinging) {
         if (!timer || !timer.isRinging || action !== 'dismiss-timer') {
-            showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+            showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
             return;
         }
     }

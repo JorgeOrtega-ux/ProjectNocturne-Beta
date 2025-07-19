@@ -2,9 +2,9 @@
 import { use24HourFormat, deactivateModule, activateModule, isModuleActive } from '../app/main.js';
 import { getTranslation } from '../core/translations-controller.js';
 import { addTimerAndRender, updateTimer } from '../features/timer-controller.js';
-import { showDynamicIslandNotification } from './notification-controller.js';
 import { playSound, stopSound, generateSoundList, handleAudioUpload, deleteUserAudio, getSoundNameById } from '../features/general-tools.js';
 import { getCurrentLocation } from '../services/location-manager.js';
+import { showSimpleNotification } from '../ui/notification-controller.js';
 // import { clearSearchColors } from './color-search-system.js'; // LÍNEA CRÍTICA ELIMINADA
 
 let onConfirmCallback = null;
@@ -1138,6 +1138,17 @@ async function handleMenuClick(event, parentMenu) {
     if (!target) return;
     const action = target.dataset.action;
 
+    // --- INICIO DE LA CORRECCIÓN ---
+    // Se ha añadido este bloque para manejar la navegación del calendario
+    if (action === 'prev-month' || action === 'next-month') {
+        event.stopPropagation();
+        const date = state.timer.countTo.date;
+        date.setMonth(date.getMonth() + (action === 'next-month' ? 1 : -1));
+        renderCalendar();
+        return;
+    }
+    // --- FIN DE LA CORRECCIÓN ---
+
     if (action === 'edit-section') {
         event.stopPropagation();
         const menuLink = target.closest('.menu-link');
@@ -1172,11 +1183,11 @@ async function handleMenuClick(event, parentMenu) {
     if (action === 'save-section-changes') {
         const context = soundSelectionContext;
         if (context === 'alarm' && window.alarmManager && window.alarmManager.isAnyAlarmRinging()) {
-            showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+            showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
             return;
         }
         if (context === 'timer' && window.timerManager && window.timerManager.isAnyTimerRinging()) {
-            showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+            showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
             return;
         }
         const saveButton = target;
@@ -1265,11 +1276,11 @@ async function handleMenuClick(event, parentMenu) {
     if (action === 'create-section') {
         const context = soundSelectionContext;
         if (context === 'alarm' && window.alarmManager && window.alarmManager.isAnyAlarmRinging()) {
-            showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+            showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
             return;
         }
         if (context === 'timer' && window.timerManager && window.timerManager.isAnyTimerRinging()) {
-            showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+            showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
             return;
         }
 
@@ -1297,7 +1308,7 @@ async function handleMenuClick(event, parentMenu) {
         const isDuplicate = existingSections.some(section => section.name.toLowerCase() === sectionName.toLowerCase());
 
         if (isDuplicate) {
-            showDynamicIslandNotification('error', 'duplicate_section_name', 'notifications', { name: sectionName });
+            showSimpleNotification('error', 'duplicate_section_name', 'notifications', { name: sectionName });
             removeSpinnerFromCreateButton(createButton);
             validateField(sectionNameInput.parentElement, false);
             return;
@@ -1581,7 +1592,7 @@ async function handleMenuClick(event, parentMenu) {
             break;
         case 'createAlarm': {
             if (window.alarmManager && window.alarmManager.getAlarmCount() >= window.alarmManager.getAlarmLimit()) {
-                showDynamicIslandNotification('error', 'limit_reached_message_premium', 'notifications', { type: getTranslation('alarms', 'tooltips') });
+                showSimpleNotification('error', 'limit_reached_message_premium', 'notifications', { type: getTranslation('alarms', 'tooltips') });
                 return;
             }
             const alarmTitleInput = parentMenu.querySelector('#alarm-title');
@@ -1595,7 +1606,7 @@ async function handleMenuClick(event, parentMenu) {
         }
         case 'createTimer': {
             if (window.timerManager && window.timerManager.getTimersCount() >= window.timerManager.getTimerLimit()) {
-                showDynamicIslandNotification('error', 'limit_reached_message_premium', 'notifications', { type: getTranslation('timer', 'tooltips') });
+                showSimpleNotification('error', 'limit_reached_message_premium', 'notifications', { type: getTranslation('timer', 'tooltips') });
                 return;
             }
             if (state.timer.currentTab === 'countdown') {
@@ -1623,7 +1634,7 @@ async function handleMenuClick(event, parentMenu) {
         }
         case 'addWorldClock': {
             if (window.worldClockManager && window.worldClockManager.getClockCount() >= window.worldClockManager.getClockLimit()) {
-                showDynamicIslandNotification('error', 'limit_reached_message_premium', 'notifications', { type: getTranslation('world_clock', 'tooltips') });
+                showSimpleNotification('error', 'limit_reached_message_premium', 'notifications', { type: getTranslation('world_clock', 'tooltips') });
                 return;
             }
             const clockTitleInput = parentMenu.querySelector('#worldclock-title');
@@ -1812,7 +1823,7 @@ function initializeFeedbackForm() {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    showDynamicIslandNotification('success', 'feedback_success_sent', 'notifications');
+                    showSimpleNotification('success', 'feedback_success_sent', 'notifications');
                     emailInput.value = '';
                     messageInput.value = '';
                     typeInput.value = 'contact_support';
@@ -1823,10 +1834,10 @@ function initializeFeedbackForm() {
                     }
                     deactivateModule('toggleFeedbackMenu');
                 } else {
-                    showDynamicIslandNotification('error', result.message || 'feedback_error_sending', 'notifications');
+                    showSimpleNotification('error', result.message || 'feedback_error_sending', 'notifications');
                 }
             } catch (error) {
-                showDynamicIslandNotification('error', 'feedback_error_server', 'notifications');
+                showSimpleNotification('error', 'feedback_error_server', 'notifications');
             } finally {
                 removeSpinnerFromCreateButton(submitButton);
             }

@@ -1,4 +1,4 @@
-import { showDynamicIslandNotification } from '../ui/notification-controller.js';
+import { showSimpleNotification } from '../ui/notification-controller.js';
 
 const SUPPORTED_LANGUAGES = ['en-us', 'es-mx', 'fr-fr'];
 
@@ -80,7 +80,7 @@ function detectBrowserLanguage() {
                     resolve(SUPPORTED_LANGUAGES.includes(detected) ? detected : 'en-us');
                 })
                 .catch(() => {
-                    showDynamicIslandNotification('error', 'feedback_error_server', 'notifications');
+                    showSimpleNotification('error', 'feedback_error_server', 'notifications');
                     const manualDetection = detectLanguageManually(browserLang);
                     resolve(manualDetection);
                 });
