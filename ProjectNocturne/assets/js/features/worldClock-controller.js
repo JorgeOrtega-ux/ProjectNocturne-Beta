@@ -2,7 +2,7 @@ import { use24HourFormat, activateModule, getCurrentActiveOverlay } from '../app
 import { prepareWorldClockForEdit } from '../ui/menu-interactions.js';
 import { updateZoneInfo } from '../services/zoneinfo-controller.js';
 import { handleWorldClockCardAction, createToolCard } from '../features/general-tools.js';
-import { showDynamicIslandNotification } from '../ui/notification-controller.js';
+import { showSimpleNotification } from '../ui/notification-controller.js';
 import { updateEverythingWidgets } from '../features/everything-controller.js';
 import { getTranslation } from '../core/translations-controller.js';
 import { showModal } from '../ui/menu-interactions.js';
@@ -142,7 +142,7 @@ const loadCountriesAndTimezones = () => new Promise((resolve, reject) => {
     script.src = 'https://cdn.jsdelivr.net/gh/manuelmhtr/countries-and-timezones@latest/dist/index.min.js';
     script.onload = () => window.ct ? resolve(window.ct) : reject(new Error('Library loaded but ct object not found'));
     script.onerror = (error) => {
-        showDynamicIslandNotification('error', 'loading_countries_error', 'notifications');
+        showSimpleNotification('error', 'loading_countries_error', 'notifications');
         reject(new Error('Failed to load countries-and-timezones script'));
     };
     document.head.appendChild(script);
@@ -329,7 +329,7 @@ function createAndStartClockCard(title, country, timezone, existingId = null, sa
     const hasLocalClock = document.querySelector('.local-clock-card');
     const actualCurrentClocks = hasLocalClock && existingId !== 'local' ? totalCurrentClocks - 1 : totalCurrentClocks;
     if (save && actualCurrentClocks >= totalClockLimit) {
-        showDynamicIslandNotification(
+        showSimpleNotification(
             'error',
             'limit_reached_message_premium',
             'notifications',
@@ -385,7 +385,7 @@ function createAndStartClockCard(title, country, timezone, existingId = null, sa
     if (save) {
         userClocks.push({ id: cardId, title, country, timezone, countryCode });
         saveClocksToStorage();
-        showDynamicIslandNotification('success', 'worldclock_created', 'notifications', { title: title });
+        showSimpleNotification('success', 'worldclock_created', 'notifications', { title: title });
         if (typeof updateEverythingWidgets === 'function') {
             updateEverythingWidgets();
         }
@@ -435,7 +435,7 @@ function updateClockCard(id, newData) {
         }
     }, 0);
 
-    showDynamicIslandNotification('success', 'worldclock_updated', 'notifications', { title: newData.title });
+    showSimpleNotification('success', 'worldclock_updated', 'notifications', { title: newData.title });
 
     if (typeof updateEverythingWidgets === 'function') {
         updateEverythingWidgets();
@@ -554,7 +554,7 @@ function handleDeleteClock(clockId) {
         showModal('confirmation', { type: 'world-clock', name: clockTitle }, () => {
             trackEvent('interaction', 'delete_clock');
             deleteClock(clockId);
-            showDynamicIslandNotification('success', 'worldclock_deleted', 'notifications', {
+            showSimpleNotification('success', 'worldclock_deleted', 'notifications', {
                 title: clockTitle
             });
             refreshWorldClockSearchResults();

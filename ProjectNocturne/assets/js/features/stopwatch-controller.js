@@ -1,5 +1,5 @@
 import { getTranslation } from '../core/translations-controller.js';
-import { showDynamicIslandNotification } from '../ui/notification-controller.js';
+import { showSimpleNotification } from '../ui/notification-controller.js';
 import { updateEverythingWidgets } from '../features/everything-controller.js';
 import { trackEvent } from '../services/event-tracker.js';
 
@@ -175,7 +175,7 @@ function recordLap() {
     trackEvent('interaction', 'record_lap');
     const lapLimit = getLapLimit();
     if (stopwatchState.lapNumber >= lapLimit) {
-        showDynamicIslandNotification(
+        showSimpleNotification(
             'error',
             'limit_reached_message_premium',
             'notifications',
@@ -279,7 +279,7 @@ function exportLaps() {
         } catch (error) {
             // --- LÍNEA MODIFICADA (BONUS) ---
             // También he corregido un mensaje de error que no estaba traducido
-            showDynamicIslandNotification('error', getTranslation('export_error', 'notifications'));
+            showSimpleNotification('error', getTranslation('export_error', 'notifications'));
             // --- FIN DE LÍNEA MODIFICADA ---
         } finally {
             setTimeout(() => {
@@ -298,7 +298,7 @@ function exportLaps() {
         };
         script.onerror = () => {
             // --- LÍNEA MODIFICADA (BONUS) ---
-            showDynamicIslandNotification('error', getTranslation('export_library_error', 'notifications'));
+            showSimpleNotification('error', getTranslation('export_library_error', 'notifications'));
             // --- FIN DE LÍNEA MODIFICADA ---
             iconContainer.innerHTML = originalIconHTML;
             exportLapsBtn.classList.remove('disabled-interactive');

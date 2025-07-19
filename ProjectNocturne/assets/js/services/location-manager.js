@@ -1,5 +1,5 @@
 import { getTranslation } from '../core/translations-controller.js';
-import { showDynamicIslandNotification } from '../ui/notification-controller.js';
+import { showSimpleNotification } from '../ui/notification-controller.js';
 
 const USER_UUID_KEY = 'user-unique-id';
 
@@ -266,7 +266,7 @@ async function detectLocationIfNotSet() {
             }
         }
     } catch (error) {
-        showDynamicIslandNotification('error', 'feedback_error_server', 'notifications');
+        showSimpleNotification('error', 'feedback_error_server', 'notifications');
     } finally {
         state.isLoading = false;
         showLoadingState(false);

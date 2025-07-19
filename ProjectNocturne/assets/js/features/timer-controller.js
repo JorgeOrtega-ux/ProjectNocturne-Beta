@@ -2,7 +2,7 @@ import { getTranslation } from '../core/translations-controller.js';
 import { activateModule, getCurrentActiveOverlay, rememberExpandedSectionsOnNav } from '../app/main.js';
 import { prepareTimerForEdit, prepareCountToDateForEdit } from '../ui/menu-interactions.js';
 import { playSound, stopSound, getAvailableSounds, handleTimerCardAction, getSoundNameById, createExpandableToolContainer, createToolCard } from '../features/general-tools.js';
-import { showDynamicIslandNotification, hideDynamicIsland } from '../ui/notification-controller.js';
+import { showSimpleNotification, hideSimpleNotification } from '../ui/notification-controller.js';
 import { updateEverythingWidgets } from '../features/everything-controller.js';
 import { showModal } from '../ui/menu-interactions.js';
 import { trackEvent } from '../services/event-tracker.js';
@@ -49,7 +49,7 @@ function toggleTimersSection(type) {
 function createTimerSection(sectionName) {
     if (isAnyTimerRinging()) return null;
     if (timerSections.length >= 10) {
-        showDynamicIslandNotification(
+        showSimpleNotification(
             'error',
             'limit_reached_message_premium',
             'notifications',
@@ -428,7 +428,7 @@ function updateTimer(timerId, newData) {
     const oldTimer = targetArray[index];
 
     if (oldTimer.type === 'default' && newData.sectionId && oldTimer.sectionId !== newData.sectionId) {
-        showDynamicIslandNotification('error', 'default_timer_cant_change_section', 'timers');
+        showSimpleNotification('error', 'default_timer_cant_change_section', 'timers');
         return;
     }
 
@@ -460,7 +460,7 @@ function updateTimer(timerId, newData) {
     updateAllTimerControls();
 
     const titleForNotification = updatedTimer.id.startsWith('default-timer-') ? getTranslation(updatedTimer.title, 'timer') : updatedTimer.title;
-    showDynamicIslandNotification('success', 'timer_updated', 'notifications', { title: titleForNotification });
+    showSimpleNotification('success', 'timer_updated', 'notifications', { title: titleForNotification });
     updateEverythingWidgets();
 }
 
@@ -516,7 +516,7 @@ function updateTimerSection(sectionId, newName) {
         saveTimerSectionsToStorage();
         renderAllTimerCards();
         updateTimerCounts();
-        showDynamicIslandNotification('success', 'section_updated_success', 'notifications', { name: newName });
+        showSimpleNotification('success', 'section_updated_success', 'notifications', { name: newName });
     }
 }
 function updateTimerCardControls(timer) {
@@ -1025,7 +1025,7 @@ function formatTime(ms, type = 'countdown') {
 
 function addTimerAndRender(timerData, sectionId = 'user') {
     if (isAnyTimerRinging()) {
-        showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+        showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
         return;
     }
     const newTimer = {
@@ -1040,7 +1040,7 @@ function addTimerAndRender(timerData, sectionId = 'user') {
 
     const timerLimit = getTimerLimit();
     if (userTimers.length >= timerLimit) {
-        showDynamicIslandNotification(
+        showSimpleNotification(
             'error',
             'limit_reached_message_premium',
             'notifications',
@@ -1075,7 +1075,7 @@ function addTimerAndRender(timerData, sectionId = 'user') {
         startTimer(newTimer.id);
     }
 
-    showDynamicIslandNotification('success', 'timer_created', 'notifications', { title: newTimer.title });
+    showSimpleNotification('success', 'timer_created', 'notifications', { title: newTimer.title });
     updateEverythingWidgets();
 }
 
@@ -1339,11 +1339,11 @@ function handleDeleteTimer(timerId) {
             updateAllTimerControls();
             updateTimerCounts();
             refreshSearchResults();
-            if (window.hideDynamicIsland) {
-                window.hideDynamicIsland();
+            if (window.hideSimpleNotification) {
+                window.hideSimpleNotification();
             }
 
-            showDynamicIslandNotification('success', 'timer_deleted', 'notifications', {
+            showSimpleNotification('success', 'timer_deleted', 'notifications', {
                 title: originalTitle
             });
             updateEverythingWidgets();
@@ -1473,7 +1473,7 @@ function deleteTimerSection(sectionId) {
     saveTimerSectionsToStorage();
     renderAllTimerCards();
     updateTimerCounts();
-    showDynamicIslandNotification('success', 'section_deleted', 'notifications', { name: section.name });
+    showSimpleNotification('success', 'section_deleted', 'notifications', { name: section.name });
 }
 function initializeTimerController() {
     const wrapper = document.querySelector('.timers-list-wrapper');
@@ -1513,7 +1513,7 @@ function initializeTimerController() {
             if (isAnyTimerRinging()) {
                 e.preventDefault();
                 e.stopPropagation();
-                showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+                showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
             }
         }, true);
     }
@@ -1526,7 +1526,7 @@ function initializeTimerController() {
                 if (isAnyTimerRinging()) {
                     e.preventDefault();
                     e.stopPropagation();
-                    showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+                    showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
                 }
             });
         }
@@ -1539,7 +1539,7 @@ function initializeTimerController() {
     if (startBtn) {
         startBtn.addEventListener('click', () => {
             if (isAnyTimerRinging()) {
-                showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+                showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
                 return;
             }
             if (pinnedTimerId) {
@@ -1551,7 +1551,7 @@ function initializeTimerController() {
     if (pauseBtn) {
         pauseBtn.addEventListener('click', () => {
              if (isAnyTimerRinging()) {
-                showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+                showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
                 return;
             }
             if (pinnedTimerId) {
@@ -1563,7 +1563,7 @@ function initializeTimerController() {
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
              if (isAnyTimerRinging()) {
-                showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+                showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
                 return;
             }
             if (pinnedTimerId) {
@@ -1592,7 +1592,7 @@ function initializeTimerController() {
             saveTimerSectionsToStorage();
             renderAllTimerCards();
             updateTimerCounts();
-            showDynamicIslandNotification('success', 'section_updated', 'notifications', { name: newName });
+            showSimpleNotification('success', 'section_updated', 'notifications', { name: newName });
         }
     }
     window.addEventListener('beforeunload', () => {

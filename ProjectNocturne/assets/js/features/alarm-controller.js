@@ -1,7 +1,7 @@
 import { use24HourFormat, activateModule, getCurrentActiveOverlay, allowCardMovement, rememberExpandedSectionsOnNav } from '../app/main.js';
 import { prepareAlarmForEdit } from '../ui/menu-interactions.js';
 import { playSound, stopSound, getAvailableSounds, handleAlarmCardAction, getSoundNameById, createExpandableToolContainer, createToolCard } from '../features/general-tools.js';
-import { showDynamicIslandNotification, hideDynamicIsland } from '../ui/notification-controller.js';
+import { showSimpleNotification, hideSimpleNotification } from '../ui/notification-controller.js';
 import { updateEverythingWidgets } from '../features/everything-controller.js';
 import { getTranslation } from '../core/translations-controller.js';
 import { showModal } from '../ui/menu-interactions.js';
@@ -49,7 +49,7 @@ function toggleAlarmsSection(type) {
 function createAlarmSection(sectionName) {
     if (isAnyAlarmRinging()) return null;
     if (alarmSections.length >= 11) {
-        showDynamicIslandNotification(
+        showSimpleNotification(
             'error',
             'limit_reached_message_premium',
             'notifications',
@@ -318,7 +318,7 @@ function updateAlarm(alarmId, newData) {
     const oldSectionId = alarm.sectionId; 
 
     if (alarm.type === 'default' && newData.sectionId && oldSectionId !== newData.sectionId) {
-        showDynamicIslandNotification('error', 'default_alarm_cant_change_section', 'alarms');
+        showSimpleNotification('error', 'default_alarm_cant_change_section', 'alarms');
         return; 
     }
 
@@ -340,7 +340,7 @@ function updateAlarm(alarmId, newData) {
 
     refreshSearchResults();
     const translatedTitle = alarm.type === 'default' ? getTranslation(alarm.title, 'alarms') : alarm.title;
-    showDynamicIslandNotification('success', 'alarm_updated', 'notifications', { title: translatedTitle });
+    showSimpleNotification('success', 'alarm_updated', 'notifications', { title: translatedTitle });
     updateEverythingWidgets();
 }
 
@@ -632,7 +632,7 @@ function addSearchItemEventListeners(item) {
         if (!actionTarget) return;
 
         if (isAnyAlarmRinging()) {
-            showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+            showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
             e.stopPropagation();
             return;
         }
@@ -723,12 +723,12 @@ function getAlarmLimit() {
 
 function createAlarm(title, hour, minute, sound, sectionId = 'user') {
     if (isAnyAlarmRinging()) {
-        showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+        showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
         return false;
     }
     const alarmLimit = getAlarmLimit();
     if (userAlarms.length >= alarmLimit) {
-        showDynamicIslandNotification(
+        showSimpleNotification(
             'error',
             'limit_reached_message_premium',
             'notifications',
@@ -752,7 +752,7 @@ function createAlarm(title, hour, minute, sound, sectionId = 'user') {
     saveAlarmsToStorage();
     renderAllAlarmCards();
     updateAlarmCounts();
-    showDynamicIslandNotification('success', 'alarm_created', 'notifications', { title: alarm.title });
+    showSimpleNotification('success', 'alarm_created', 'notifications', { title: alarm.title });
     updateEverythingWidgets();
     return true;
 }
@@ -844,11 +844,11 @@ function deleteAlarm(alarmId) {
         alarmCard.remove();
     }
     updateAlarmCounts();
-    if (window.hideDynamicIsland) {
-        window.hideDynamicIsland();
+    if (window.hideSimpleNotification) {
+        window.hideSimpleNotification();
     }
     trackEvent('interaction', 'delete_alarm');
-    showDynamicIslandNotification('success', 'alarm_deleted', 'notifications', { title: originalTitle });
+    showSimpleNotification('success', 'alarm_deleted', 'notifications', { title: originalTitle });
     refreshSearchResults();
     updateEverythingWidgets();
 }
@@ -1119,7 +1119,7 @@ function deleteAlarmSection(sectionId) {
     saveAlarmSectionsToStorage();
     renderAllAlarmCards();
     updateAlarmCounts();
-    showDynamicIslandNotification('success', 'section_deleted', 'notifications', { name: section.name });
+    showSimpleNotification('success', 'section_deleted', 'notifications', { name: section.name });
 }
 function updateAlarmSection(sectionId, newName) {
     if (isAnyAlarmRinging()) return;
@@ -1129,7 +1129,7 @@ function updateAlarmSection(sectionId, newName) {
         saveAlarmSectionsToStorage();
         renderAllAlarmCards();
         updateAlarmCounts();
-        showDynamicIslandNotification('success', 'section_updated_success', 'notifications', { name: newName });
+        showSimpleNotification('success', 'section_updated_success', 'notifications', { name: newName });
     }
 }
 function initializeAlarmClock() {
@@ -1170,7 +1170,7 @@ function initializeAlarmClock() {
                 if (isAnyAlarmRinging()) {
                     e.preventDefault();
                     e.stopPropagation();
-                    showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+                    showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
                 }
             }, true); // Usar fase de captura
         }
@@ -1184,7 +1184,7 @@ function initializeAlarmClock() {
                 if (isAnyAlarmRinging()) {
                     e.preventDefault();
                     e.stopPropagation();
-                    showDynamicIslandNotification('error', 'action_not_allowed_while_ringing', 'notifications');
+                    showSimpleNotification('error', 'action_not_allowed_while_ringing', 'notifications');
                     return;
                 }
             });

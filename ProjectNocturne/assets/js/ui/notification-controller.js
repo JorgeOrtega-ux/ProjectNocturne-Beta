@@ -104,4 +104,4 @@ function hideSimpleNotification() {
 }
 
 // Renombramos la exportación para mantener la consistencia en los archivos que la llaman
-export { showSimpleNotification as showDynamicIslandNotification, hideSimpleNotification as hideDynamicIsland };
+export { showSimpleNotification, hideSimpleNotification };
