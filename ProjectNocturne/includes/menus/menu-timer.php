@@ -8,7 +8,7 @@
                 <div class="search-content-icon">
                     <span class="material-symbols-rounded">search</span>
                 </div>
-                <div class="search-content-text" style="display: flex; align-items: center;">
+                <div class="search-content-text">
                     <input type="text" id="timer-search-input" class="body-title" autocomplete="off" data-translate="search_timers_placeholder" data-translate-category="search" data-translate-target="placeholder">
                 </div>
             </div>

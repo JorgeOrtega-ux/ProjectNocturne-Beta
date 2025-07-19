@@ -186,19 +186,39 @@ function replaceDeletedAudioInTools(deletedAudioId, defaultSoundId) {
     }
 }
 const SOUND_PATTERNS = {
-    'classic_beep': { frequencies: [800], beepDuration: 150, pauseDuration: 150, type: 'square' },
-    'gentle_chime': { frequencies: [523.25, 659.25, 783.99], beepDuration: 300, pauseDuration: 500, type: 'sine' },
-    'digital_alarm': { frequencies: [1200, 800], beepDuration: 100, pauseDuration: 100, type: 'square' },
-    'peaceful_tone': { frequencies: [440, 554.37, 659.25], beepDuration: 400, pauseDuration: 600, type: 'sine' },
-    'urgent_beep': { frequencies: [1600, 1600], beepDuration: 80, pauseDuration: 80, type: 'sawtooth' }
+    'celestial_harp': { frequencies: [783, 987, 1318], beepDuration: 500, pauseDuration: 500, type: 'triangle' },
+    'classic_beep': { frequencies: [900], beepDuration: 150, pauseDuration: 150, type: 'square' },
+    'cosmic_synth': { frequencies: [220, 440, 660, 880, 660, 440, 220], beepDuration: 120, pauseDuration: 120, type: 'sine' },
+    'crystal_clear': { frequencies: [4000], beepDuration: 100, pauseDuration: 350, type: 'sine' },
+    'digital_alarm': { frequencies: [1500, 1000], beepDuration: 100, pauseDuration: 100, type: 'sawtooth' },
+    'echo_chime': { frequencies: [880, 1046], beepDuration: 300, pauseDuration: 700, type: 'sine' },
+    'electric_pulse': { frequencies: [400, 800], beepDuration: 80, pauseDuration: 180, type: 'square' },
+    'fast_beeps': { frequencies: [1200, 1200, 1200], beepDuration: 60, pauseDuration: 60, type: 'square' },
+    'gentle_chime': { frequencies: [523, 659, 783], beepDuration: 400, pauseDuration: 600, type: 'sine' },
+    'morning_dew': { frequencies: [659, 880, 1046], beepDuration: 350, pauseDuration: 450, type: 'sine' },
+    'peaceful_tone': { frequencies: [440, 587, 659], beepDuration: 500, pauseDuration: 700, type: 'triangle' },
+    'sci_fi_alarm': { frequencies: [1000, 2000], beepDuration: 150, pauseDuration: 150, type: 'triangle' },
+    'sonar_ping': { frequencies: [1200], beepDuration: 150, pauseDuration: 850, type: 'sine' },
+    'urgent_beep': { frequencies: [1800, 1800], beepDuration: 80, pauseDuration: 80, type: 'sawtooth' },
+    'woodpecker': { frequencies: [2000, 2000, 2000], beepDuration: 40, pauseDuration: 90, type: 'sawtooth' }
 };
 function getAvailableSounds() {
     const defaultSounds = [
+        { id: 'celestial_harp', nameKey: 'celestial_harp', icon: 'filter_vintage' },
         { id: 'classic_beep', nameKey: 'classic_beep', icon: 'volume_up' },
-        { id: 'gentle_chime', nameKey: 'gentle_chime', icon: 'notifications' },
+        { id: 'cosmic_synth', nameKey: 'cosmic_synth', icon: 'auto_awesome' },
+        { id: 'crystal_clear', nameKey: 'crystal_clear', icon: 'diamond' },
         { id: 'digital_alarm', nameKey: 'digital_alarm', icon: 'alarm' },
+        { id: 'echo_chime', nameKey: 'echo_chime', icon: 'graphic_eq' },
+        { id: 'electric_pulse', nameKey: 'electric_pulse', icon: 'flash_on' },
+        { id: 'fast_beeps', nameKey: 'fast_beeps', icon: 'fast_forward' },
+        { id: 'gentle_chime', nameKey: 'gentle_chime', icon: 'notifications' },
+        { id: 'morning_dew', nameKey: 'morning_dew', icon: 'wb_sunny' },
         { id: 'peaceful_tone', nameKey: 'peaceful_tone', icon: 'self_care' },
-        { id: 'urgent_beep', nameKey: 'urgent_beep', icon: 'priority_high' }
+        { id: 'sci_fi_alarm', nameKey: 'sci_fi_alarm', icon: 'smart_toy' },
+        { id: 'sonar_ping', nameKey: 'sonar_ping', icon: 'radar' },
+        { id: 'urgent_beep', nameKey: 'urgent_beep', icon: 'priority_high' },
+        { id: 'woodpecker', nameKey: 'woodpecker', icon: 'animation' }
     ];
     const customAudios = userAudiosCache.map(audio => ({
         id: audio.id,
