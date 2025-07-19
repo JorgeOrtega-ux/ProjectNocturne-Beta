@@ -41,7 +41,7 @@ function initializeRingingController() {
     window.ringingState = window.ringingState || { tools: {} };
 
     document.addEventListener('moduleDeactivated', (e) => {
-        if (e.detail.module === 'toggleNotificationsOverlay' || e.detail.module === 'overlayContainer') {
+        if (e.detail.module === 'toggleNotifications' || e.detail.module === 'overlayContainer') {
             updateRestoreButton();
             clearAllRingingIntervals();
 
@@ -65,7 +65,7 @@ function initializeRingingController() {
     });
 
     document.addEventListener('moduleActivated', (e) => {
-        if (e.detail.module === 'toggleNotificationsOverlay') {
+        if (e.detail.module === 'toggleNotifications') {
             const latestTool = getLatestRingingTool();
             if (latestTool) {
                 showDetailView(latestTool.toolId);
@@ -92,17 +92,11 @@ function initializeRingingController() {
             }
         });
     }
-    const ringingRestoreBtn = document.getElementById('ringing-restore-btn-id');
-    if (ringingRestoreBtn) {
-        ringingRestoreBtn.addEventListener('click', () => {
-            toggleModule('toggleNotificationsOverlay');
-        });
-    }
 }
 
 function updateRestoreButton() {
     const ringingToolsCount = Object.keys(window.ringingState.tools).length;
-    const buttonElement = document.getElementById('ringing-restore-btn-id');
+    const buttonElement = document.querySelector('.header-button[data-module="toggleNotifications"]');
 
     if (buttonElement) {
         if (ringingToolsCount > 0) {
@@ -138,7 +132,7 @@ function showRingingScreen(toolType, data, onDismiss, onSnooze, onRestart) {
         window.ringingState.tools[toolId] = { ...data, toolType, onDismiss, onSnooze, onRestart, rangAt: Date.now() };
     }
 
-    activateModule('toggleNotificationsOverlay');
+    activateModule('toggleNotifications');
     
     const latestTool = getLatestRingingTool();
     if (latestTool) {
@@ -290,7 +284,7 @@ function updateRingingList() {
     const ringingTools = Object.values(window.ringingState.tools);
 
     if (ringingTools.length === 0) {
-        deactivateModule('toggleNotificationsOverlay');
+        deactivateModule('toggleNotifications');
         return;
     }
 

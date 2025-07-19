@@ -243,11 +243,11 @@ function initModuleToggleListeners() {
         });
     }
 
-    const notificationsToggle = document.querySelector('[data-module="toggleNotificationsOverlay"]');
+    const notificationsToggle = document.querySelector('[data-module="toggleNotifications"]');
     if (notificationsToggle) {
         notificationsToggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            toggleModule('overlayContainerRight');
+            toggleModule('toggleNotifications');
         });
     }
 }
@@ -300,7 +300,7 @@ function activateSpecificOverlay(overlayName) {
         'menuTimer': 'toggleMenuTimer',
         'menuWorldClock': 'toggleMenuWorldClock',
         'menuPaletteColors': 'togglePaletteColors',
-        'menuNotifications': 'toggleNotificationsOverlay'
+        'menuNotifications': 'toggleNotifications'
     };
     const toggle = overlayToToggleMap[overlayName];
     if (toggle) {

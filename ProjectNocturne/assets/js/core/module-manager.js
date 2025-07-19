@@ -65,8 +65,7 @@ const TOGGLE_TO_MODULE_MAP = {
     'toggleDeleteMenu': 'overlayContainer',
     'toggleFeedbackMenu': 'overlayContainer',
     'toggleFeedbackTypesMenu': 'overlayContainer',
-    'toggleNotificationsOverlay': 'overlayContainer'
-    // Se eliminó 'toggleRingingListOverlay'
+    'toggleNotifications': 'overlayContainer'
 };
 
 const moduleState = {
@@ -474,7 +473,7 @@ function normalizeModuleName(moduleName) {
     if (TOGGLE_TO_MODULE_MAP[moduleName]) {
         return TOGGLE_TO_MODULE_MAP[moduleName];
     }
-    if (moduleName.startsWith('toggleMenu') || moduleName === 'togglePaletteColors' || moduleName === 'toggleSoundsMenu' || moduleName === 'toggleNotificationsOverlay') {
+    if (moduleName.startsWith('toggleMenu') || moduleName === 'togglePaletteColors' || moduleName === 'toggleSoundsMenu' || moduleName === 'toggleNotifications') {
         return 'overlayContainer';
     }
     return moduleName;
@@ -490,7 +489,7 @@ function getOverlayFromToggle(toggleName) {
         'toggleDeleteMenu': 'menuDelete',
         'toggleFeedbackMenu': 'menuFeedback',
         'toggleFeedbackTypesMenu': 'menuFeedbackTypes',
-        'toggleNotificationsOverlay': 'menuNotifications'
+        'toggleNotifications': 'menuNotifications'
     };
     return toggleToOverlayMap[toggleName] || null;
 }
@@ -505,7 +504,7 @@ function getToggleFromOverlay(overlayName) {
         'menuDelete': 'toggleDeleteMenu',
         'menuFeedback': 'toggleFeedbackMenu',
         'menuFeedbackTypes': 'toggleFeedbackTypesMenu',
-        'menuNotifications': 'toggleNotificationsOverlay'
+        'menuNotifications': 'toggleNotifications'
     };
     return overlayToToggleMap[overlayName] || null;
 }
