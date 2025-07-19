@@ -1307,6 +1307,11 @@ window.clearRecentColors = () => {
 };
 
 function getTranslatedColorNameFromHex(hex) {
+    // Verificación añadida para asegurar que 'hex' es una cadena de texto.
+    if (typeof hex !== 'string') {
+        return null;
+    }
+
     const hexToColorKeyMap = {
         '#ff0000': 'base_red',
         '#00ff00': 'base_green',
