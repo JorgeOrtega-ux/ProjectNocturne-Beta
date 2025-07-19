@@ -363,7 +363,6 @@ const setAlarmDefaults = () => {
     state.alarm.hour = now.getHours();
     state.alarm.minute = now.getMinutes();
 };
-
 const resetAlarmMenu = (menuElement) => {
     setAlarmDefaults();
     state.alarm.sound = 'classic_beep';
@@ -376,6 +375,15 @@ const resetAlarmMenu = (menuElement) => {
         titleInput.removeAttribute('disabled');
         titleInput.parentElement.classList.remove('disabled-interactive', 'input-error');
     }
+    
+    // --- INICIO DE LA CORRECCIÓN ---
+    // Se asegura de que el selector de sección esté siempre activo al crear una nueva alarma.
+    const sectionSelector = menuElement.querySelector('[data-action="open-create-section-menu"]');
+    if (sectionSelector) {
+        sectionSelector.classList.remove('disabled-interactive');
+    }
+    // --- FIN DE LA CORRECCIÓN ---
+
     updateAlarmDisplay(menuElement);
     updateDisplay('#alarm-selected-sound', getSoundNameById(state.alarm.sound), menuElement);
     updateDisplay('#alarm-selected-section', state.alarm.sectionName, menuElement);
@@ -393,7 +401,6 @@ const resetAlarmMenu = (menuElement) => {
     }
     menuElement.removeAttribute('data-editing-id');
 };
-
 const resetTimerMenu = (menuElement) => {
     state.timer = JSON.parse(JSON.stringify(initialState.timer));
     state.timer.countTo.date = new Date();
